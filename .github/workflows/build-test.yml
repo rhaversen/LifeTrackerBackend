@@ -1,4 +1,4 @@
-name: Backend Test CI
+name: Life Tracker Backend Test CI
 
 on:
   push:

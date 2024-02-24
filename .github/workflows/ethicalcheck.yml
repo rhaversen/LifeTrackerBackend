@@ -26,7 +26,7 @@
 
 # This is a starter workflow to help you get started with EthicalCheck Actions
 
-name: EthicalCheck-Workflow
+name: Life Tracker EthicalCheck
 
 # Controls when the workflow will run
 on:

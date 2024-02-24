@@ -1,4 +1,4 @@
-name: Backend Docker Image CI
+name: Life Tracker Backend Docker Image CI
 
 on:
   push:
