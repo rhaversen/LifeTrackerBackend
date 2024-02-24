@@ -29,7 +29,7 @@ export default async function loadVaultSecrets (): Promise<void> {
 
         // Load all keys
         for (const key of keys) {
-            const secretPath = `secret/data/lifetrack/backend/${key}`
+            const secretPath = `secret/data/life_tracker/backend/${key}`
             logger.debug('Fetching secret key at path: ' + secretPath)
 
             const response = await vault.read(secretPath)
