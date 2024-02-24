@@ -15,6 +15,10 @@
             "maxAttempts": 5,
             "interval": 5000
         },
-        "options": {}
+        "options": {
+            "retryWrites": "true",
+            "w": "majority",
+            "appName": "main"
+        }
     }
 }

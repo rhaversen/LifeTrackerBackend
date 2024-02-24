@@ -5,14 +5,17 @@ import mongoose from 'mongoose'
 
 // Own modules
 import logger from '../utils/logger.js'
-import config from '../utils/setupConfig.js' // Assuming setupConfig combines the config loading
+import config from '../utils/setupConfig.js'
 
 const {
     mongooseOpts,
     maxRetryAttempts,
-    retryInterval
+    retryInterval,
+    retryWrites,
+    w,
+    appName
 } = config
-const mongoUri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}`
+const mongoUri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=${retryWrites}&w=${w}&appName=${appName}`
 
 async function connectToMongoDB (): Promise<void> {
     for (let currentRetryAttempt = 0; currentRetryAttempt < maxRetryAttempts; currentRetryAttempt++) {
