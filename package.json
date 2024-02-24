@@ -1,5 +1,5 @@
 {
-	"name": "LifeTrackerBackend",
+	"name": "life-tracker-backend",
 	"version": "0.0.1",
 	"main": "index.js",
 	"type": "module",
