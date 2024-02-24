@@ -34,10 +34,12 @@ const {
 // Global variables and setup
 const app = express()
 
+// Middleware
 app.use(helmet())
 app.use(express.json())
 app.use(mongoSanitize())
 
+// Rate limiters
 const relaxedApiLimiter = RateLimit(relaxedApiLimiterConfig)
 const sensitiveApiLimiter = RateLimit(sensitiveApiLimiterConfig)
 
@@ -53,10 +55,12 @@ app.use('/v1/users/signup', sensitiveApiLimiter)
 app.use('/v1/users/', sensitiveApiLimiter)
 app.use('/v1/util/healthcheck', sensitiveApiLimiter)
 
+// Listen
 app.listen(expressPort, () => {
     console.log(`Express is listening at http://localhost:${expressPort}`)
 })
 
+// Handle unhandled rejections outside middleware
 process.on('unhandledRejection', (reason, promise): void => {
     // Attempt to get a string representation of the promise
     const promiseString = JSON.stringify(promise) !== '' ? JSON.stringify(promise) : 'a promise'
