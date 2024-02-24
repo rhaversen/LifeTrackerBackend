@@ -22,7 +22,7 @@ const AppConfig = {
     retryInterval: config.get('mongoose.retrySettings.interval') as number, // in milliseconds
     retryWrites: config.get('mongoose.options.retryWrites') as string,
     w: config.get('mongoose.options.w') as string,
-    appName: config.get('mongoose.options.appName') as string,
+    appName: config.get('mongoose.options.appName') as string
 }
 
 export default AppConfig
