@@ -12,26 +12,14 @@ const configString = JSON.stringify(config.util.toObject(config), null, 4)
 // Log the configs used
 logger.info(`Using configs:\n${configString}`)
 
-export function getRelaxedApiLimiterConfig (): RateLimitOptions {
-    return config.get('apiLimiter.nonSensitive')
+/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
+const AppConfig = {
+    relaxedApiLimiterConfig: config.get('apiLimiter.nonSensitive') as RateLimitOptions,
+    sensitiveApiLimiterConfig: config.get('apiLimiter.sensitive') as RateLimitOptions,
+    expressPort: config.get('expressPort') as number,
+    mongooseOpts: config.get('mongoose.options') as ConnectOptions,
+    maxRetryAttempts: config.get('mongoose.retrySettings.maxAttempts') as number,
+    retryInterval: config.get('mongoose.retrySettings.interval') as number // in milliseconds
 }
 
-export function getSensitiveApiLimiterConfig (): RateLimitOptions {
-    return config.get('apiLimiter.sensitive')
-}
-
-export function getExpressPort (): number {
-    return config.get('expressPort')
-}
-
-export function getMongooseOptions (): ConnectOptions {
-    return config.get('mongoose.options')
-}
-
-export function getMaxRetryAttempts (): number {
-    return config.get('mongoose.retrySettings.maxAttempts')
-}
-
-export function getRetryInterval (): number { // in milliseconds
-    return config.get('mongoose.retrySettings.interval')
-}
+export default AppConfig

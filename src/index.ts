@@ -10,13 +10,7 @@ import helmet from 'helmet'
 import loadVaultSecrets from './utils/vault.js'
 import { initializeDatabaseConnection } from './database/databaseHandler.js'
 import logger from './utils/logger.js'
-
-// Configs
-import {
-    getRelaxedApiLimiterConfig,
-    getSensitiveApiLimiterConfig,
-    getExpressPort
-} from './utils/setupConfig.js'
+import config from './utils/setupConfig.js'
 
 // Routes
 import userRoutes from './routes/users.js'
@@ -30,6 +24,13 @@ await loadVaultSecrets()
 // Connect to MongoDB (Automatically connect to in-memory replica set if not production environment)
 await initializeDatabaseConnection()
 
+// Configs
+const {
+    relaxedApiLimiterConfig,
+    sensitiveApiLimiterConfig,
+    expressPort
+} = config
+
 // Global variables and setup
 const app = express()
 
@@ -37,12 +38,8 @@ app.use(helmet())
 app.use(express.json())
 app.use(mongoSanitize())
 
-const confRelaxedApiLimiter = getRelaxedApiLimiterConfig()
-const confSensitiveApiLimiter = getSensitiveApiLimiterConfig()
-const expressPort = getExpressPort()
-
-const relaxedApiLimiter = RateLimit(confRelaxedApiLimiter)
-const sensitiveApiLimiter = RateLimit(confSensitiveApiLimiter)
+const relaxedApiLimiter = RateLimit(relaxedApiLimiterConfig)
+const sensitiveApiLimiter = RateLimit(sensitiveApiLimiterConfig)
 
 // Use all routes and with relaxed limiter
 app.use('/v1/users', relaxedApiLimiter, userRoutes)

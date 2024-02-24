@@ -6,9 +6,9 @@ import { MongoMemoryReplSet } from 'mongodb-memory-server'
 
 // Own modules
 import logger from '../utils/logger.js'
-import { getMongooseOptions } from '../utils/setupConfig.js'
+import config from '../utils/setupConfig.js'
 
-const mongooseOpts = getMongooseOptions()
+const { mongooseOpts } = config
 
 logger.info('Attempting connection to in-memory MongoDB')
 

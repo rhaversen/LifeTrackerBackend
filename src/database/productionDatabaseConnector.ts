@@ -5,10 +5,14 @@ import mongoose from 'mongoose'
 
 // Own modules
 import logger from '../utils/logger.js'
-import { getMaxRetryAttempts, getMongooseOptions, getRetryInterval } from '../utils/setupConfig.js'
+import config from '../utils/setupConfig.js' // Assuming setupConfig combines the config loading
 
-const mongooseOpts = getMongooseOptions()
-const maxRetryAttempts = getMaxRetryAttempts()
+const {
+    mongooseOpts,
+    maxRetryAttempts,
+    retryInterval
+} = config
+
 let currentRetryAttempt = 0
 
 while (currentRetryAttempt < maxRetryAttempts) {
@@ -26,7 +30,6 @@ while (currentRetryAttempt < maxRetryAttempts) {
         process.exit(1)
     }
     currentRetryAttempt++
-    const retryInterval = getRetryInterval()
     await new Promise((resolve) => setTimeout(resolve, retryInterval))
 }
 
