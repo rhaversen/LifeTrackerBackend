@@ -9,7 +9,7 @@
             "max": 10
         }
     },
-    "expressPort": 3000,
+    "expressPort": 5001,
     "mongoose": {
         "retrySettings": {
             "maxAttempts": 5,
