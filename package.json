@@ -10,7 +10,7 @@
 		"build-test": "npm run build && npm run test",
 		"lint": "npx eslint **/*.ts",
 		"lint:fix": "npx eslint **/*.ts --fix",
-        "test": "cross-env NODE_ENV=test MOCHA_REPORTER_OPTIONS=toConsole=true mocha --reporter spec --recursive dist/test/**/*.spec.js"
+		"test": "cross-env NODE_ENV=test MOCHA_REPORTER_OPTIONS=toConsole=true mocha --reporter spec --recursive dist/test/**/*.spec.js"
 	},
 	"dependencies": {
 		"@logtail/node": "^0.4.19",
@@ -31,6 +31,7 @@
 		"@types/express-healthcheck": "^0.1.3",
 		"@types/mocha": "^10.0.6",
 		"@types/node": "^20.11.20",
+		"@types/sinon": "^17.0.3",
 		"@typescript-eslint/eslint-plugin": "^6.21.0",
 		"chai": "^5.1.0",
 		"chai-http": "^4.4.0",
@@ -42,6 +43,7 @@
 		"eslint-plugin-promise": "^6.1.1",
 		"mocha": "^10.3.0",
 		"mongodb-memory-server": "^9.1.6",
+		"sinon": "^17.0.1",
 		"typescript": "^5.3.3"
 	}
 }

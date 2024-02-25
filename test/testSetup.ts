@@ -9,6 +9,7 @@ import logger from '../src/utils/logger.js'
 import UserModel from '../src/models/User.js'
 import TrackModel from '../src/models/Track.js'
 import { isMemoryDatabase } from '../src/database/databaseHandler.js'
+import sinon from 'sinon'
 
 // Test environment settings
 process.env.SESSION_SECRET = 'TEST_SESSION_SECRET'
@@ -52,6 +53,7 @@ beforeEach(async function () {
 })
 
 afterEach(async function () {
+    sinon.restore()
     agent.close()
     await cleanDatabase()
 })

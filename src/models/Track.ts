@@ -11,12 +11,12 @@ const { Schema } = mongoose
 
 export interface ITrack extends Document {
     trackName: string
-    UTCDateTime: Date
+    Date: Date
 }
 
 const trackSchema = new Schema<ITrack>({
     trackName: { type: String, required: true },
-    UTCDateTime: { type: Date, required: true }
+    Date: { type: Date, required: true }
 })
 
 trackSchema.pre('save', function (next) {
