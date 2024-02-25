@@ -17,7 +17,7 @@ Create a user by sending a POST request to **https://life-stats.net/api/v1/users
 curl -X POST -H "Content-Type: application/json" -d "{\"userName\": \"Your Username Here\"}" https://www.life-stats.net/api/v1/users
 ```
 
-#### PowerShell
+**PowerShell**
 ```bash
 $headers = @{ "Content-Type" = "application/json" }
 $body = '{"userName": "Your Username Here"}'
@@ -25,7 +25,7 @@ $body = '{"userName": "Your Username Here"}'
 Invoke-WebRequest -Uri "https://www.life-stats.net/api/v1/users" -Method Post -Headers $headers -Body $body
 ```
 
-#### Python
+**Python**
 ```py
 import requests
 
@@ -39,7 +39,7 @@ print(response.text)
 
 ## Tracking
 
-You can create tracks with a POST request to **https://www.life-stats.net/api/v1/tracks)**. Provide a track name and your access token in the request body. There are two types of tracks: instantaneous (for current events) and relative (for past or future events), with the offset specified in milliseconds.
+You can create tracks with a POST request to **https://www.life-stats.net/api/v1/tracks**. Provide a track name and your access token in the request body. There are two types of tracks: instantaneous (for current events) and relative (for past or future events), with the offset specified in milliseconds.
 
 ## Instantaneous Track
 
@@ -48,7 +48,7 @@ You can create tracks with a POST request to **https://www.life-stats.net/api/v1
 curl -X POST -H "Content-Type: application/json" -d "{\"trackName\": \"Your Track Name Here\", \"accessToken\": \"Your Access Token Here\"}" https://www.life-stats.net/api/v1/tracks
 ```
 
-#### PowerShell
+**PowerShell**
 ```bash
 $headers = @{ "Content-Type" = "application/json" }
 $body = '{"trackName": "Your Track Name Here", "accessToken": "Your Access Token Here"}'
@@ -56,7 +56,7 @@ $body = '{"trackName": "Your Track Name Here", "accessToken": "Your Access Token
 Invoke-WebRequest -Uri "https://www.life-stats.net/api/v1/tracks" -Method Post -Headers $headers -Body $body
 ```
 
-#### Python
+**Python**
 ```py
 import requests
 
@@ -75,7 +75,7 @@ print(response.text)
 curl -X POST -H "Content-Type: application/json" -d "{\"trackName\": \"Your Track Name Here\", \"accessToken\": \"Your Access Token Here\", \"timeOffset\": \"Your Time Offset Here\"}" https://www.life-stats.net/api/v1/tracks
 ```
 
-#### PowerShell
+**PowerShell**
 ```bash
 $headers = @{ "Content-Type" = "application/json" }
 $body = '{"trackName": "Your Track Name Here", "accessToken": "Your Access Token Here", "timeOffset": "Your Time Offset Here"}'
@@ -83,7 +83,7 @@ $body = '{"trackName": "Your Track Name Here", "accessToken": "Your Access Token
 Invoke-WebRequest -Uri "https://www.life-stats.net/api/v1/tracks" -Method Post -Headers $headers -Body $body
 ```
 
-#### Python
+**Python**
 ```py
 import requests
 
@@ -128,36 +128,36 @@ print(response.text)
 
 ## Privacy Policy
 
-### Data Collection
+**Data Collection**
 We collect only the data you provide:
 
 -   **Username**: Your chosen pseudonym within the app.
 -   **Track Name**: The label you assign to each event.
 -   **Time of Track**: The creation time of each event, adjustable by specifying an offset.
 
-### Data Use
+**Data Use**
 Your data is solely logged for personal reference. It is not subjected to advertising, commercial use, or analysis. Future app versions will offer enhanced data views for the user.
 
-### Data Storage and Security
+**Data Storage and Security**
 We securely store your data in a MongoDB Cloud Database, employing standard security measures to safeguard against unauthorized access.
 
 ## Terms of Service
 
-### Acceptance of Terms
+**Acceptance of Terms**
 By using this app, you consent to these terms. Discontinue use immediately if you do not agree.
 
-### User Conduct
+**User Conduct**
 You bear responsibility for the data you track and disseminate. Ensure compliance with laws and respect for others' rights.
 
-### Intellectual Property
+**Intellectual Property**
 Data generated is your property. However, by using our service, you grant us a license to process this data for service provision.
 
 ## User Rights
 
-### Data Access and Deletion
+**Data Access and Deletion**
 Use your access token to request data access or deletion at any time. For guidance, consult the app documentation or contact us directly.
 
-### Withdrawal of Consent
+**Withdrawal of Consent**
 You may withdraw data processing consent by deleting your data with your access token. For further instructions, refer to our documentation or reach out directly.
 
 ## Changes to Our Policies
