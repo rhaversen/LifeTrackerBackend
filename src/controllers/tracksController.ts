@@ -25,7 +25,7 @@ export async function createTrack (req: Request, res: Response, next: NextFuncti
 
     const newTrack = new TrackModel({
         trackName,
-        UTCDateTime: Date.now() + (timeOffset ?? 0)
+        Date: Date.now() + (timeOffset ?? 0)
     })
 
     const savedTrack = await newTrack.save() as ITrack
