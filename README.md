@@ -12,6 +12,11 @@ Track events with **Life Stats** using a straightforward webhook. Below is the e
 
 Create a user by sending a POST request to **https://life-stats.net/api/v1/users**. Provide a username in the request body to receive your personal access token. This token is crucial for your tracking activities, cannot be retrieved again and will allow anyone to track to your user, so keep it secure.
 
+**CMD**
+```bash
+curl -X POST -H "Content-Type: application/json" -d "{\"userName\": \"Your Username Here\"}" https://www.life-stats.net/api/v1/users
+```
+
 #### PowerShell
 ```bash
 $headers = @{ "Content-Type" = "application/json" }
@@ -38,6 +43,11 @@ You can create tracks with a POST request to **https://www.life-stats.net/api/v1
 
 ## Instantaneous Track
 
+**CMD**
+```bash
+curl -X POST -H "Content-Type: application/json" -d "{\"trackName\": \"Your Track Name Here\", \"accessToken\": \"Your Access Token Here\"}" https://www.life-stats.net/api/v1/tracks
+```
+
 #### PowerShell
 ```bash
 $headers = @{ "Content-Type" = "application/json" }
@@ -59,6 +69,11 @@ print(response.text)
 ```
 
 ## Relative Track
+
+**CMD**
+```bash
+curl -X POST -H "Content-Type: application/json" -d "{\"trackName\": \"Your Track Name Here\", \"accessToken\": \"Your Access Token Here\", \"timeOffset\": \"Your Time Offset Here\"}" https://www.life-stats.net/api/v1/tracks
+```
 
 #### PowerShell
 ```bash
