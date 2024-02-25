@@ -80,6 +80,34 @@ response = requests.post(url, json=data)
 print(response.text)
 ```
 
+## User- and Data Deletion
+
+You can delete your user all all associated data with a DELETE request to **https://www.life-stats.net/api/v1/users**. Provide your username, access token and confirmDeletion=true in the request body. 
+
+**CMD**
+```bash
+curl -X DELETE -H "Content-Type: application/json" -d "{\"userName\": \"Your Username Here\", \"accessToken\": \"Your Access Token Here\", \"confirmDeletion\": true}" https://www.life-stats.net/api/v1/users
+```
+
+**PowerShell**
+```bash
+$headers = @{ "Content-Type" = "application/json" }
+$body = '{"userName": "Your Username Here", "accessToken": "Your Access Token Here", "confirmDeletion": true}'
+
+Invoke-WebRequest -Uri "https://www.life-stats.net/api/v1/users" -Method Delete -Headers $headers -Body $body
+```
+
+**Python**
+```py
+import requests
+
+url = "https://www.life-stats.net/api/v1/users"
+data = {"trackName": "Your Track Name Here", "accessToken": "Your Access Token Here", "confirmDeletion": true}
+
+response = requests.delete(url, json=data)
+
+print(response.text)
+```
 
 # Legal Notices
 
