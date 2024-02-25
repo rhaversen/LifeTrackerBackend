@@ -13,9 +13,11 @@ import { createUser } from '../controllers/userController.js'
 const router = Router()
 
 /**
- * @route POST api/v1/tracks
- * @desc Create a new user with a username and return access token
+ * @route POST api/v1/users
+ * @desc Create a new user
  * @access Public
+ * @param {string} req.body.username The username given to this user
+ * @return {string} Accesstoken
  */
 router.post('/',
     asyncErrorHandler(createUser)

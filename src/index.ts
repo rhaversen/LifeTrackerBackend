@@ -17,6 +17,7 @@ import userRoutes from './routes/users.js'
 import trackRoutes from './routes/tracks.js'
 import utilRoutes from './routes/util.js'
 import mongoose from 'mongoose'
+import globalErrorHandler from './middleware/globalErrorHandler.js'
 
 // Load environment
 await loadVaultSecrets()
@@ -49,15 +50,15 @@ app.use('/v1/tracks', relaxedApiLimiter, trackRoutes)
 app.use('/v1/util', relaxedApiLimiter, utilRoutes)
 
 // Apply stricter rate limiters to routes
-app.use('/v1/users/update-password', sensitiveApiLimiter)
-app.use('/v1/users/login', sensitiveApiLimiter)
-app.use('/v1/users/signup', sensitiveApiLimiter)
 app.use('/v1/users/', sensitiveApiLimiter)
 app.use('/v1/util/healthcheck', sensitiveApiLimiter)
 
+// Global error handler middleware
+app.use(globalErrorHandler)
+
 // Listen
 app.listen(expressPort, () => {
-    console.log(`Express is listening at http://localhost:${expressPort}`)
+    logger.info(`Express is listening at http://localhost:${expressPort}`)
 })
 
 // Handle unhandled rejections outside middleware

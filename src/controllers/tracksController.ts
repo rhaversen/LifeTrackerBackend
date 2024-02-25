@@ -6,8 +6,11 @@ import { type NextFunction, type Request, type Response } from 'express'
 // Own modules
 import TrackModel, { type ITrack } from '../models/Track.js'
 import UserModel from '../models/User.js'
+import logger from '../utils/logger.js'
 
 export async function createTrack (req: Request, res: Response, next: NextFunction): Promise<void> {
+    logger.silly('Creating track')
+
     interface TrackRequestBody {
         accessToken: string
         trackName: string
