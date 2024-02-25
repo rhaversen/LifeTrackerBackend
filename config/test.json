@@ -1,0 +1,12 @@
+{
+    "apiLimiter": {
+        "nonSensitive": {
+            "windowMs": 1,
+            "max": 1000
+        },
+        "sensitive": {
+            "windowMs": 1,
+            "max": 1000
+        }
+    }
+}
