@@ -50,9 +50,6 @@ app.use('/v1/tracks', relaxedApiLimiter, trackRoutes)
 app.use('/v1/util', relaxedApiLimiter, utilRoutes)
 
 // Apply stricter rate limiters to routes
-app.use('/v1/users/update-password', sensitiveApiLimiter)
-app.use('/v1/users/login', sensitiveApiLimiter)
-app.use('/v1/users/signup', sensitiveApiLimiter)
 app.use('/v1/users/', sensitiveApiLimiter)
 app.use('/v1/util/healthcheck', sensitiveApiLimiter)
 
