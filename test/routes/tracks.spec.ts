@@ -53,8 +53,8 @@ describe('Post a new track', function () {
     it('should have the current date and time', async function () {
         const fakeTime = new Date(2020, 4, 15).getTime()
         sinon.useFakeTimers(fakeTime) // Fake the JavaScript environment's time
-        await agent.post('/v1/tracks').send(track);
-        const foundTrack = await TrackModel.findOne({}).exec() as ITrack;
-        expect(new Date(foundTrack.Date).getTime()).to.equal(fakeTime);
+        await agent.post('/v1/tracks').send(track)
+        const foundTrack = await TrackModel.findOne({}).exec() as ITrack
+        expect(new Date(foundTrack.Date).getTime()).to.equal(fakeTime)
     })
 })
