@@ -4,7 +4,7 @@
 import mongoose, { type Document, model } from 'mongoose'
 
 // Own modules
-import logger from '../utils/logger'
+import logger from '../utils/logger.js'
 
 // Destructuring and global variables
 const { Schema } = mongoose
