@@ -10,7 +10,7 @@
 		"build-test": "npm run build && npm run test",
 		"lint": "npx eslint **/*.ts",
 		"lint:fix": "npx eslint **/*.ts --fix",
-        "test": "cross-env NODE_ENV=test MOCHA_REPORTER_OPTIONS=toConsole=true mocha --reporter spec --recursive dist/test/**/*.spec.js"
+		"test": "cross-env NODE_ENV=test MOCHA_REPORTER_OPTIONS=toConsole=true mocha --reporter spec --recursive dist/test/**/*.spec.js"
 	},
 	"dependencies": {
 		"@logtail/node": "^0.4.19",
