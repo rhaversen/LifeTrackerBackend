@@ -5,14 +5,14 @@
 // Third-party libraries
 
 // Own modules
-import { agent, chaiHttpObject } from './testSetup.js'
-import UserModel, { type IUser } from '../src/models/User.js'
-import TrackModel, { type ITrack } from '../src/models/Track.js'
+import { agent, chaiHttpObject } from '../testSetup.js'
+import UserModel, { type IUser } from '../../src/models/User.js'
+import TrackModel, { type ITrack } from '../../src/models/Track.js'
 
 // Global variables and setup
 const { expect } = chaiHttpObject
 
-describe('Post a new track POST /v1/tracks', function () {
+describe('Post a new track', function () {
     let testUser: IUser
 
     beforeEach(async function () {
