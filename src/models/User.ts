@@ -16,13 +16,13 @@ export interface IUserPopulated extends IUser {
 }
 
 export interface IUser extends Document {
-    username: string
+    userName: string
     accessToken: string
     tracks: Types.ObjectId[] | ITrack[]
 }
 
 const userSchema = new Schema<IUser>({
-    username: { type: String, required: true },
+    userName: { type: String, required: true },
     accessToken: { type: String, required: false },
     tracks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Track' }]
 })

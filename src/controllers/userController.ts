@@ -10,15 +10,15 @@ import logger from '../utils/logger.js'
 export async function createUser (req: Request, res: Response, next: NextFunction): Promise<void> {
     logger.silly('Creating user')
     interface UserRequestBody {
-        username: string
+        userName: string
     }
 
     const {
-        username
+        userName
     } = req.body as UserRequestBody
 
     const newUser = new UserModel({
-        username
+        userName
     })
     const savedUser = await newUser.save() as IUser
 

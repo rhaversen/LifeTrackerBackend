@@ -16,8 +16,8 @@ const router = Router()
  * @route POST api/v1/users
  * @desc Create a new user
  * @access Public
- * @param {string} req.body.username The username given to this user
- * @return {string} Accesstoken
+ * @param {string} req.body.userName The username given to this user
+ * @return {string} accessToken
  */
 router.post('/',
     asyncErrorHandler(createUser)
