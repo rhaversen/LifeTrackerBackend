@@ -1,4 +1,4 @@
-# Free to use life tracker!
+# Free to use event tracker!
 
 This app is currently in a very early alpha stage. While it is not yet possible to retrieve or view your tracks, this functionality will be introduced soon. Start tracking today to take full advantage once this feature is available.
 
