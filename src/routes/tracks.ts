@@ -16,7 +16,7 @@ const router = Router()
 
 /**
  * @route POST api/v1/tracks
- * @desc Post a new track at the current time to the access token provided in the body.
+ * @desc Post a new track
  * @access Public
  * @param {string} req.body.accessToken The access token required to authenticate the request.
  * @param {Object} req.body.trackName The name of the track.
