@@ -19,7 +19,7 @@ const router = Router()
  * @desc Post a new track at the current time to the access token provided in the body.
  * @access Public
  * @param {string} req.body.accessToken The access token required to authenticate the request.
- * @param {Object} req.body.name The name of the track.
+ * @param {Object} req.body.trackName The name of the track.
  * @param {Object} [req.body.timeOffset] Relative Time Offset (milliseconds).
  */
 router.post('/',
