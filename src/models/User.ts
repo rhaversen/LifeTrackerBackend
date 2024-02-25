@@ -6,6 +6,7 @@ import { nanoid } from 'nanoid'
 
 // Own modules
 import { type ITrack } from './Track.js'
+import logger from '../utils/logger.js'
 
 // Destructuring and global variables
 const { Schema } = mongoose
@@ -27,6 +28,7 @@ const userSchema = new Schema<IUser>({
 })
 
 userSchema.pre('save', async function (next) {
+    logger.silly('Saving user')
     if (this.isNew) {
         this.accessToken = nanoid()
     }

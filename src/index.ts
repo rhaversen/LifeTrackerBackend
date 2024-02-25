@@ -61,7 +61,7 @@ app.use(globalErrorHandler)
 
 // Listen
 app.listen(expressPort, () => {
-    console.log(`Express is listening at http://localhost:${expressPort}`)
+    logger.info(`Express is listening at http://localhost:${expressPort}`)
 })
 
 // Handle unhandled rejections outside middleware

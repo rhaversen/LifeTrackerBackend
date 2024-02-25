@@ -5,8 +5,10 @@ import { type NextFunction, type Request, type Response } from 'express'
 
 // Own modules
 import UserModel, { type IUser } from '../models/User.js'
+import logger from '../utils/logger.js'
 
 export async function createUser (req: Request, res: Response, next: NextFunction): Promise<void> {
+    logger.silly('Creating user')
     interface UserRequestBody {
         username: string
     }

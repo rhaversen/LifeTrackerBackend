@@ -6,6 +6,7 @@ import mongoose from 'mongoose'
 
 // Own modules
 import asyncErrorHandler from '../utils/asyncErrorHandler.js'
+import logger from '../utils/logger.js'
 
 // Controller functions
 
@@ -14,6 +15,8 @@ const router = Router()
 
 // Functions
 async function checkHealth (req: Request, res: Response, next: NextFunction): Promise<void> {
+    logger.silly('Checking health')
+
     const uptimeSeconds = process.uptime()
     const uptimeHours = uptimeSeconds / 60 / 60
     const uptimeDays = uptimeHours / 24
