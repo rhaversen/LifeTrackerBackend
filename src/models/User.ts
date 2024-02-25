@@ -24,7 +24,7 @@ export interface IUser extends Document {
 const userSchema = new Schema<IUser>({
     username: { type: String, required: true },
     accessToken: { type: String, required: false },
-    tracks: [{ type: Schema.Types.ObjectId, ref: 'Track' }]
+    tracks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Track' }]
 })
 
 userSchema.pre('save', async function (next) {

@@ -21,6 +21,7 @@ const trackSchema = new Schema<ITrack>({
 
 trackSchema.pre('save', function (next) {
     logger.silly('Saving track')
+    next()
 })
 
 // Compile the schema into a model
