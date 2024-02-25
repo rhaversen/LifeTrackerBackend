@@ -3,6 +3,7 @@
 // file deepcode ignore HardcodedNonCryptoSecret/test: Hardcoded credentials are only used for testing purposes
 
 // Third-party libraries
+import sinon from 'sinon'
 
 // Own modules
 import { agent, chaiHttpObject } from '../testSetup.js'
@@ -47,5 +48,13 @@ describe('Post a new track', function () {
         const foundTrack = await TrackModel.findOne({}).exec() as ITrack
         expect(foundUser.tracks.length).to.equal(1)
         expect(foundTrack.id).to.equal(foundUser.tracks[0]._id.toString())
+    })
+
+    it('should have the current date and time', async function () {
+        const fakeTime = new Date(2020, 4, 15).getTime()
+        sinon.useFakeTimers(fakeTime) // Fake the JavaScript environment's time
+        await agent.post('/v1/tracks').send(track);
+        const foundTrack = await TrackModel.findOne({}).exec() as ITrack;
+        expect(new Date(foundTrack.Date).getTime()).to.equal(fakeTime);
     })
 })
