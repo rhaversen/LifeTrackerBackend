@@ -11,17 +11,15 @@ import logger from '../utils/logger.js'
 export async function createTrack (req: Request, res: Response, next: NextFunction): Promise<void> {
     logger.silly('Creating track')
 
-    interface TrackRequestBody {
-        accessToken: string
-        trackName: string
-        timeOffset?: number
-    }
-
     const {
         accessToken,
         trackName,
         timeOffset
-    } = req.body as TrackRequestBody
+    } = req.body as {
+        accessToken: string
+        trackName: string
+        timeOffset?: number
+    }
 
     const newTrack = new TrackModel({
         trackName,
