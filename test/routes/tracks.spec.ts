@@ -12,8 +12,9 @@ import TrackModel, { type ITrack } from '../../src/models/Track.js'
 
 // Global variables and setup
 const { expect } = chaiHttpObject
+const endpoint = ' api/v1/tracks'
 
-describe('Post a new track', function () {
+describe('Post a new track' + endpoint, function () {
     let testUser: IUser
     let track: { trackName: string, accessToken: string }
 
@@ -59,7 +60,7 @@ describe('Post a new track', function () {
     })
 })
 
-describe('Post a new track with positive timeOffset', function () {
+describe('Post a new track with positive timeOffset' + endpoint, function () {
     let testUser: IUser
     let track: { trackName: string, accessToken: string, timeOffset: number }
 
@@ -105,7 +106,7 @@ describe('Post a new track with positive timeOffset', function () {
     })
 })
 
-describe('Post a new track with negative timeOffset', function () {
+describe('Post a new track with negative timeOffset' + endpoint, function () {
     let testUser: IUser
     let track: { trackName: string, accessToken: string, timeOffset: number }
 
