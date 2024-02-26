@@ -96,8 +96,8 @@ describe('api/v1/tracks', function () {
         }
 
         const trackNameMessage = trackName === undefined ? 'trackName missing' : `trackName: ${validator.escape(String(trackName))}`
-        const accessTokenMessage = accessToken === undefined ? 'accessToken missing' : `accessToken: ${String(accessToken)}`
-        const timeOffsetMessage = timeOffset === undefined ? 'timeOffset missing' : `timeOffset: ${String(timeOffset)}`
+        const accessTokenMessage = accessToken === undefined ? 'accessToken missing' : `accessToken: ${validator.escape(String(accessToken))}`
+        const timeOffsetMessage = timeOffset === undefined ? 'timeOffset missing' : `timeOffset: ${validator.escape(String(timeOffset))}`
 
         const testName = [trackNameMessage, accessTokenMessage, timeOffsetMessage].join(', ')
 
