@@ -12,13 +12,13 @@ const { Schema } = mongoose
 
 export interface ITrack extends Document {
     trackName: string
-    Date: Date
+    date: Date
     userId: IUser['_id']
 }
 
 const trackSchema = new Schema<ITrack>({
     trackName: { type: String, required: true },
-    Date: { type: Date, required: true },
+    date: { type: Date, required: true },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 })
 

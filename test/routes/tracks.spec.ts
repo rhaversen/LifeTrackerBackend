@@ -55,7 +55,7 @@ describe('Post a new track' + endpoint, function () {
         sinon.useFakeTimers(fakeTime) // Fake the JavaScript environment's time
         await agent.post('/v1/tracks').send(track)
         const foundTrack = await TrackModel.findOne({}).exec() as ITrack
-        expect(new Date(foundTrack.Date).getTime()).to.equal(fakeTime)
+        expect(new Date(foundTrack.date).getTime()).to.equal(fakeTime)
     })
 
     it('should not create a track if accessToken is invalid', async function () {
@@ -107,7 +107,7 @@ describe('Post a new track with positive timeOffset' + endpoint, function () {
         sinon.useFakeTimers(fakeTime) // Fake the JavaScript environment's time
         await agent.post('/v1/tracks').send(track)
         const foundTrack = await TrackModel.findOne({}).exec() as ITrack
-        expect(new Date(foundTrack.Date).getTime()).to.equal(fakeTime + track.timeOffset)
+        expect(new Date(foundTrack.date).getTime()).to.equal(fakeTime + track.timeOffset)
     })
 })
 
@@ -152,6 +152,6 @@ describe('Post a new track with negative timeOffset' + endpoint, function () {
         sinon.useFakeTimers(fakeTime) // Fake the JavaScript environment's time
         await agent.post('/v1/tracks').send(track)
         const foundTrack = await TrackModel.findOne({}).exec() as ITrack
-        expect(new Date(foundTrack.Date).getTime()).to.equal(fakeTime + track.timeOffset)
+        expect(new Date(foundTrack.date).getTime()).to.equal(fakeTime + track.timeOffset)
     })
 })

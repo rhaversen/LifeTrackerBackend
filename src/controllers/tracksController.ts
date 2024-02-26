@@ -46,7 +46,7 @@ export async function createTrack (req: Request, res: Response, next: NextFuncti
 
     const newTrack = new TrackModel({
         trackName,
-        Date: Date.now() + (timeOffset ?? 0),
+        date: Date.now() + (timeOffset ?? 0),
         userId: user._id
     })
 
