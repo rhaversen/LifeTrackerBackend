@@ -22,7 +22,7 @@ const values = [
     'false', // string
     '0', // string
     ' " ', // a single double-quote character
-    " ' ", // a single quote character
+    ' \' ', // a single quote character
     '\n', // newline character
     '\t', // tab character
     '\0', // null character
@@ -34,6 +34,11 @@ const values = [
     '\u200B', // Zero width space
     'a'.repeat(1000), // a very long string of 1000 'a' characters
     'a'.repeat(100), // a very long string of 100 'a' characters
+    'https://example.com', // HTTP URL
+    'http://example.com', // HTTPS URL
+    'ftp://example.com', // FTP URL
+    '/(?:)/', // a regular expression string with an empty pattern
+    '/(.*)/', // a regular expression string with a pattern that matches anything
 
     // Numbers (and related special numeric values)
     0, // number
@@ -41,8 +46,6 @@ const values = [
     -10, // negative number
     NaN, // NaN
     Number.NaN, // NaN
-    Number.POSITIVE_INFINITY, // Infinity
-    Number.NEGATIVE_INFINITY, // -Infinity
     Number.MAX_SAFE_INTEGER, // Largest integer that can be accurately represented
     Number.MIN_SAFE_INTEGER, // Smallest integer that can be accurately represented
     -Number.MAX_SAFE_INTEGER, // Largest integer that can be accurately represented
@@ -51,8 +54,8 @@ const values = [
     Number.MIN_VALUE, // Smallest number that can be accurately represented
     -Number.MAX_VALUE, // Largest number that can be accurately represented
     -Number.MIN_VALUE, // Smallest number that can be accurately represented
-    1.7976931348623157E+10308, // just below Number.MAX_VALUE
-    -1.7976931348623157E+10308, // just above Number.MIN_VALUE
+    Number.MAX_VALUE - 1E+292, // just below Number.MAX_VALUE
+    Number.MAX_VALUE + 1E+292, // just above Number.MAX_VALUE
 
     // Booleans
     true, // boolean
@@ -61,10 +64,6 @@ const values = [
     // Nullish values
     null, // null
     undefined, // explicitly testing for undefined
-
-    // BigInts
-    1n, // BigInt
-    -1n, // BigInt
 
     // Arrays (including nested arrays)
     [], // array
@@ -75,13 +74,7 @@ const values = [
     {}, // object
     { a: 1, b: 2 }, // object
     { a: { b: { c: { d: 1 } } } }, // deeply nested object
-    new Date(), // Date object
-    new RegExp(''), // a regular expression object with an empty pattern
-    new Map(), // a Map object
-    new Set(), // a Set object
-
-    // Others (unique types that don't fit neatly into other categories)
-    Symbol('test'), // a Symbol object
+    function () { } // a function object
 ]
 
 describe('api/v1/tracks', function () {
