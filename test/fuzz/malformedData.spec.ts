@@ -12,8 +12,9 @@ import TrackModel from '../../src/models/Track.js'
 // Global variables and setup
 const { expect } = chaiHttpObject
 const values = [
+    'actualValue', // Used for inputting the real and expected values
+
     // Strings
-    'actualValue', // Used for inputting the expected values
     '', // empty string
     'test', // string
     'true', // string
