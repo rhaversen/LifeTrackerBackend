@@ -26,10 +26,46 @@ const values = [
     10, // number
     -10, // negative number
     undefined, // explicitly testing for undefined
-    Number.NaN
+    NaN, // NaN
+    Number.NaN, // NaN
+    Number.POSITIVE_INFINITY, // Infinity
+    Number.NEGATIVE_INFINITY, // -Infinity
+    Number.MAX_SAFE_INTEGER, // Largest integer that can be accurately represented
+    Number.MIN_SAFE_INTEGER, // Smallest integer that can be accurately represented
+    -Number.MAX_SAFE_INTEGER, // Largest integer that can be accurately represented
+    -Number.MIN_SAFE_INTEGER, // Smallest integer that can be accurately represented
+    Number.MAX_VALUE, // Largest number that can be accurately represented
+    Number.MIN_VALUE, // Smallest number that can be accurately represented
+    -Number.MAX_VALUE, // Largest number that can be accurately represented
+    -Number.MIN_VALUE, // Smallest number that can be accurately represented
+    1.7976931348623157E+10308, // just below Number.MAX_VALUE
+    -1.7976931348623157E+10308, // just above Number.MIN_VALUE
+    1n, // BigInt
+    -1n, // BigInt
+    [], // array
+    [1, 2, 3], // array
+    {}, // object
+    { a: 1, b: 2 }, // object
+    new Date(), // Date object
+    "\n", // newline character
+    "\t", // tab character
+    "\0", // null character
+    "\r", // carriage return character
+    "\b", // backspace character
+    "<script>alert('XSS')</script>", // simple XSS injection test
+    "你好", // Hello in Chinese
+    "🚀", // Rocket emoji
+    "\u200B", // (Zero width space)
+    'a'.repeat(1000), // a very long string of 1000 'a' characters
+    'a'.repeat(100), // a very long string of 100 'a' characters
+    { a: { b: { c: { d: 1 } } } }, // deeply nested object
+    [[[[1]]]], // deeply nested array
+    new RegExp(''), // a regular expression object with an empty pattern
+    new Map(), // a Map object
+    new Set(), // a Set object
+    Symbol('test'), // a Symbol object
 ]
 
-describe('Malformed data' + endpoint, function () {
     let testUser: IUser
     let track: { trackName?: any, accessToken?: any, timeOffset?: any }
 
