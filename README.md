@@ -1,16 +1,15 @@
-# Free to use event tracker!
+# Free to use event tracker
 
 This app is currently in a very early alpha stage. While it is not yet possible to retrieve or view your tracks, this functionality will be introduced soon. Start tracking today to take full advantage once this feature is available.
 
->You can check the health of the service **[here](https://life-stats.net/api/v1/util/healthcheck)** (View uptime and database connection). The response is in simple JSON format, which can be more easily read with this [chrome extension](https://chromewebstore.google.com/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa).
-
-# Usage
-
 Track events with **Life Stats** using a straightforward webhook. Below is the essential workflow.
 
-## User creation
+>You can check the health of the service **[here](https://life-stats.net/api/v1/util/healthcheck)** (View uptime and database connection). The response is in simple JSON format, which can be more easily read with this [chrome extension](https://chromewebstore.google.com/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa).
 
-Create a user by sending a POST request to **https://life-stats.net/api/v1/users**. Provide a username in the request body to receive your personal access token. This token is crucial for your tracking activities, cannot be retrieved again and will allow anyone to track to your user, so keep it secure.
+
+### User creation
+
+Create a user by sending a POST request to **<https://life-stats.net/api/v1/users>**. Provide a username in the request body to receive your personal access token. This token is crucial for your tracking activities, cannot be retrieved again and will allow anyone to track to your user, so keep it secure.
 
 **CMD**
 ```bash
@@ -39,9 +38,11 @@ print(response.text)
 
 ## Tracking
 
-You can create tracks with a POST request to **https://www.life-stats.net/api/v1/tracks**. Provide a track name and your access token in the request body. There are two types of tracks: instantaneous (for current events) and relative (for past or future events), with the offset specified in milliseconds.
 
-## Instantaneous Track
+You can create tracks with a POST request to **<https://www.life-stats.net/api/v1/tracks>**. Provide a track name and your access token in the request body. There are two types of tracks: instantaneous (for current events) and relative (for past or future events), with the offset specified in milliseconds.
+
+### Instantaneous Track
+
 
 **CMD**
 ```bash
@@ -97,7 +98,7 @@ print(response.text)
 
 ## User- and Data Deletion
 
-You can delete your user all all associated data with a DELETE request to **https://www.life-stats.net/api/v1/users**. Provide your username, access token and confirmDeletion=true in the request body. 
+You can delete your user all all associated data with a DELETE request to **<https://www.life-stats.net/api/v1/users>**. Provide your username, access token and confirmDeletion=true in the request body.
 
 **CMD**
 ```bash
@@ -124,16 +125,14 @@ response = requests.delete(url, json=data)
 print(response.text)
 ```
 
-# Legal Notices
-
 ## Privacy Policy
 
 **Data Collection**
 We collect only the data you provide:
 
--   **Username**: Your chosen pseudonym within the app.
--   **Track Name**: The label you assign to each event.
--   **Time of Track**: The creation time of each event, adjustable by specifying an offset.
+ - **Username**: Your chosen pseudonym within the app.
+ - **Track Name**: The label you assign to each event.
+ - **Time of Track**: The creation time of each event, adjustable by specifying an offset.
 
 **Data Use**
 Your data is solely logged for personal reference. It is not subjected to advertising, commercial use, or analysis. Future app versions will offer enhanced data views for the user.
@@ -166,4 +165,4 @@ We reserve the right to modify these legal notices at any time. Any changes will
 
 ## Contact Information
 
-For any questions or concerns regarding your data, privacy, or our policies, please contact me at rhaversen@gmail.com.
+For any questions or concerns regarding your data, privacy, or our policies, please contact me at <rhaversen@gmail.com>.
