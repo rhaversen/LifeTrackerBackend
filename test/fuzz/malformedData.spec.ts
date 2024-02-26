@@ -91,7 +91,7 @@ describe('api/v1/tracks', function () {
 
     function handleTestCase (trackName: any, accessToken: any, timeOffset: any): void {
         // These cases are not considered malformed data
-        if (trackName != '' && accessToken === 'actualValue' && (typeof timeOffset === 'number' || timeOffset === undefined) && !(isNaN((new Date(Date.now() + (timeOffset ?? 0))).getTime()))) {
+        if (trackName !== '' && accessToken === 'actualValue' && (typeof timeOffset === 'number' || timeOffset === undefined) && !(isNaN((new Date(Date.now() + Number(timeOffset ?? 0))).getTime()))) {
             return
         }
 
