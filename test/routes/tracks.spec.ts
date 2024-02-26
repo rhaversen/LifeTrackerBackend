@@ -20,7 +20,8 @@ describe('Post a new track' + endpoint, function () {
 
     beforeEach(async function () {
         testUser = new UserModel({
-            userName: 'TestUser'
+            userName: 'TestUser',
+            signUpDate: new Date()
         })
         await testUser.save()
         track = { trackName: 'test', accessToken: testUser.accessToken }
@@ -72,7 +73,8 @@ describe('Post a new track with positive timeOffset' + endpoint, function () {
 
     beforeEach(async function () {
         testUser = new UserModel({
-            userName: 'TestUser'
+            userName: 'TestUser',
+            signUpDate: new Date()
         })
         await testUser.save()
         track = { trackName: 'test', accessToken: testUser.accessToken, timeOffset: 10 }
@@ -117,7 +119,8 @@ describe('Post a new track with negative timeOffset' + endpoint, function () {
 
     beforeEach(async function () {
         testUser = new UserModel({
-            userName: 'TestUser'
+            userName: 'TestUser',
+            signUpDate: new Date()
         })
         await testUser.save()
         track = { trackName: 'test', accessToken: testUser.accessToken, timeOffset: -10 }

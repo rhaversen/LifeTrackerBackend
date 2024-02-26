@@ -13,11 +13,13 @@ const { Schema } = mongoose
 export interface IUser extends Document {
     userName: string
     accessToken: string
+    signUpDate: Date
 }
 
 const userSchema = new Schema<IUser>({
     userName: { type: String, required: true },
     accessToken: { type: String, required: false },
+    signUpDate: { type: Date, required: true }
 })
 
 userSchema.pre('save', async function (next) {
