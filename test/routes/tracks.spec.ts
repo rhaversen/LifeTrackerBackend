@@ -58,6 +58,13 @@ describe('Post a new track' + endpoint, function () {
         const foundTrack = await TrackModel.findOne({}).exec() as ITrack
         expect(new Date(foundTrack.Date).getTime()).to.equal(fakeTime)
     })
+
+    it('should not create a track if accessToken is invalid', async function () {
+        track = { ...track, accessToken: 'invalidCode' }
+        await agent.post('/v1/tracks').send(track)
+        const allTracks = await TrackModel.find({}).exec()
+        expect(allTracks.length).to.equal(0)
+    })
 })
 
 describe('Post a new track with positive timeOffset' + endpoint, function () {
@@ -149,5 +156,60 @@ describe('Post a new track with negative timeOffset' + endpoint, function () {
         await agent.post('/v1/tracks').send(track)
         const foundTrack = await TrackModel.findOne({}).exec() as ITrack
         expect(new Date(foundTrack.Date).getTime()).to.equal(fakeTime + track.timeOffset)
+    })
+})
+
+describe('Malformed data' + endpoint, function () {
+    const values = [
+        '', // empty string
+        'test', // string
+        true, // boolean used for setting the actual accessToken
+        false, // boolean
+        0, // number
+        10, // number
+        -10, // negative number
+        undefined, // explicitly testing for undefined
+        Number.NaN
+    ]
+    let testUser: IUser
+    let track: { trackName?: any, accessToken?: any, timeOffset?: any }
+
+    beforeEach(async function () {
+        testUser = new UserModel({
+            userName: 'TestUser'
+        })
+        await testUser.save()
+    })
+
+    // Dynamically create test cases for each combination
+    values.forEach(trackName => {
+        values.forEach(accessToken => {
+            values.forEach(timeOffset => {
+                // These cases are not considered malformed data
+                if (trackName === 'test' && accessToken === true && (typeof timeOffset === 'number' || timeOffset === undefined)) {
+                    return
+                }
+
+                const testNameParts = [
+                    trackName === undefined ? 'trackName missing' : `trackName: ${typeof trackName}, ${trackName === '' ? '""' : trackName}`,
+                    accessToken === undefined ? 'accessToken missing' : `accessToken: ${typeof accessToken}, ${accessToken === true ? 'real' : (accessToken === '' ? '""' : accessToken)}`,
+                    timeOffset === undefined ? 'timeOffset missing' : `timeOffset: ${typeof timeOffset}, ${timeOffset === '' ? '""' : timeOffset}`
+                ]
+
+                const testName = testNameParts.join(', ')
+
+                it(`should handle case with ${testName}`, async function () {
+                    track = {}
+                    if (trackName !== undefined) track.trackName = trackName
+                    if (accessToken !== undefined) track.accessToken = accessToken === true ? testUser.accessToken : accessToken
+                    if (timeOffset !== undefined) track.timeOffset = timeOffset
+
+                    const res = await agent.post('/v1/tracks').send(track)
+                    const allTracks = await TrackModel.find({}).exec()
+                    expect(allTracks.length).to.equal(0)
+                    expect(res).to.have.status(400)
+                })
+            })
+        })
     })
 })
