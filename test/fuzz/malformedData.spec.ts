@@ -62,13 +62,8 @@ describe('Malformed data' + endpoint, function () {
             const res = await agent.post('/v1/tracks').send(track)
             const allTracks = await TrackModel.find({}).exec()
 
-            // Only print out the error message if the test case is not expected to pass
-            if (allTracks.length > 0) {
-                expect(allTracks.length).to.equal(0)
-            }
-            if (res.status !== 400) {
-                expect(res).to.have.status(400)
-            }
+            expect(allTracks.length).to.equal(0)
+            expect(res).to.have.status(400)
         })
     }
 
