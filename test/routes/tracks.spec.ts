@@ -43,12 +43,11 @@ describe('Post a new track' + endpoint, function () {
         expect(res.body.trackName).to.equal(track.trackName)
     })
 
-    it('should add the track to the user', async function () {
+    it('should add the user to the track', async function () {
         await agent.post('/v1/tracks').send(track)
         const foundUser = await UserModel.findOne({}).exec() as IUser
         const foundTrack = await TrackModel.findOne({}).exec() as ITrack
-        expect(foundUser.tracks.length).to.equal(1)
-        expect(foundTrack.id).to.equal(foundUser.tracks[0]._id.toString())
+        expect(foundTrack.userId.toString()).to.equal(foundUser._id.toString())
     })
 
     it('should have the current date and time', async function () {
@@ -96,12 +95,11 @@ describe('Post a new track with positive timeOffset' + endpoint, function () {
         expect(res.body.trackName).to.equal(track.trackName)
     })
 
-    it('should add the track to the user', async function () {
+    it('should add the user to the track', async function () {
         await agent.post('/v1/tracks').send(track)
         const foundUser = await UserModel.findOne({}).exec() as IUser
         const foundTrack = await TrackModel.findOne({}).exec() as ITrack
-        expect(foundUser.tracks.length).to.equal(1)
-        expect(foundTrack.id).to.equal(foundUser.tracks[0]._id.toString())
+        expect(foundTrack.userId.toString()).to.equal(foundUser._id.toString())
     })
 
     it('should have the offset date and time', async function () {
@@ -142,12 +140,11 @@ describe('Post a new track with negative timeOffset' + endpoint, function () {
         expect(res.body.trackName).to.equal(track.trackName)
     })
 
-    it('should add the track to the user', async function () {
+    it('should add the user to the track', async function () {
         await agent.post('/v1/tracks').send(track)
         const foundUser = await UserModel.findOne({}).exec() as IUser
         const foundTrack = await TrackModel.findOne({}).exec() as ITrack
-        expect(foundUser.tracks.length).to.equal(1)
-        expect(foundTrack.id).to.equal(foundUser.tracks[0]._id.toString())
+        expect(foundTrack.userId.toString()).to.equal(foundUser._id.toString())
     })
 
     it('should have the offset date and time', async function () {

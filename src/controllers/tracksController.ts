@@ -46,14 +46,11 @@ export async function createTrack (req: Request, res: Response, next: NextFuncti
 
     const newTrack = new TrackModel({
         trackName,
-        Date: Date.now() + (timeOffset ?? 0)
+        Date: Date.now() + (timeOffset ?? 0),
+        userId: user._id
     })
 
     const savedTrack = await newTrack.save()
-
-    const filter = { accessToken }
-    const update = { $push: { tracks: savedTrack } }
-    await UserModel.findOneAndUpdate(filter, update).exec()
 
     res.status(201).json(savedTrack)
 }
