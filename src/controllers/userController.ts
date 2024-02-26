@@ -28,3 +28,43 @@ export async function createUser (req: Request, res: Response, next: NextFunctio
 
     res.status(201).json(savedUser.accessToken)
 }
+
+export async function deleteUser (req: Request, res: Response, next: NextFunction): Promise<void> {
+    logger.silly('Deleting user')
+
+    const {
+        userName,
+        accessToken,
+        confirmDeletion
+    } = req.body as {
+        userName?: unknown
+        accessToken?: unknown
+        confirmDeletion?: unknown
+    }
+
+    if (typeof userName !== 'string' || userName === '') {
+        res.status(400).json({ error: 'userName must be a non-empty string.' })
+        return
+    }
+
+    if (typeof accessToken !== 'string' || accessToken === '') {
+        res.status(400).json({ error: 'accessToken must be a non-empty string.' })
+        return
+    }
+
+    if (typeof confirmDeletion !== 'boolean' || confirmDeletion === true) {
+        res.status(400).json({ error: 'confirmDeletion must be true.' })
+        return
+    }
+
+    const user = await UserModel.findOne({ accessToken })
+
+    if (user === null) {
+        res.status(404).json({ error: 'accessToken is not valid.' })
+        return
+    }
+
+    await UserModel.deleteOne({ accessToken })
+
+    res.status(204).send()
+}

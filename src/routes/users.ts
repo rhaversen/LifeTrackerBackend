@@ -7,7 +7,7 @@ import Router from 'express'
 import asyncErrorHandler from '../utils/asyncErrorHandler.js'
 
 // Controller functions
-import { createUser } from '../controllers/userController.js'
+import { createUser, deleteUser } from '../controllers/userController.js'
 
 // Destructuring and global variables
 const router = Router()
@@ -21,6 +21,18 @@ const router = Router()
  */
 router.post('/',
     asyncErrorHandler(createUser)
+)
+
+/**
+ * @route DELETE api/v1/users
+ * @desc Delete the user
+ * @access Public
+ * @param {string} req.body.userName The users userName
+ * @param {string} req.body.accessToken The users accessToken
+ * @param {string} req.body.confirmDeletion Must be true to confirm deletion
+ */
+router.delete('/',
+    asyncErrorHandler(deleteUser)
 )
 
 export default router
