@@ -52,7 +52,7 @@ export async function deleteUser (req: Request, res: Response, next: NextFunctio
         return
     }
 
-    if (typeof confirmDeletion !== 'boolean' || confirmDeletion === true) {
+    if (typeof confirmDeletion !== 'boolean' || confirmDeletion) {
         res.status(400).json({ error: 'confirmDeletion must be true.' })
         return
     }
