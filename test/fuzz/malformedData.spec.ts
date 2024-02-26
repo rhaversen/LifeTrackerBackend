@@ -11,7 +11,6 @@ import TrackModel from '../../src/models/Track.js'
 
 // Global variables and setup
 const { expect } = chaiHttpObject
-const endpoint = ' api/v1/tracks'
 const values = [
     'actualValue', // Used for inputting the expected values
     '', // empty string
@@ -66,6 +65,7 @@ const values = [
     Symbol('test'), // a Symbol object
 ]
 
+describe('api/v1/tracks', function () {
     let testUser: IUser
     let track: { trackName?: any, accessToken?: any, timeOffset?: any }
 
