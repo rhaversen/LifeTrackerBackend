@@ -96,7 +96,13 @@ describe('api/v1/tracks', function () {
 
         const testName = [trackNameMessage, accessTokenMessage, timeOffsetMessage].join(', ')
 
-        if (trackName !== '' && accessToken === 'actualValue' && (typeof timeOffset === 'number' || timeOffset === undefined) && !(isNaN((new Date(Date.now() + Number(timeOffset ?? 0))).getTime()))) {
+        const isTrackNameValid = typeof trackName === 'string' && trackName !== ''
+        const isAccessTokenValid = accessToken === 'actualValue'
+        const isTimeOffsetUndefined = timeOffset === undefined
+        const isTimeOffsetValid = typeof timeOffset === 'number' &&
+                                  !isNaN((new Date(Date.now() + Number(timeOffset ?? 0))).getTime())
+
+        if (isTrackNameValid && isAccessTokenValid && (isTimeOffsetUndefined || isTimeOffsetValid)) {
             // These cases are not considered malformed data
             it(`should respond with status 201 with case ${testName}`, async function () {
                 track = {}
