@@ -1,0 +1,2 @@
+# LifeTrackerBackend
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ef66dcaaa6534536832ab1a2ecc5e7fb)](https://app.codacy.com/gh/rhaversen/LifeTrackerBackend?utm_source=github.com&utm_medium=referral&utm_content=rhaversen/LifeTrackerBackend&utm_campaign=Badge_Grade)
