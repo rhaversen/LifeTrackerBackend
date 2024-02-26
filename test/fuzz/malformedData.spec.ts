@@ -102,30 +102,23 @@ describe('api/v1/tracks', function () {
         const isTimeOffsetValid = typeof timeOffset === 'number' &&
                                   !isNaN((new Date(Date.now() + Number(timeOffset ?? 0))).getTime())
 
+        track = {}
+        if (trackName !== undefined) track.trackName = trackName
+        if (accessToken !== undefined) track.accessToken = accessToken === 'actualValue' ? testUser.accessToken : accessToken
+        if (timeOffset !== undefined) track.timeOffset = timeOffset
+
         if (isTrackNameValid && isAccessTokenValid && (isTimeOffsetUndefined || isTimeOffsetValid)) {
             // These cases are not considered malformed data
             it(`should respond with status 201 with case ${testName}`, async function () {
-                track = {}
-                if (trackName !== undefined) track.trackName = trackName
-                if (accessToken !== undefined) track.accessToken = accessToken === 'actualValue' ? testUser.accessToken : accessToken
-                if (timeOffset !== undefined) track.timeOffset = timeOffset
-
                 const res = await agent.post('/v1/tracks').send(track)
                 const allTracks = await TrackModel.find({}).exec()
-
                 expect(allTracks.length).to.equal(1)
                 expect(res).to.have.status(201)
             })
         } else {
             it(`should not create a track with case ${testName}`, async function () {
-                track = {}
-                if (trackName !== undefined) track.trackName = trackName
-                if (accessToken !== undefined) track.accessToken = accessToken === 'actualValue' ? testUser.accessToken : accessToken
-                if (timeOffset !== undefined) track.timeOffset = timeOffset
-
                 const res = await agent.post('/v1/tracks').send(track)
                 const allTracks = await TrackModel.find({}).exec()
-
                 expect(allTracks.length).to.equal(0)
                 expect(res).to.have.status(400)
             })
