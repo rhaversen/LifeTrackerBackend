@@ -21,10 +21,12 @@ jobs:
           node-version: 'lts/*'
       - name: Install Dependencies
         run: npm install
-      - name: Build the project
+      - name: Build
         run: npm run build
-      - name: Test the project
-        run: NODE_ENV=test npm run test
+      - name: Integration tests
+        run: NODE_ENV=test npm run test:integration
+      - name: Fuzz tests
+        run: NODE_ENV=test npm run test:fuzz
       - name: Build Docker image for testing purposes
         run: |
           docker buildx create --use
