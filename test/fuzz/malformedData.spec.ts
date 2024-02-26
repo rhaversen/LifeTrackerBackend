@@ -90,29 +90,40 @@ describe('api/v1/tracks', function () {
     })
 
     function handleTestCase (trackName: any, accessToken: any, timeOffset: any): void {
-        // These cases are not considered malformed data
-        if (trackName !== '' && accessToken === 'actualValue' && (typeof timeOffset === 'number' || timeOffset === undefined) && !(isNaN((new Date(Date.now() + Number(timeOffset ?? 0))).getTime()))) {
-            return
-        }
-
         const trackNameMessage = trackName === undefined ? 'trackName missing' : `trackName: ${validator.escape(String(trackName))}`
         const accessTokenMessage = accessToken === undefined ? 'accessToken missing' : `accessToken: ${validator.escape(String(accessToken))}`
         const timeOffsetMessage = timeOffset === undefined ? 'timeOffset missing' : `timeOffset: ${validator.escape(String(timeOffset))}`
 
         const testName = [trackNameMessage, accessTokenMessage, timeOffsetMessage].join(', ')
 
-        it(`should handle case with ${testName}`, async function () {
-            track = {}
-            if (trackName !== undefined) track.trackName = trackName
-            if (accessToken !== undefined) track.accessToken = accessToken === 'actualValue' ? testUser.accessToken : accessToken
-            if (timeOffset !== undefined) track.timeOffset = timeOffset
+        if (trackName !== '' && accessToken === 'actualValue' && (typeof timeOffset === 'number' || timeOffset === undefined) && !(isNaN((new Date(Date.now() + Number(timeOffset ?? 0))).getTime()))) {
+            // These cases are not considered malformed data
+            it(`should respond with status 201 with case ${testName}`, async function () {
+                track = {}
+                if (trackName !== undefined) track.trackName = trackName
+                if (accessToken !== undefined) track.accessToken = accessToken === 'actualValue' ? testUser.accessToken : accessToken
+                if (timeOffset !== undefined) track.timeOffset = timeOffset
 
-            const res = await agent.post('/v1/tracks').send(track)
-            const allTracks = await TrackModel.find({}).exec()
+                const res = await agent.post('/v1/tracks').send(track)
+                const allTracks = await TrackModel.find({}).exec()
 
-            expect(allTracks.length).to.equal(0)
-            expect(res).to.have.status(400)
-        })
+                expect(allTracks.length).to.equal(1)
+                expect(res).to.have.status(201)
+            })
+        } else {
+            it(`should not create a track with case ${testName}`, async function () {
+                track = {}
+                if (trackName !== undefined) track.trackName = trackName
+                if (accessToken !== undefined) track.accessToken = accessToken === 'actualValue' ? testUser.accessToken : accessToken
+                if (timeOffset !== undefined) track.timeOffset = timeOffset
+
+                const res = await agent.post('/v1/tracks').send(track)
+                const allTracks = await TrackModel.find({}).exec()
+
+                expect(allTracks.length).to.equal(0)
+                expect(res).to.have.status(400)
+            })
+        }
     }
 
     values.forEach(trackName => {
