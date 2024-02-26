@@ -12,19 +12,31 @@ import TrackModel from '../../src/models/Track.js'
 // Global variables and setup
 const { expect } = chaiHttpObject
 const values = [
+    // Strings
     'actualValue', // Used for inputting the expected values
     '', // empty string
     'test', // string
     'true', // string
     'false', // string
     '0', // string
-    null, // null
-    true, // boolean
-    false, // boolean
+    ' " ', // a single double-quote character
+    " ' ", // a single quote character
+    '\n', // newline character
+    '\t', // tab character
+    '\0', // null character
+    '\r', // carriage return character
+    '\b', // backspace character
+    "<script>alert('XSS')</script>", // simple XSS injection test
+    '你好', // Hello in Chinese
+    '🚀', // Rocket emoji
+    '\u200B', // Zero width space
+    'a'.repeat(1000), // a very long string of 1000 'a' characters
+    'a'.repeat(100), // a very long string of 100 'a' characters
+
+    // Numbers (and related special numeric values)
     0, // number
     10, // number
     -10, // negative number
-    undefined, // explicitly testing for undefined
     NaN, // NaN
     Number.NaN, // NaN
     Number.POSITIVE_INFINITY, // Infinity
@@ -39,31 +51,34 @@ const values = [
     -Number.MIN_VALUE, // Smallest number that can be accurately represented
     1.7976931348623157E+10308, // just below Number.MAX_VALUE
     -1.7976931348623157E+10308, // just above Number.MIN_VALUE
+
+    // Booleans
+    true, // boolean
+    false, // boolean
+
+    // Nullish values
+    null, // null
+    undefined, // explicitly testing for undefined
+
+    // BigInts
     1n, // BigInt
     -1n, // BigInt
+
+    // Arrays (including nested arrays)
     [], // array
     [1, 2, 3], // array
+    [[[[1]]]], // deeply nested array
+
+    // Objects (including special object types and nested objects)
     {}, // object
     { a: 1, b: 2 }, // object
-    new Date(), // Date object
-    ' " ', // a single double-quote character
-    " ' ", // a single quote character
-    "\n", // newline character
-    "\t", // tab character
-    "\0", // null character
-    "\r", // carriage return character
-    "\b", // backspace character
-    "<script>alert('XSS')</script>", // simple XSS injection test
-    "你好", // Hello in Chinese
-    "🚀", // Rocket emoji
-    "\u200B", // (Zero width space)
-    'a'.repeat(1000), // a very long string of 1000 'a' characters
-    'a'.repeat(100), // a very long string of 100 'a' characters
     { a: { b: { c: { d: 1 } } } }, // deeply nested object
-    [[[[1]]]], // deeply nested array
+    new Date(), // Date object
     new RegExp(''), // a regular expression object with an empty pattern
     new Map(), // a Map object
     new Set(), // a Set object
+
+    // Others (unique types that don't fit neatly into other categories)
     Symbol('test'), // a Symbol object
 ]
 
