@@ -4,7 +4,7 @@
 import { type NextFunction, type Request, type Response } from 'express'
 
 // Own modules
-import UserModel, { type IUser } from '../models/User.js'
+import UserModel from '../models/User.js'
 import logger from '../utils/logger.js'
 
 export async function createUser (req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -13,13 +13,18 @@ export async function createUser (req: Request, res: Response, next: NextFunctio
     const {
         userName
     } = req.body as {
-        userName: string
+        userName?: unknown
+    }
+
+    if (typeof userName !== 'string' || userName === '') {
+        res.status(400).json({ error: 'userName must be a non-empty string.' })
+        return
     }
 
     const newUser = new UserModel({
         userName
     })
-    const savedUser = await newUser.save() as IUser
+    const savedUser = await newUser.save()
 
     res.status(201).json(savedUser.accessToken)
 }
