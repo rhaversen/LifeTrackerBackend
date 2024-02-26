@@ -28,7 +28,7 @@ const values = [
     '\0', // null character
     '\r', // carriage return character
     '\b', // backspace character
-    "<script>alert('XSS')</script>", // simple XSS injection test
+    '<script>alert(\'XSS\')</script>', // simple XSS injection test
     '你好', // Hello in Chinese
     '🚀', // Rocket emoji
     '\u200B', // Zero width space

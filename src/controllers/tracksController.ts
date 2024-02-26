@@ -38,11 +38,11 @@ export async function createTrack (req: Request, res: Response, next: NextFuncti
         return
     }
 
-    const date = new Date(Date.now() + (timeOffset ?? 0));
+    const date = new Date(Date.now() + (timeOffset ?? 0))
 
     // Check if the potential date is valid
     if (isNaN(date.getTime())) {
-        res.status(400).json({ error: 'Provided timeOffset results in an invalid date.' });
+        res.status(400).json({ error: 'Provided timeOffset results in an invalid date.' })
         return
     }
 

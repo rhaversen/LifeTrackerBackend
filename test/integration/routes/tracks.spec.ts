@@ -161,7 +161,7 @@ describe('Post a new track with negative timeOffset' + endpoint, function () {
 
 describe('Reject large positive timeOffset' + endpoint, function () {
     let testUser: IUser
-    let track: { trackName: string, accessToken: string, timeOffset: number}
+    let track: { trackName: string, accessToken: string, timeOffset: number }
 
     beforeEach(async function () {
         testUser = new UserModel({
@@ -186,7 +186,7 @@ describe('Reject large positive timeOffset' + endpoint, function () {
 
 describe('Reject large negative timeOffset' + endpoint, function () {
     let testUser: IUser
-    let track: { trackName: string, accessToken: string, timeOffset: number}
+    let track: { trackName: string, accessToken: string, timeOffset: number }
 
     beforeEach(async function () {
         testUser = new UserModel({
