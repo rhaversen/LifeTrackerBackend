@@ -158,3 +158,53 @@ describe('Post a new track with negative timeOffset' + endpoint, function () {
         expect(new Date(foundTrack.date).getTime()).to.equal(fakeTime + track.timeOffset)
     })
 })
+
+describe('Reject large positive timeOffset' + endpoint, function () {
+    let testUser: IUser
+    let track: { trackName: string, accessToken: string, timeOffset: number}
+
+    beforeEach(async function () {
+        testUser = new UserModel({
+            userName: 'TestUser',
+            signUpDate: new Date()
+        })
+        await testUser.save()
+        track = { trackName: 'test', accessToken: testUser.accessToken, timeOffset: Number.MAX_VALUE }
+    })
+
+    it('should not create a track with large offset', async function () {
+        await agent.post('/v1/tracks').send(track)
+        const allTracks = await TrackModel.find({}).exec()
+        expect(allTracks.length).to.equal(0)
+    })
+
+    it('should respond with status code 400', async function () {
+        const res = await agent.post('/v1/tracks').send(track)
+        expect(res).to.have.status(400)
+    })
+})
+
+describe('Reject large negative timeOffset' + endpoint, function () {
+    let testUser: IUser
+    let track: { trackName: string, accessToken: string, timeOffset: number}
+
+    beforeEach(async function () {
+        testUser = new UserModel({
+            userName: 'TestUser',
+            signUpDate: new Date()
+        })
+        await testUser.save()
+        track = { trackName: 'test', accessToken: testUser.accessToken, timeOffset: -Number.MAX_VALUE }
+    })
+
+    it('should not create a track with large offset', async function () {
+        await agent.post('/v1/tracks').send(track)
+        const allTracks = await TrackModel.find({}).exec()
+        expect(allTracks.length).to.equal(0)
+    })
+
+    it('should respond with status code 400', async function () {
+        const res = await agent.post('/v1/tracks').send(track)
+        expect(res).to.have.status(400)
+    })
+})
