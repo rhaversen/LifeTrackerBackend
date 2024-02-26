@@ -46,6 +46,8 @@ const values = [
     {}, // object
     { a: 1, b: 2 }, // object
     new Date(), // Date object
+    ' " ', // a single double-quote character
+    " ' ", // a single quote character
     "\n", // newline character
     "\t", // tab character
     "\0", // null character
