@@ -29,7 +29,7 @@ const userSchema = new Schema<IUser>({
 
 userSchema.pre('save', async function (next) {
     logger.silly('Saving user')
-    if (this.isNew) {
+    if (this.isNew as boolean) {
         this.accessToken = nanoid()
     }
     next()

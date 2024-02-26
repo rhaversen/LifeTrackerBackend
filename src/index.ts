@@ -3,7 +3,7 @@
 // Third-party libraries
 import express from 'express'
 import mongoSanitize from 'express-mongo-sanitize'
-import RateLimit from 'express-rate-limit'
+import RateLimit, { type RateLimitRequestHandler } from 'express-rate-limit'
 import helmet from 'helmet'
 
 // Own Modules
@@ -41,8 +41,8 @@ app.use(express.json())
 app.use(mongoSanitize())
 
 // Rate limiters
-const relaxedApiLimiter = RateLimit(relaxedApiLimiterConfig)
-const sensitiveApiLimiter = RateLimit(sensitiveApiLimiterConfig)
+const relaxedApiLimiter: RateLimitRequestHandler = RateLimit(relaxedApiLimiterConfig)
+const sensitiveApiLimiter: RateLimitRequestHandler = RateLimit(sensitiveApiLimiterConfig)
 
 // Use all routes and with relaxed limiter
 app.use('/v1/users', relaxedApiLimiter, userRoutes)
