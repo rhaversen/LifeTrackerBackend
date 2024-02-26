@@ -44,11 +44,9 @@ print(response.text)
 
 ## Tracking
 
-
 You can create tracks with a POST request to **<https://www.life-stats.net/api/v1/tracks>**. Provide a track name and your access token in the request body. There are two types of tracks: instantaneous (for current events) and relative (for past or future events), with the offset specified in milliseconds.
 
 ### Instantaneous Track
-
 
 **CMD**
 
