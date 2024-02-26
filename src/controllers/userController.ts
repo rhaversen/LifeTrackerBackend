@@ -22,7 +22,8 @@ export async function createUser (req: Request, res: Response, next: NextFunctio
     }
 
     const newUser = new UserModel({
-        userName
+        userName,
+        signUpDate: new Date()
     })
     const savedUser = await newUser.save()
 

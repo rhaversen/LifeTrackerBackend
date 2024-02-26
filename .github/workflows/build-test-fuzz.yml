@@ -1,10 +1,8 @@
-name: Life Tracker Backend Test CI
+name: Fuzz Tests CI
 
 on:
   push:
-    branches: [ "dev" ]
-  pull_request:
-    branches: [ "dev" ]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -21,11 +19,7 @@ jobs:
           node-version: 'lts/*'
       - name: Install Dependencies
         run: npm install
-      - name: Build the project
+      - name: Build
         run: npm run build
-      - name: Test the project
-        run: NODE_ENV=test npm run test
-      - name: Build Docker image for testing purposes
-        run: |
-          docker buildx create --use
-          docker buildx build --output type=docker --file Dockerfile --platform linux/arm64 .
+      - name: Fuzz tests
+        run: NODE_ENV=test npm run test:fuzz

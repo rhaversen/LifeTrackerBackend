@@ -2,6 +2,7 @@
 
 // Third-party libraries
 import { type NextFunction, type Request, type Response } from 'express'
+import validator from 'validator'
 
 // Own modules
 import TrackModel from '../models/Track.js'
@@ -37,6 +38,14 @@ export async function createTrack (req: Request, res: Response, next: NextFuncti
         return
     }
 
+    const date = new Date(Date.now() + (timeOffset ?? 0))
+
+    // Check if the potential date is valid
+    if (isNaN(date.getTime())) {
+        res.status(400).json({ error: 'Provided timeOffset results in an invalid date.' })
+        return
+    }
+
     const user = await UserModel.findOne({ accessToken })
 
     if (user === null) {
@@ -45,15 +54,12 @@ export async function createTrack (req: Request, res: Response, next: NextFuncti
     }
 
     const newTrack = new TrackModel({
-        trackName,
-        Date: Date.now() + (timeOffset ?? 0)
+        trackName: validator.escape(trackName),
+        date,
+        userId: user._id
     })
 
     const savedTrack = await newTrack.save()
-
-    const filter = { accessToken }
-    const update = { $push: { tracks: savedTrack } }
-    await UserModel.findOneAndUpdate(filter, update).exec()
 
     res.status(201).json(savedTrack)
 }

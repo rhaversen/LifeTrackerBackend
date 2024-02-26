@@ -148,28 +148,35 @@ We collect only the data you provide:
 - **Time of Track**: The creation time of each event, adjustable by specifying an offset.
 
 **Data Use**
+
 Your data is solely logged for personal reference. It is not subjected to advertising, commercial use, or analysis. Future app versions will offer enhanced data views for the user.
 
 **Data Storage and Security**
+
 We securely store your data in a MongoDB Cloud Database, employing standard security measures to safeguard against unauthorized access.
 
 ## Terms of Service
 
 **Acceptance of Terms**
+
 By using this app, you consent to these terms. Discontinue use immediately if you do not agree.
 
 **User Conduct**
+
 You bear responsibility for the data you track and disseminate. Ensure compliance with laws and respect for others' rights.
 
 **Intellectual Property**
+
 Data generated is your property. However, by using our service, you grant us a license to process this data for service provision.
 
 ## User Rights
 
 **Data Access and Deletion**
+
 Use your access token to request data access or deletion at any time. For guidance, consult the app documentation or contact us directly.
 
 **Withdrawal of Consent**
+
 You may withdraw data processing consent by deleting your data with your access token. For further instructions, refer to our documentation or reach out directly.
 
 ## Changes to Our Policies
