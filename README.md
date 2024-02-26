@@ -1,8 +1,8 @@
+# Free to use event tracker
+
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/3e839962a2a54735a388ba6075ee9ccc)](https://app.codacy.com/gh/rhaversen/LifeTrackerBackend/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 [![Test CI](https://github.com/rhaversen/LifeTrackerBackend/actions/workflows/build-test-push-docker.yml/badge.svg)](https://github.com/rhaversen/LifeTrackerBackend/actions/workflows/build-test-push-docker.yml)
-
-# Free to use event tracker
 
 This app is currently in a very early alpha stage. While it is not yet possible to retrieve or view your tracks, this functionality will be introduced soon. Start tracking today to take full advantage once this feature is available.
 
@@ -15,11 +15,13 @@ Track events with **Life Stats** using a straightforward webhook. Below is the e
 Create a user by sending a POST request to **<https://life-stats.net/api/v1/users>**. Provide a username in the request body to receive your personal access token. This token is crucial for your tracking activities, cannot be retrieved again and will allow anyone to track to your user, so keep it secure.
 
 **CMD**
+
 ```bash
 curl -X POST -H "Content-Type: application/json" -d "{\"userName\": \"Your Username Here\"}" https://www.life-stats.net/api/v1/users
 ```
 
 **PowerShell**
+
 ```bash
 $headers = @{ "Content-Type" = "application/json" }
 $body = '{"userName": "Your Username Here"}'
@@ -28,6 +30,7 @@ Invoke-WebRequest -Uri "https://www.life-stats.net/api/v1/users" -Method Post -H
 ```
 
 **Python**
+
 ```py
 import requests
 
@@ -48,11 +51,13 @@ You can create tracks with a POST request to **<https://www.life-stats.net/api/v
 
 
 **CMD**
+
 ```bash
 curl -X POST -H "Content-Type: application/json" -d "{\"trackName\": \"Your Track Name Here\", \"accessToken\": \"Your Access Token Here\"}" https://www.life-stats.net/api/v1/tracks
 ```
 
 **PowerShell**
+
 ```bash
 $headers = @{ "Content-Type" = "application/json" }
 $body = '{"trackName": "Your Track Name Here", "accessToken": "Your Access Token Here"}'
@@ -61,6 +66,7 @@ Invoke-WebRequest -Uri "https://www.life-stats.net/api/v1/tracks" -Method Post -
 ```
 
 **Python**
+
 ```py
 import requests
 
@@ -75,11 +81,13 @@ print(response.text)
 ## Relative Track
 
 **CMD**
+
 ```bash
 curl -X POST -H "Content-Type: application/json" -d "{\"trackName\": \"Your Track Name Here\", \"accessToken\": \"Your Access Token Here\", \"timeOffset\": \"Your Time Offset Here\"}" https://www.life-stats.net/api/v1/tracks
 ```
 
 **PowerShell**
+
 ```bash
 $headers = @{ "Content-Type" = "application/json" }
 $body = '{"trackName": "Your Track Name Here", "accessToken": "Your Access Token Here", "timeOffset": "Your Time Offset Here"}'
@@ -88,6 +96,7 @@ Invoke-WebRequest -Uri "https://www.life-stats.net/api/v1/tracks" -Method Post -
 ```
 
 **Python**
+
 ```py
 import requests
 
@@ -104,11 +113,13 @@ print(response.text)
 You can delete your user all all associated data with a DELETE request to **<https://www.life-stats.net/api/v1/users>**. Provide your username, access token and confirmDeletion=true in the request body.
 
 **CMD**
+
 ```bash
 curl -X DELETE -H "Content-Type: application/json" -d "{\"userName\": \"Your Username Here\", \"accessToken\": \"Your Access Token Here\", \"confirmDeletion\": true}" https://www.life-stats.net/api/v1/users
 ```
 
 **PowerShell**
+
 ```bash
 $headers = @{ "Content-Type" = "application/json" }
 $body = '{"userName": "Your Username Here", "accessToken": "Your Access Token Here", "confirmDeletion": true}'
@@ -117,6 +128,7 @@ Invoke-WebRequest -Uri "https://www.life-stats.net/api/v1/users" -Method Delete 
 ```
 
 **Python**
+
 ```py
 import requests
 
