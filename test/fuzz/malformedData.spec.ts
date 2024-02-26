@@ -3,6 +3,7 @@
 // file deepcode ignore HardcodedNonCryptoSecret/test: Hardcoded credentials are only used for testing purposes
 
 // Third-party libraries
+import validator from 'validator'
 
 // Own modules
 import { agent, chaiHttpObject } from '../testSetup.js'
@@ -101,9 +102,9 @@ describe('api/v1/tracks', function () {
             return
         }
 
-        const trackNameMessage = trackName === undefined ? 'trackName missing' : `trackName: ${trackName}`
-        const accessTokenMessage = accessToken === undefined ? 'accessToken missing' : `accessToken: ${accessToken}`
-        const timeOffsetMessage = timeOffset === undefined ? 'timeOffset missing' : `timeOffset: ${timeOffset}`
+        const trackNameMessage = trackName === undefined ? 'trackName missing' : `trackName: ${validator.escape(String(trackName))}`
+        const accessTokenMessage = accessToken === undefined ? 'accessToken missing' : `accessToken: ${String(accessToken)}`
+        const timeOffsetMessage = timeOffset === undefined ? 'timeOffset missing' : `timeOffset: ${String(timeOffset)}`
 
         const testName = [trackNameMessage, accessTokenMessage, timeOffsetMessage].join(', ')
 
