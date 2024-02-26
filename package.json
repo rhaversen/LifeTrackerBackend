@@ -15,7 +15,7 @@
 		"upgrade-all": "npm update && npx ncu -u && npm install",
 		"test": "npm run test:fuzz && npm run test:integration",
 		"test:integration": "cross-env NODE_ENV=test mocha --reporter spec --recursive dist/test/integration/**/*.spec.js",
-		"test:fuzz": "cross-env NODE_ENV=test mocha --reporter min --recursive dist/test/fuzz/**/*.spec.js"
+		"test:fuzz": "cross-env NODE_ENV=test mocha --reporter dot --recursive dist/test/fuzz/**/*.spec.js"
 	},
 	"dependencies": {
 		"@logtail/node": "^0.4.19",
