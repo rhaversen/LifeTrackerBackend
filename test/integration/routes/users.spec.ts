@@ -125,6 +125,7 @@ describe('DELETE api/v1/users', function () {
 
         it('should respond with an empty body', async function () {
             const res = await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(res.body).to.be.empty
         })
     })
