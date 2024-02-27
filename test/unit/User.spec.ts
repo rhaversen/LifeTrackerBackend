@@ -67,6 +67,7 @@ describe('User Model', () => {
                 accessToken: user1.accessToken
             })
             await user2.save().catch((err) => {
+                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                 expect(err).to.not.be.null
             })
         })
