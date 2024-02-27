@@ -193,9 +193,9 @@ describe('DELETE api/v1/users', function () {
     })
 
     function handleTestCase (userName: any, accessToken: any, confirmDeletion: any): void {
-        const userNameMessage = userName === undefined ? 'userName missing' : `trackName: ${validator.escape(String(userName))}`
+        const userNameMessage = userName === undefined ? 'userName missing' : `userName: ${validator.escape(String(userName))}`
         const accessTokenMessage = accessToken === undefined ? 'accessToken missing' : `accessToken: ${validator.escape(String(accessToken))}`
-        const confirmDeletionMessage = confirmDeletion === undefined ? 'confirmDeletion missing' : `timeOffset: ${validator.escape(String(confirmDeletion))}`
+        const confirmDeletionMessage = confirmDeletion === undefined ? 'confirmDeletion missing' : `confirmDeletion: ${validator.escape(String(confirmDeletion))}`
 
         const testName = [userNameMessage, accessTokenMessage, confirmDeletionMessage].join(', ')
 
