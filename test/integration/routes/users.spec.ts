@@ -34,16 +34,16 @@ describe('POST api/v1/users', function () {
         })
 
         it('should have a correct signUpDate', async function () {
-            const startTime = new Date().getTime();
-            await agent.post('/v1/users').send(user);
-            const endTime = new Date().getTime();
-        
-            const allUsers = await UserModel.find({}).exec();
-            const signUpDate = new Date(allUsers[0].signUpDate).getTime();
-        
-            expect(signUpDate).to.be.at.least(startTime);
-            expect(signUpDate).to.be.at.most(endTime);
-        });        
+            const startTime = new Date().getTime()
+            await agent.post('/v1/users').send(user)
+            const endTime = new Date().getTime()
+
+            const allUsers = await UserModel.find({}).exec()
+            const signUpDate = new Date(allUsers[0].signUpDate).getTime()
+
+            expect(signUpDate).to.be.at.least(startTime)
+            expect(signUpDate).to.be.at.most(endTime)
+        })
     })
 
     describe('Post a new user with an empty userName', function () {

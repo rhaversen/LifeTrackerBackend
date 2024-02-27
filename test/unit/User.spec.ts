@@ -17,7 +17,7 @@ describe('User Model', () => {
             const user = new UserModel({
                 userName: 'JohnDoe'
             })
-            await user.save()    
+            await user.save()
 
             expect(user.signUpDate).to.be.a('date')
         })
@@ -36,7 +36,7 @@ describe('User Model', () => {
 
     describe('Unique access token', () => {
         it('should generate a random, unique access token', async () => {
-            let accessTokens = []
+            const accessTokens = []
 
             // One hundred different are sufficient to prove that the access token is random
             for (let i = 0; i < 100; i++) {
