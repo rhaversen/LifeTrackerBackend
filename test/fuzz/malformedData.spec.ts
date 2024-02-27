@@ -20,6 +20,8 @@ const values = [
     'test', // string
     'true', // string
     'false', // string
+    'undefined', // string
+    'null', // string
     '0', // string
     ' " ', // a single double-quote character
     ' \' ', // a single quote character
@@ -74,7 +76,7 @@ const values = [
     {}, // object
     { a: 1, b: 2 }, // object
     { a: { b: { c: { d: 1 } } } }, // deeply nested object
-    function () { } // a function object
+    function () { } // a function object returning void
 ]
 
 describe('POST api/v1/tracks', function () {
