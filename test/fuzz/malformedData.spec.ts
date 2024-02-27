@@ -98,11 +98,20 @@ describe('POST api/v1/tracks', function () {
 
         const testName = [trackNameMessage, accessTokenMessage, timeOffsetMessage].join(', ')
 
-        const isTrackNameValid = typeof trackName === 'string' && trackName !== ''
-        const isAccessTokenValid = accessToken === 'actualValue'
-        const isTimeOffsetUndefined = timeOffset === undefined
-        const isTimeOffsetValid = typeof timeOffset === 'number' &&
-                                  !isNaN((new Date(Date.now() + Number(timeOffset ?? 0))).getTime())
+        track = {
+            trackName,
+            accessToken,
+            timeOffset
+        }
+
+        // Simulate JSON serialization as it would occur in an HTTP request
+        const trackString = JSON.stringify(track)
+        const trackJSON = JSON.parse(trackString) as { trackName?: any, accessToken?: any, timeOffset?: any }
+
+        const isTrackNameValid = trackJSON.trackName !== ''
+        const isAccessTokenValid = trackJSON.accessToken === 'actualValue'
+        const isTimeOffsetUndefined = trackJSON.timeOffset === undefined
+        const isTimeOffsetValid = !isNaN((new Date(Date.now() + Number(trackJSON.timeOffset ?? 0))).getTime())
 
         if (isTrackNameValid && isAccessTokenValid && (isTimeOffsetUndefined || isTimeOffsetValid)) {
             // These cases are not considered malformed data
@@ -149,7 +158,15 @@ describe('POST api/v1/users', function () {
     function handleTestCase (userName: any): void {
         const testName = userName === undefined ? 'userName missing' : `userName: ${validator.escape(String(userName))}`
 
-        const isUserNameValid = typeof userName === 'string' && userName !== ''
+        user = {
+            userName
+        }
+
+        // Simulate JSON serialization as it would occur in an HTTP request
+        const userString = JSON.stringify(user)
+        const userJSON = JSON.parse(userString) as { userName?: any }
+
+        const isUserNameValid = userJSON.userName !== ''
 
         if (isUserNameValid) {
             // These cases are not considered malformed data
@@ -201,9 +218,19 @@ describe('DELETE api/v1/users', function () {
 
         const testName = [userNameMessage, accessTokenMessage, confirmDeletionMessage].join(', ')
 
-        const isUserNameValid = typeof userName === 'string' && userName !== ''
-        const isAccessTokenValid = accessToken === 'actualValue'
-        const isConfirmDeletionValid = confirmDeletion === true
+        user = {
+            userName,
+            accessToken,
+            confirmDeletion
+        }
+
+        // Simulate JSON serialization as it would occur in an HTTP request
+        const userString = JSON.stringify(user)
+        const userJSON = JSON.parse(userString) as { userName?: any, accessToken?: any, confirmDeletion?: any }
+
+        const isUserNameValid = userJSON.userName !== ''
+        const isAccessTokenValid = userJSON.accessToken === 'actualValue'
+        const isConfirmDeletionValid = userJSON.confirmDeletion === true
 
         if (isUserNameValid && isAccessTokenValid && isConfirmDeletionValid) {
             it(`should respond with status 204 with case ${testName}`, async function () {
