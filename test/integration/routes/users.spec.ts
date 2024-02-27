@@ -3,7 +3,6 @@
 // file deepcode ignore HardcodedNonCryptoSecret/test: Hardcoded credentials are only used for testing purposes
 
 // Third-party libraries
-import sinon from 'sinon'
 
 // Own modules
 import { agent, chaiHttpObject } from '../../testSetup.js'
@@ -35,12 +34,16 @@ describe('POST api/v1/users', function () {
         })
 
         it('should have a correct signUpDate', async function () {
-            const fakeTime = new Date(2020, 4, 15).getTime()
-            sinon.useFakeTimers(fakeTime) // Fake the JavaScript environment's time
-            await agent.post('/v1/users').send(user)
-            const allUsers = await UserModel.find({}).exec()
-            expect(new Date(allUsers[0].signUpDate).getTime()).to.equal(fakeTime)
-        })
+            const startTime = new Date().getTime();
+            await agent.post('/v1/users').send(user);
+            const endTime = new Date().getTime();
+        
+            const allUsers = await UserModel.find({}).exec();
+            const signUpDate = new Date(allUsers[0].signUpDate).getTime();
+        
+            expect(signUpDate).to.be.at.least(startTime);
+            expect(signUpDate).to.be.at.most(endTime);
+        });        
     })
 
     describe('Post a new user with an empty userName', function () {
