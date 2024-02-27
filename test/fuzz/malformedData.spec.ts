@@ -102,23 +102,30 @@ describe('POST api/v1/tracks', function () {
         const isTimeOffsetValid = typeof timeOffset === 'number' &&
                                   !isNaN((new Date(Date.now() + Number(timeOffset ?? 0))).getTime())
 
-        track = {}
-        if (trackName !== undefined) track.trackName = trackName
-        if (accessToken !== undefined) track.accessToken = accessToken === 'actualValue' ? testUser.accessToken : accessToken
-        if (timeOffset !== undefined) track.timeOffset = timeOffset
-
         if (isTrackNameValid && isAccessTokenValid && (isTimeOffsetUndefined || isTimeOffsetValid)) {
             // These cases are not considered malformed data
             it(`should respond with status 201 with case ${testName}`, async function () {
+                track = {}
+                if (trackName !== undefined) track.trackName = trackName
+                if (accessToken !== undefined) track.accessToken = accessToken === 'actualValue' ? testUser.accessToken : accessToken
+                if (timeOffset !== undefined) track.timeOffset = timeOffset
+
                 const res = await agent.post('/v1/tracks').send(track)
                 const allTracks = await TrackModel.find({}).exec()
+
                 expect(allTracks.length).to.equal(1)
                 expect(res).to.have.status(201)
             })
         } else {
             it(`should not create a track with case ${testName}`, async function () {
+                track = {}
+                if (trackName !== undefined) track.trackName = trackName
+                if (accessToken !== undefined) track.accessToken = accessToken === 'actualValue' ? testUser.accessToken : accessToken
+                if (timeOffset !== undefined) track.timeOffset = timeOffset
+
                 const res = await agent.post('/v1/tracks').send(track)
                 const allTracks = await TrackModel.find({}).exec()
+
                 expect(allTracks.length).to.equal(0)
                 expect(res).to.have.status(400)
             })
@@ -142,12 +149,12 @@ describe('POST api/v1/users', function () {
 
         const isUserNameValid = typeof userName === 'string' && userName !== ''
 
-        user = {}
-        if (userName !== undefined) user.userName = userName
-
         if (isUserNameValid) {
             // These cases are not considered malformed data
             it(`should respond with status 201 with case ${testName}`, async function () {
+                user = {}
+                if (userName !== undefined) user.userName = userName
+
                 const res = await agent.post('/v1/users').send(user)
                 const allUsers = await UserModel.find({}).exec()
 
@@ -156,6 +163,9 @@ describe('POST api/v1/users', function () {
             })
         } else {
             it(`should not create a user with case ${testName}`, async function () {
+                user = {}
+                if (userName !== undefined) user.userName = userName
+
                 const res = await agent.post('/v1/users').send(user)
                 const allUsers = await UserModel.find({}).exec()
 
@@ -193,29 +203,42 @@ describe('DELETE api/v1/users', function () {
         const isAccessTokenValid = accessToken === 'actualValue'
         const isConfirmDeletionValid = confirmDeletion === true
 
-        user = {}
-        if (userName !== undefined) user.userName = userName
-        if (accessToken !== undefined) user.accessToken = accessToken === 'actualValue' ? testUser.accessToken : accessToken
-        if (confirmDeletion !== undefined) user.confirmDeletion = confirmDeletion
-
         if (isUserNameValid && isAccessTokenValid && isConfirmDeletionValid) {
             it(`should respond with status 204 with case ${testName}`, async function () {
+                user = {}
+                if (userName !== undefined) user.userName = userName
+                if (accessToken !== undefined) user.accessToken = accessToken === 'actualValue' ? testUser.accessToken : accessToken
+                if (confirmDeletion !== undefined) user.confirmDeletion = confirmDeletion
+
                 const res = await agent.post('/v1/users').send(user)
                 const allUsers = await TrackModel.find({}).exec()
+
                 expect(allUsers.length).to.equal(0)
                 expect(res).to.have.status(204)
             })
         } else if (isUserNameValid && !isAccessTokenValid && isConfirmDeletionValid) {
             it(`should respond with status 404 with case ${testName}`, async function () {
+                user = {}
+                if (userName !== undefined) user.userName = userName
+                if (accessToken !== undefined) user.accessToken = accessToken === 'actualValue' ? testUser.accessToken : accessToken
+                if (confirmDeletion !== undefined) user.confirmDeletion = confirmDeletion
+
                 const res = await agent.post('/v1/users').send(user)
                 const allUsers = await TrackModel.find({}).exec()
+
                 expect(allUsers.length).to.equal(1)
                 expect(res).to.have.status(404)
             })
         } else {
             it(`should not delete user with case ${testName}`, async function () {
+                user = {}
+                if (userName !== undefined) user.userName = userName
+                if (accessToken !== undefined) user.accessToken = accessToken === 'actualValue' ? testUser.accessToken : accessToken
+                if (confirmDeletion !== undefined) user.confirmDeletion = confirmDeletion
+
                 const res = await agent.post('/v1/users').send(user)
                 const allUsers = await TrackModel.find({}).exec()
+
                 expect(allUsers.length).to.equal(1)
                 expect(res).to.have.status(400)
             })
