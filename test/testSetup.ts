@@ -1,8 +1,6 @@
 // Node.js built-in modules
 
 // Third-party libraries
-import * as chai from 'chai'
-import chaiHttp from 'chai-http'
 import sinon from 'sinon'
 
 // Own modules
@@ -17,11 +15,6 @@ process.env.CSRF_TOKEN = 'TEST_CSRF_TOKEN'
 
 // Importing the server
 const server = await import('../src/index.js')
-
-// Using chaiHttp with chai
-const chaiHttpObject = chai.use(chaiHttp)
-
-let agent: ChaiHttp.Agent
 
 async function cleanDatabase (): Promise<void> {
     /// ////////////////////////////////////////////
@@ -48,13 +41,8 @@ async function cleanDatabase (): Promise<void> {
     }
 }
 
-beforeEach(async function () {
-    agent = chaiHttpObject.request.agent(server.app) // Create an agent instance
-})
-
 afterEach(async function () {
     sinon.restore()
-    agent.close()
     await cleanDatabase()
 })
 
@@ -63,4 +51,3 @@ after(function () {
 })
 
 export default server
-export { agent, chaiHttpObject }

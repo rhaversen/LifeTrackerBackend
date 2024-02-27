@@ -6,7 +6,7 @@
 import validator from 'validator'
 
 // Own modules
-import { agent, chaiHttpObject } from '../testSetup.js'
+import { agent, chaiHttpObject } from '../HttpTestSetup.js'
 import UserModel, { type IUser } from '../../src/models/User.js'
 import TrackModel from '../../src/models/Track.js'
 
