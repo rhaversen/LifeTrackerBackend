@@ -5,7 +5,7 @@
 // Third-party libraries
 
 // Own modules
-import { agent, chaiHttpObject } from '../../HttpTestSetup.js'
+import { agent, chaiHttpObject } from '../../httpTestSetup.js'
 import UserModel, { type IUser } from '../../../src/models/User.js'
 
 // Global variables and setup
