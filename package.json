@@ -5,6 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"build": "tsc",
+		"build:watch": "tsc --watch",
 		"start": "node dist/src/index.js",
 		"start:ts": "node --loader ts-node/esm src/index.ts",
 		
@@ -12,7 +13,11 @@
 		"test:integration": "cross-env NODE_ENV=test mocha --extension ts -reporter spec --recursive dist/test/integration/**/*.spec.js",
 		"test:fuzz": "cross-env NODE_ENV=test mocha --reporter dot --recursive dist/test/fuzz/**/*.spec.js",
 		"test:coverage": "nyc npm run test:integration",
-		
+
+		"build-test:integration": "npm run build && npm run test:integration",
+		"build-test:fuzz": "npm run build && npm run test:fuzz",
+		"build-test:coverage": "npm run build && npm run test:coverage",
+
 		"lint": "npx eslint **/*.ts",
 		"lint:fix": "npx eslint **/*.ts --fix",
 		
