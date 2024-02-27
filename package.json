@@ -6,25 +6,30 @@
 	"scripts": {
 		"build": "tsc",
 		"build:watch": "tsc --watch",
-		"start": "node dist/src/index.js",
-		"start:ts": "node --loader ts-node/esm src/index.ts",
-		
-		"test": "npm run test:fuzz && npm run test:integration",
-		"test:integration": "cross-env NODE_ENV=test mocha --extension ts -reporter spec --recursive dist/test/integration/**/*.spec.js",
-		"test:fuzz": "cross-env NODE_ENV=test mocha --reporter dot --recursive dist/test/fuzz/**/*.spec.js",
-		"test:coverage": "nyc npm run test:integration",
 
+		"start": "node \"dist/src/index.js\"",
+		"build-start": "npm run build && npm run start",
+		"ts:start": "node --loader ts-node/esm \"src/index.ts\"",
+		
+		"build-test": "npm run build && npm run test",
 		"build-test:integration": "npm run build && npm run test:integration",
 		"build-test:fuzz": "npm run build && npm run test:fuzz",
-		"build-test:coverage": "npm run build && npm run test:coverage",
 
-		"lint": "npx eslint **/*.ts",
-		"lint:fix": "npx eslint **/*.ts --fix",
+		"ts:test": "npm run ts:test:integration && npm run ts:test:fuzz",
+		"ts:test:integration": "cross-env NODE_ENV=test node --loader ts-node/esm node_modules/mocha/bin/mocha --require ts-node/register --reporter spec --recursive \"test/integration/**/*.spec.ts\"",
+		"ts:test:fuzz": "cross-env NODE_ENV=test node --loader ts-node/esm node_modules/mocha/bin/mocha --require ts-node/register --reporter dot --recursive \"test/fuzz/**/*.spec.ts\"",
+
+		"test": "npm run test:integration && npm run test:fuzz",
+		"test:integration": "cross-env NODE_ENV=test mocha --reporter spec --recursive \"dist/test/integration/**/*.spec.js\"",
+		"test:fuzz": "cross-env NODE_ENV=test mocha --reporter dot --recursive \"dist/test/fuzz/**/*.spec.js\"",
+
+		"test:coverage": "nyc npm run ts:test:integration",
+
+		"lint": "npx eslint \"**/*.ts\"",
+		"lint:fix": "npx eslint \"**/*.ts\" --fix",
 		
 		"depcheck": "npx depcheck",
-		"upgrade-all": "npm update && npx ncu -u && npm install",
-				
-		"mocha-ts-node": "node --loader ts-node/esm node_modules/mocha/bin/mocha --require ts-node/register -reporter spec --recursive test/integration/**/*.spec.ts"
+		"upgrade": "npm update && npx ncu -u && npm install"
 	},
 	"dependencies": {
 		"@logtail/node": "^0.4.19",
