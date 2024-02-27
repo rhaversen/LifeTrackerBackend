@@ -25,6 +25,8 @@ jobs:
         run: npm run build
       - name: Integration tests
         run: NODE_ENV=test npm run test:integration
+      - name: Unit tests
+        run: NODE_ENV=test npm run test:unit
       - name: Test build Docker image
         run: |
           docker buildx create --use

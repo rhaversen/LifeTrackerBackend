@@ -11,17 +11,19 @@ import logger from '../utils/logger.js'
 const { Schema } = mongoose
 
 export interface IUser extends Document {
-    userName: string
-    accessToken: string
-    signUpDate: Date
+    userName: string // Username of the user
+    accessToken: string // Unique access token for user authentication
+    signUpDate: Date // The date the user signed up
 }
 
+// User schema definition
 const userSchema = new Schema<IUser>({
     userName: { type: String, required: true },
-    accessToken: { type: String, required: false },
-    signUpDate: { type: Date, required: true }
+    accessToken: { type: String, required: false, unique: true },
+    signUpDate: { type: Date, required: true, default: Date.now }
 })
 
+// Pre-save middleware for User schema
 userSchema.pre('save', async function (next) {
     logger.silly('Saving user')
     if (this.isNew) {
@@ -31,6 +33,6 @@ userSchema.pre('save', async function (next) {
 })
 
 // Compile the schema into a model
-const UserModel = model<IUser>('User', userSchema)
+const UserModel = model<IUser>('User', userSchema) // Compiling the user schema into a mongoose model
 
-export default UserModel
+export default UserModel // Export the compiled UserModel for use in other modules
