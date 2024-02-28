@@ -3,11 +3,10 @@
 // Third-party libraries
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import { nanoid } from 'nanoid'
 
 // Own modules
-import UserModel, { IUser } from '../../src/models/User.js'
-import TrackModel, { ITrack } from '../../src/models/Track.js'
+import UserModel, { type IUser } from '../../src/models/User.js'
+import TrackModel, { type ITrack } from '../../src/models/Track.js'
 
 // Setup test environment
 import '../testSetup.js'
@@ -43,7 +42,7 @@ describe('Track Model', () => {
                 expect(track.date.getTime()).to.be.closeTo(new Date().getTime(), 1000)
             })
 
-            it('should set date before saving', async () => {        
+            it('should set date before saving', async () => {
                 expect(track.date).to.be.a('date')
             })
         })
@@ -63,15 +62,14 @@ describe('Track Model', () => {
                 expect(track.createdAt).to.be.a('date')
             })
 
-            it('should set correct date', async () => {  
-                await track.save()  
+            it('should set correct date', async () => {
+                await track.save()
                 expect(track.createdAt.getTime()).to.be.closeTo(new Date().getTime(), 1000)
             })
 
-            it('should set createdAt before saving', async () => {        
+            it('should set createdAt before saving', async () => {
                 expect(track.createdAt).to.be.a('date')
             })
-        
         })
     })
 
