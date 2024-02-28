@@ -205,8 +205,7 @@ describe('DELETE api/v1/users', function () {
 
     beforeEach(async function () {
         testUser = new UserModel({
-            userName: 'TestUser',
-            signUpDate: new Date()
+            userName: 'TestUser'
         })
         await testUser.save()
     })
@@ -239,8 +238,8 @@ describe('DELETE api/v1/users', function () {
                 if (accessToken !== undefined) user.accessToken = accessToken === 'actualValue' ? testUser.accessToken : accessToken
                 if (confirmDeletion !== undefined) user.confirmDeletion = confirmDeletion
 
-                const res = await agent.post('/v1/users').send(user)
-                const allUsers = await TrackModel.find({}).exec()
+                const res = await agent.delete('/v1/users').send(user)
+                const allUsers = await UserModel.find({}).exec()
 
                 expect(allUsers.length).to.equal(0)
                 expect(res).to.have.status(204)
@@ -252,8 +251,8 @@ describe('DELETE api/v1/users', function () {
                 if (accessToken !== undefined) user.accessToken = accessToken === 'actualValue' ? testUser.accessToken : accessToken
                 if (confirmDeletion !== undefined) user.confirmDeletion = confirmDeletion
 
-                const res = await agent.post('/v1/users').send(user)
-                const allUsers = await TrackModel.find({}).exec()
+                const res = await agent.delete('/v1/users').send(user)
+                const allUsers = await UserModel.find({}).exec()
 
                 expect(allUsers.length).to.equal(1)
                 expect(res).to.have.status(404)
@@ -265,8 +264,8 @@ describe('DELETE api/v1/users', function () {
                 if (accessToken !== undefined) user.accessToken = accessToken === 'actualValue' ? testUser.accessToken : accessToken
                 if (confirmDeletion !== undefined) user.confirmDeletion = confirmDeletion
 
-                const res = await agent.post('/v1/users').send(user)
-                const allUsers = await TrackModel.find({}).exec()
+                const res = await agent.delete('/v1/users').send(user)
+                const allUsers = await UserModel.find({}).exec()
 
                 expect(allUsers.length).to.equal(1)
                 expect(res).to.have.status(400)

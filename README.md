@@ -104,7 +104,11 @@ response = requests.post(url, json=data)
 print(response.text)
 ```
 
-## User- and Data Deletion
+## User Agreement
+
+By accessing or using our website and services, you agree to the terms of this User Agreement. This includes our Privacy Policy, data deletion guidelines, Terms of Service, User Rights, and policy changes. We encourage you to review this document to understand our data practices and your rights.
+
+### User- and Data Deletion
 
 You can delete your user all all associated data with a DELETE request to **<https://www.life-stats.net/api/v1/users>**. Provide your username, access token and confirmDeletion=true in the request body.
 
@@ -136,7 +140,7 @@ response = requests.delete(url, json=data)
 print(response.text)
 ```
 
-## Privacy Policy
+### Privacy Policy
 
 **Data Collection**
 We collect only the data you provide:
@@ -153,7 +157,7 @@ Your data is solely logged for personal reference. It is not subjected to advert
 
 We securely store your data in a MongoDB Cloud Database, employing standard security measures to safeguard against unauthorized access.
 
-## Terms of Service
+### Terms of Service
 
 **Acceptance of Terms**
 
@@ -167,7 +171,7 @@ You bear responsibility for the data you track and disseminate. Ensure complianc
 
 Data generated is your property. However, by using our service, you grant us a license to process this data for service provision.
 
-## User Rights
+### User Rights
 
 **Data Access and Deletion**
 
@@ -177,10 +181,10 @@ Use your access token to request data access or deletion at any time. For guidan
 
 You may withdraw data processing consent by deleting your data with your access token. For further instructions, refer to our documentation or reach out directly.
 
-## Changes to Our Policies
+### Changes to Our Policies
 
 We reserve the right to modify these legal notices at any time. Any changes will be updated in this README document. Since we do not collect email addresses, we encourage you to periodically review this document for any updates.
 
-## Contact Information
+### Contact Information
 
 For any questions or concerns regarding your data, privacy, or our policies, please contact me at <rhaversen@gmail.com>.
