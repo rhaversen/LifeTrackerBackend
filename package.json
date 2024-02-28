@@ -25,9 +25,8 @@
 		"test:integration": "cross-env NODE_ENV=test mocha --reporter spec --recursive \"dist/test/integration/**/*.spec.js\"",
 		"test:unit": "cross-env NODE_ENV=test mocha --reporter spec --recursive \"dist/test/unit/**/*.spec.js\"",
 		"test:fuzz": "cross-env NODE_ENV=test mocha --reporter dot --recursive \"dist/test/fuzz/**/*.spec.js\"",
-
-		"test:coverage": "nyc npm run ts:test:integration",
-
+		"build-test:coverage": "npm run build && npm run test:coverage",
+		"test:coverage": "nyc cross-env NODE_ENV=test mocha \"dist/test/integration/**/*.spec.js\"",
 		"lint": "npx eslint \"**/*.ts\"",
 		"lint:fix": "npx eslint \"**/*.ts\" --fix",
 		
