@@ -57,7 +57,7 @@ afterEach(async function () {
 })
 
 after(function () {
-    app.shutDown()
+    void app.shutDown()
 })
 
 export { chaiAppServer }
