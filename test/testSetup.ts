@@ -48,7 +48,7 @@ async function cleanDatabase (): Promise<void> {
 let chaiAppServer: ChaiHttp.Agent
 
 before(async function () {
-    chaiAppServer = chaiHttpObject.request(app.server).keepOpen();
+    chaiAppServer = chaiHttpObject.request(app.server).keepOpen()
 })
 
 afterEach(async function () {
@@ -57,7 +57,7 @@ afterEach(async function () {
 })
 
 after(function() {
-    return app.shutDown();
+    return app.shutDown()
 })
 
 export { chaiAppServer }
