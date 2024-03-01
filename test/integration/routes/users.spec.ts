@@ -146,6 +146,21 @@ describe('DELETE api/v1/users', function () {
         })
     })
 
+    describe('Delete a user with an invalid username', function () {
+        const user = { userName: 'incorrectUsername', confirmDeletion: true }
+
+        it('should respond with status code 403', async function () {
+            const res = await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
+            expect(res).to.have.status(403)
+        })
+
+        it('should not delete a user', async function () {
+            await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
+            const allUsers = await UserModel.find({}).exec()
+            expect(allUsers.length).to.equal(1)
+        })
+    })
+
     describe('Delete a user with missing fields', function () {
         describe('Delete a user with no username', function () {
             const user = { confirmDeletion: true }
