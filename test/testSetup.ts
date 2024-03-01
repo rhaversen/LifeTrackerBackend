@@ -41,7 +41,7 @@ async function cleanDatabase (): Promise<void> {
             logger.error('Error dropping indexes: An unknown error occurred')
         }
         logger.error('Shutting down')
-        app.shutDown()
+        await app.shutDown()
     }
 }
 
@@ -56,8 +56,8 @@ afterEach(async function () {
     await cleanDatabase()
 })
 
-after(function() {
-    return app.shutDown()
+after(function () {
+    app.shutDown()
 })
 
 export { chaiAppServer }
