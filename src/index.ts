@@ -99,10 +99,14 @@ process.on('SIGINT', (): void => {
 })
 
 // Shutdown function
-async function shutDown (): Promise<void> {
+export async function shutDown (): Promise<void> {
     try {
+        logger.info('Closing server...')
+        server.close()
+        logger.info('Server closed')
         logger.info('Starting database disconnection...')
         await mongoose.disconnect()
+        logger.info('Database disconnected')
         logger.info('Shutdown completed')
         process.exit(0) // Exit with code 0 indicating successful termination
     } catch (error) {
