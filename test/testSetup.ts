@@ -41,7 +41,7 @@ async function cleanDatabase (): Promise<void> {
             logger.error('Error dropping indexes: An unknown error occurred')
         }
         logger.error('Shutting down')
-        process.exit(1)
+        app.shutDown()
     }
 }
 

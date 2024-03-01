@@ -1,3 +1,4 @@
+import { shutDown } from '../index.js'
 import logger from './logger.js'
 import nodeVault from 'node-vault'
 
@@ -65,6 +66,6 @@ export default async function loadVaultSecrets (): Promise<void> {
             logger.error('Failed to load secrets: An unknown error occurred')
         }
         logger.error('Shutting down')
-        process.exit(1)
+        shutDown()
     }
 }
