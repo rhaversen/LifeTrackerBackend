@@ -4,14 +4,13 @@
 
 // Third-party libraries
 import sinon from 'sinon'
+import { expect } from 'chai'
 
 // Own modules
-import { agent, chaiHttpObject } from '../../httpTestSetup.js'
+import { chaiAppServer as agent } from '../../testSetup.js'
 import UserModel, { type IUser } from '../../../src/models/User.js'
 import TrackModel, { type ITrack } from '../../../src/models/Track.js'
 
-// Global variables and setup
-const { expect } = chaiHttpObject
 describe('POST api/v1/tracks', function () {
     describe('Post a new track', function () {
         let testUser: IUser

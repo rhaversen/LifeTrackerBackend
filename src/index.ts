@@ -57,7 +57,7 @@ app.use('/v1/util/healthcheck', sensitiveApiLimiter)
 app.use(globalErrorHandler)
 
 // Listen
-app.listen(expressPort, () => {
+export const server = app.listen(expressPort, () => {
     logger.info(`Express is listening at http://localhost:${expressPort}`)
 })
 
@@ -111,6 +111,4 @@ async function shutDown (): Promise<void> {
     }
 }
 
-export type AppType = typeof app
-export type ShutDownType = typeof shutDown
-export { app, shutDown }
+export default app

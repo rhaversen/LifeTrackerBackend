@@ -3,13 +3,11 @@
 // file deepcode ignore HardcodedNonCryptoSecret/test: Hardcoded credentials are only used for testing purposes
 
 // Third-party libraries
+import { expect } from 'chai'
 
 // Own modules
-import { agent, chaiHttpObject } from '../../httpTestSetup.js'
+import { chaiAppServer as agent } from '../../testSetup.js'
 import UserModel, { type IUser } from '../../../src/models/User.js'
-
-// Global variables and setup
-const { expect } = chaiHttpObject
 
 describe('POST api/v1/users', function () {
     describe('Post a new user', function () {
