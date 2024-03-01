@@ -98,6 +98,15 @@ process.on('SIGINT', (): void => {
     })
 })
 
+// Assigning shutdown function to SIGTERM signal
+process.on('SIGTERM', (): void => {
+    logger.info('Received SIGTERM')
+    shutDown().catch(error => {
+        logger.error('An error occurred during shutdown:', error)
+        process.exit(1)
+    })
+})
+
 // Shutdown function
 export async function shutDown (): Promise<void> {
     try {
