@@ -7,7 +7,6 @@ import { MongoMemoryReplSet } from 'mongodb-memory-server'
 // Own modules
 import logger from '../utils/logger.js'
 import config from '../utils/setupConfig.js'
-import { shutDown } from '../index.js'
 
 const { mongooseOpts } = config
 
@@ -25,5 +24,5 @@ try {
     logger.info('Connected to in-memory MongoDB')
 } catch (error: any) {
     logger.error(`Error connecting to in-memory MongoDB: ${error.message !== undefined ? error.message : error}`)
-    shutDown()
+    process.exit(1)
 }

@@ -6,7 +6,6 @@ import mongoose from 'mongoose'
 // Own modules
 import logger from '../utils/logger.js'
 import config from '../utils/setupConfig.js'
-import { shutDown } from '../index.js'
 
 const {
     mongooseOpts,
@@ -34,7 +33,7 @@ async function connectToMongoDB (): Promise<void> {
 
     // Exhausted retries
     logger.error(`Failed to connect to MongoDB after ${maxRetryAttempts} attempts. Shutting down.`)
-    shutDown()
+    process.exit(1)
 }
 
 await connectToMongoDB()
