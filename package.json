@@ -4,35 +4,38 @@
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
+		"//":"————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————",
 		"build": "tsc",
 		"build:watch": "tsc --watch",
-
+		"//":"————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————",
 		"start": "node \"dist/src/index.js\"",
 		"build-start": "npm run build && npm run start",
 		"ts:start": "node --loader ts-node/esm \"src/index.ts\"",
-		
+		"//":"————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————",
 		"build-test": "npm run build && npm run test",
 		"build-test:integration": "npm run build && npm run test:integration",
 		"build-test:unit": "npm run build && npm run test:unit",
 		"build-test:fuzz": "npm run build && npm run test:fuzz",
-
+		"//":"————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————",
 		"ts:test": "npm run ts:test:integration && npm run ts:test:unit && npm run ts:test:fuzz",
 		"ts:test:integration": "cross-env NODE_ENV=test node --loader ts-node/esm node_modules/mocha/bin/mocha --require ts-node/register --reporter spec --recursive \"test/integration/**/*.spec.ts\"",
 		"ts:test:unit": "cross-env NODE_ENV=test node --loader ts-node/esm node_modules/mocha/bin/mocha --require ts-node/register --reporter spec --recursive \"test/unit/**/*.spec.ts\"",
 		"ts:test:fuzz": "cross-env NODE_ENV=test node --loader ts-node/esm node_modules/mocha/bin/mocha --require ts-node/register --reporter dot --recursive \"test/fuzz/**/*.spec.ts\"",
-
+		"//":"————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————",
 		"test": "npm run test:integration && npm run test:unit && npm run test:fuzz",
 		"test:integration": "cross-env NODE_ENV=test mocha --reporter spec --recursive \"dist/test/integration/**/*.spec.js\"",
 		"test:unit": "cross-env NODE_ENV=test mocha --reporter spec --recursive \"dist/test/unit/**/*.spec.js\"",
 		"test:fuzz": "cross-env NODE_ENV=test mocha --reporter dot --recursive \"dist/test/fuzz/**/*.spec.js\"",
-
-		"test:coverage": "nyc npm run ts:test:integration",
-
+		"//":"————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————",
+		"build-test:coverage": "npm run build && npm run test:coverage",
+		"test:coverage": "nyc npm run test:integration",
+		"//":"————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————",
 		"lint": "npx eslint \"**/*.ts\"",
 		"lint:fix": "npx eslint \"**/*.ts\" --fix",
-		
+		"//":"————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————",
 		"depcheck": "npx depcheck",
-		"upgrade": "npm update && npx ncu -u && npm install"
+		"upgrade": "npm update && npx ncu -u && npm install",
+		"//":"————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————"
 	},
 	"dependencies": {
 		"@logtail/node": "^0.4.19",

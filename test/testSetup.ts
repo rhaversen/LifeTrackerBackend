@@ -2,6 +2,8 @@
 
 // Third-party libraries
 import sinon from 'sinon'
+import chaiHttp from 'chai-http'
+import * as chai from 'chai'
 
 // Own modules
 import logger from '../src/utils/logger.js'
@@ -14,7 +16,9 @@ process.env.SESSION_SECRET = 'TEST_SESSION_SECRET'
 process.env.CSRF_TOKEN = 'TEST_CSRF_TOKEN'
 
 // Importing the server
-const server = await import('../src/index.js')
+const app = await import('../src/index.js')
+
+const chaiHttpObject = chai.use(chaiHttp)
 
 async function cleanDatabase (): Promise<void> {
     /// ////////////////////////////////////////////
@@ -37,9 +41,15 @@ async function cleanDatabase (): Promise<void> {
             logger.error('Error dropping indexes: An unknown error occurred')
         }
         logger.error('Shutting down')
-        process.exit(1)
+        await app.shutDown()
     }
 }
+
+let chaiAppServer: ChaiHttp.Agent
+
+before(async function () {
+    chaiAppServer = chaiHttpObject.request(app.server).keepOpen()
+})
 
 afterEach(async function () {
     sinon.restore()
@@ -47,7 +57,7 @@ afterEach(async function () {
 })
 
 after(function () {
-    void server.shutDown()
+    void app.shutDown()
 })
 
-export default server
+export { chaiAppServer }

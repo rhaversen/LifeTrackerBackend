@@ -3,13 +3,11 @@
 // file deepcode ignore HardcodedNonCryptoSecret/test: Hardcoded credentials are only used for testing purposes
 
 // Third-party libraries
+import { expect } from 'chai'
 
 // Own modules
-import { agent, chaiHttpObject } from '../../httpTestSetup.js'
+import { chaiAppServer as agent } from '../../testSetup.js'
 import UserModel, { type IUser } from '../../../src/models/User.js'
-
-// Global variables and setup
-const { expect } = chaiHttpObject
 
 describe('POST api/v1/users', function () {
     describe('Post a new user', function () {
@@ -143,6 +141,21 @@ describe('DELETE api/v1/users', function () {
 
         it('should not delete a user', async function () {
             await agent.delete('/v1/users').send(user)
+            const allUsers = await UserModel.find({}).exec()
+            expect(allUsers.length).to.equal(1)
+        })
+    })
+
+    describe('Delete a user with an invalid username', function () {
+        const user = { userName: 'incorrectUsername', confirmDeletion: true }
+
+        it('should respond with status code 403', async function () {
+            const res = await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
+            expect(res).to.have.status(403)
+        })
+
+        it('should not delete a user', async function () {
+            await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
             const allUsers = await UserModel.find({}).exec()
             expect(allUsers.length).to.equal(1)
         })

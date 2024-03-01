@@ -57,7 +57,7 @@ app.use('/v1/util/healthcheck', sensitiveApiLimiter)
 app.use(globalErrorHandler)
 
 // Listen
-app.listen(expressPort, () => {
+export const server = app.listen(expressPort, () => {
     logger.info(`Express is listening at http://localhost:${expressPort}`)
 })
 
@@ -98,11 +98,24 @@ process.on('SIGINT', (): void => {
     })
 })
 
+// Assigning shutdown function to SIGTERM signal
+process.on('SIGTERM', (): void => {
+    logger.info('Received SIGTERM')
+    shutDown().catch(error => {
+        logger.error('An error occurred during shutdown:', error)
+        process.exit(1)
+    })
+})
+
 // Shutdown function
-async function shutDown (): Promise<void> {
+export async function shutDown (): Promise<void> {
     try {
+        logger.info('Closing server...')
+        server.close()
+        logger.info('Server closed')
         logger.info('Starting database disconnection...')
         await mongoose.disconnect()
+        logger.info('Database disconnected')
         logger.info('Shutdown completed')
         process.exit(0) // Exit with code 0 indicating successful termination
     } catch (error) {
@@ -111,6 +124,4 @@ async function shutDown (): Promise<void> {
     }
 }
 
-export type AppType = typeof app
-export type ShutDownType = typeof shutDown
-export { app, shutDown }
+export default app

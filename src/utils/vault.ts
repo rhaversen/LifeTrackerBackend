@@ -1,5 +1,10 @@
-import logger from './logger.js'
+// Node.js built-in modules
+
+// Third-party libraries
 import nodeVault from 'node-vault'
+
+// Own modules
+import logger from './logger.js'
 
 const vaultAddr = process.env.VAULT_ADDR // Vault address
 const token = process.env.VAULT_TOKEN // Vault token

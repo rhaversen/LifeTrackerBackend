@@ -64,6 +64,11 @@ export async function deleteUser (req: Request, res: Response, next: NextFunctio
         return
     }
 
+    if (user.userName !== userName) {
+        res.status(403).json({ error: 'userName does not match the user associated with the accessToken.' })
+        return
+    }
+
     await UserModel.deleteOne({ accessToken })
 
     res.status(204).send()

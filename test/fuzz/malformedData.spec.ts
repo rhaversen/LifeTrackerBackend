@@ -4,14 +4,14 @@
 
 // Third-party libraries
 import validator from 'validator'
+import { expect } from 'chai'
 
 // Own modules
-import { agent, chaiHttpObject } from '../httpTestSetup.js'
+import { chaiAppServer as agent } from '../testSetup.js'
 import UserModel, { type IUser } from '../../src/models/User.js'
 import TrackModel from '../../src/models/Track.js'
 
 // Global variables and setup
-const { expect } = chaiHttpObject
 const values = [
     'actualValue', // Used for inputting the real and expected values
 
