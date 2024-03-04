@@ -27,8 +27,9 @@ await initializeDatabaseConnection()
 
 // Configs
 const {
-    relaxedApiLimiterConfig,
-    sensitiveApiLimiterConfig,
+    lowSensitivityApiLimiterConfig,
+    mediumSensitivityApiLimiterConfig,
+    highSensitivityApiLimiterConfig,
     expressPort
 } = config
 
@@ -41,17 +42,24 @@ app.use(express.json())
 app.use(mongoSanitize())
 
 // Rate limiters
-const relaxedApiLimiter = RateLimit(relaxedApiLimiterConfig)
-const sensitiveApiLimiter = RateLimit(sensitiveApiLimiterConfig)
+const lowSensitivityApiLimiter = RateLimit(lowSensitivityApiLimiterConfig)
+const mediumSensitivityApiLimiter = RateLimit(mediumSensitivityApiLimiterConfig)
+const highSensitivityApiLimiter = RateLimit(highSensitivityApiLimiterConfig)
 
-// Use all routes and with relaxed limiter
-app.use('/v1/users', relaxedApiLimiter, userRoutes)
-app.use('/v1/tracks', relaxedApiLimiter, trackRoutes)
-app.use('/v1/util', relaxedApiLimiter, utilRoutes)
+// Use all routes with medium sensitivity rate limiter
+app.use('/v1/users', mediumSensitivityApiLimiter, userRoutes)
+app.use('/v1/tracks', mediumSensitivityApiLimiter, trackRoutes)
+app.use('/v1/util', mediumSensitivityApiLimiter, utilRoutes)
+
+// Apply medium sensitivity for all database operation routes
+app.use('/v1/users', mediumSensitivityApiLimiter)
+app.use('/v1/tracks', mediumSensitivityApiLimiter)
+
+// Apply low sensitivity for utility routes
+app.use('/v1/util', lowSensitivityApiLimiter)
 
 // Apply stricter rate limiters to routes
-app.use('/v1/users/', sensitiveApiLimiter)
-app.use('/v1/util/healthcheck', sensitiveApiLimiter)
+app.use('/v1/users/', highSensitivityApiLimiter)
 
 // Global error handler middleware
 app.use(globalErrorHandler)

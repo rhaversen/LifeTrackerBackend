@@ -1,12 +1,21 @@
 {
     "apiLimiter": {
-        "nonSensitive": {
-            "windowMs": 10000,
-            "max": 20
-        },
-        "sensitive": {
-            "windowMs": 60000,
-            "max": 10
+        "sensitivity": {
+            "low": {
+                "max": 100,
+                "windowMs": 60000,
+                "standardHeaders": true
+            },
+            "medium": {
+                "max": 10,
+                "windowMs": 60000,
+                "standardHeaders": true
+            },
+            "high": {
+                "max": 1,
+                "windowMs": 60000,
+                "standardHeaders": true
+            }
         }
     },
     "expressPort": 5001,
