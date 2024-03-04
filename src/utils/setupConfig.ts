@@ -14,9 +14,9 @@ logger.info(`Using configs:\n${configString}`)
 
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 const AppConfig = {
-    lowSensitivityApiLimiterConfig: config.get('apiLimiter..sensitivity.low') as RateLimitOptions,
-    mediumSensitivityApiLimiterConfig: config.get('apiLimiter..sensitivity.medium') as RateLimitOptions,
-    highSensitivityApiLimiterConfig: config.get('apiLimiter..sensitivity.high') as RateLimitOptions,
+    lowSensitivityApiLimiterConfig: config.get('apiLimiter.sensitivity.low') as RateLimitOptions,
+    mediumSensitivityApiLimiterConfig: config.get('apiLimiter.sensitivity.medium') as RateLimitOptions,
+    highSensitivityApiLimiterConfig: config.get('apiLimiter.sensitivity.high') as RateLimitOptions,
     expressPort: config.get('expressPort') as number,
     mongooseOpts: config.get('mongoose.options') as ConnectOptions,
     maxRetryAttempts: config.get('mongoose.retrySettings.maxAttempts') as number,
