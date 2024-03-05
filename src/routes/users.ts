@@ -16,8 +16,9 @@ const router = Router()
  * @route POST api/v1/users
  * @desc Create a new user
  * @access Public
- * @param {string} req.body.userName The username given to this user
- * @return {string} accessToken
+ * @param {string} req.body.userName The username given to this user.
+ * @return {number} res.status The status code of the HTTP response.
+ * @return {string} res.body The accessToken of the newly created user.
  */
 router.post('/',
     asyncErrorHandler(createUser)
@@ -27,9 +28,10 @@ router.post('/',
  * @route DELETE api/v1/users
  * @desc Delete the user
  * @access Public
- * @param {string} req.body.userName The users userName
- * @param {string} req.body.accessToken The users accessToken
- * @param {string} req.body.confirmDeletion Must be true to confirm deletion
+ * @param {string} req.body.userName The users userName.
+ * @param {string} req.body.accessToken The users accessToken.
+ * @param {boolean} req.body.confirmDeletion Must be true to confirm deletion.
+ * @return {number} res.status The status code of the HTTP response.
  */
 router.delete('/',
     asyncErrorHandler(deleteUser)

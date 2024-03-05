@@ -63,3 +63,30 @@ export async function createTrack (req: Request, res: Response, next: NextFuncti
 
     res.status(201).json(savedTrack)
 }
+
+export async function deleteLastTrack (req: Request, res: Response, next: NextFunction): Promise<void> {
+    logger.silly('Deleting last track')
+
+    const {
+        accessToken
+    } = req.body as {
+        accessToken?: unknown
+    }
+
+    if (typeof accessToken !== 'string' || accessToken === '') {
+        res.status(400).json({ error: 'accessToken must be a non-empty string.' })
+        return
+    }
+
+    const user = await UserModel.findOne({ accessToken })
+
+    if (user === null) {
+        res.status(400).json({ error: 'accessToken is not valid.' })
+        return
+    }
+
+    // Find and delete the last track created by the user
+    await TrackModel.findOneAndDelete({ userId: user._id }).sort({ createdAt: -1 })
+
+    res.status(204).send()
+}
