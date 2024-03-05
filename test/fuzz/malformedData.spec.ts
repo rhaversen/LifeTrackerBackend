@@ -9,7 +9,7 @@ import { expect } from 'chai'
 // Own modules
 import { chaiAppServer as agent } from '../testSetup.js'
 import UserModel, { type IUser } from '../../src/models/User.js'
-import TrackModel from '../../src/models/Track.js'
+import TrackModel, { type ITrack } from '../../src/models/Track.js'
 
 // Global variables and setup
 const values = [
@@ -279,5 +279,68 @@ describe('DELETE api/v1/users', function () {
                 handleTestCase(userName, accessToken, confirmDeletion)
             })
         })
+    })
+})
+
+describe('DELETE api/v1/tracks/last', function () {
+    let testUser: IUser
+    let testTrack: ITrack
+    let user: { accessToken?: any }
+
+    beforeEach(async function () {
+        testUser = new UserModel({
+            userName: 'TestUser'
+        })
+        await testUser.save()
+        testTrack = new TrackModel({
+            trackName: 'testTrackA1',
+            date: new Date(),
+            userId: testUser._id
+        })
+        await testTrack.save()
+    })
+
+    function handleTestCase (accessToken: any): void {
+        const accessTokenMessage = accessToken === undefined ? 'accessToken missing' : `accessToken: ${validator.escape(String(accessToken))}`
+
+        const testName = [accessTokenMessage].join(', ')
+
+        user = {
+            accessToken
+        }
+
+        // Simulate JSON serialization as it would occur in an HTTP request
+        const userString = JSON.stringify(user)
+        const userJSON = JSON.parse(userString) as { accessToken?: any }
+
+        const isAccessTokenValid = userJSON.accessToken === 'actualValue'
+
+        if (isAccessTokenValid) {
+            it(`should respond with status 204 with case ${testName}`, async function () {
+                user = {}
+                if (accessToken !== undefined) user.accessToken = accessToken === 'actualValue' ? testUser.accessToken : accessToken
+
+                const res = await agent.delete('/v1/tracks/last').send(user)
+                const allTracks = await TrackModel.find({}).exec()
+
+                expect(allTracks.length).to.equal(0)
+                expect(res).to.have.status(204)
+            })
+        } else {
+            it(`should not delete user with case ${testName}`, async function () {
+                user = {}
+                if (accessToken !== undefined) user.accessToken = accessToken === 'actualValue' ? testUser.accessToken : accessToken
+
+                const res = await agent.delete('/v1/tracks/last').send(user)
+                const allTracks = await TrackModel.find({}).exec()
+
+                expect(allTracks.length).to.equal(1)
+                expect(res).to.have.status(400)
+            })
+        }
+    }
+
+    values.forEach(accessToken => {
+        handleTestCase(accessToken)
     })
 })
