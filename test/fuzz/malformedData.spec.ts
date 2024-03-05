@@ -108,7 +108,7 @@ describe('POST api/v1/tracks', function () {
         const trackString = JSON.stringify(track)
         const trackJSON = JSON.parse(trackString) as { trackName?: any, accessToken?: any, timeOffset?: any }
 
-        const isTrackNameValid = trackJSON.trackName !== ''
+        const isTrackNameValid = trackJSON.trackName !== '' && trackName !== undefined
         const isAccessTokenValid = trackJSON.accessToken === 'actualValue'
         const isTimeOffsetUndefined = trackJSON.timeOffset === undefined
         const isTimeOffsetValid = !isNaN((new Date(Date.now() + Number(trackJSON.timeOffset ?? 0))).getTime())
@@ -166,7 +166,7 @@ describe('POST api/v1/users', function () {
         const userString = JSON.stringify(user)
         const userJSON = JSON.parse(userString) as { userName?: any }
 
-        const isUserNameValid = userJSON.userName !== ''
+        const isUserNameValid = userJSON.userName !== '' && userName !== undefined
 
         if (isUserNameValid) {
             // These cases are not considered malformed data
@@ -227,7 +227,7 @@ describe('DELETE api/v1/users', function () {
         const userString = JSON.stringify(user)
         const userJSON = JSON.parse(userString) as { userName?: any, accessToken?: any, confirmDeletion?: any }
 
-        const isUserNameValid = userJSON.userName !== ''
+        const isUserNameValid = userJSON.userName !== '' && userName !== undefined
         const isAccessTokenValid = userJSON.accessToken === 'actualValue'
         const isConfirmDeletionValid = userJSON.confirmDeletion === true
 
