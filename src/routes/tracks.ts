@@ -19,8 +19,10 @@ const router = Router()
  * @desc Post a new track
  * @access Public
  * @param {string} req.body.accessToken The access token required to authenticate the request.
- * @param {Object} req.body.trackName The name of the track.
- * @param {Object} [req.body.timeOffset] Relative Time Offset (milliseconds).
+ * @param {string} req.body.trackName The name of the track.
+ * @param {number} [req.body.timeOffset] Relative Time Offset (milliseconds).
+ * @return {number} res.status The status code of the HTTP response.
+ * @return {object} res.body The newly created track.
  */
 router.post('/',
     asyncErrorHandler(createTrack)
