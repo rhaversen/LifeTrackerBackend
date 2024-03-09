@@ -89,3 +89,41 @@ export async function deleteLastTrack (req: Request, res: Response, next: NextFu
 
     res.status(204).send()
 }
+
+export async function getTracksWithQuery (req: Request, res: Response, next: NextFunction): Promise<void> {
+    logger.silly('Fetching tracks with query')
+
+    const {
+        accessToken
+    } = req.body as {
+        accessToken?: unknown
+    }
+
+    const {
+        trackName
+    } = req.query as {
+        trackName?: unknown
+    }
+
+    if (typeof accessToken !== 'string' || accessToken === '') {
+        res.status(400).json({ error: 'accessToken must be a non-empty string.' })
+        return
+    }
+
+    // If trackName is provided, it must be a non-empty string
+    if (trackName !== undefined && (typeof trackName !== 'string' || trackName === '')) {
+        res.status(400).json({ error: 'trackName must be a non-empty string.' })
+        return
+    }
+
+    const user = await UserModel.findOne({ accessToken })
+
+    if (user === null) {
+        res.status(400).json({ error: 'accessToken is not valid.' })
+        return
+    }
+
+    const tracks = await TrackModel.find({ userId: user._id, trackName })
+
+    res.status(200).send(tracks)
+}

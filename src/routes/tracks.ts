@@ -9,7 +9,8 @@ import asyncErrorHandler from '../utils/asyncErrorHandler.js'
 // Controller functions
 import {
     createTrack,
-    deleteLastTrack
+    deleteLastTrack,
+    getTracksWithQuery
 } from '../controllers/tracksController.js'
 
 // Destructuring and global variables
@@ -38,6 +39,19 @@ router.post('/',
  */
 router.delete('/last',
     asyncErrorHandler(deleteLastTrack)
+)
+
+/**
+ * @route GET api/v1/tracks
+ * @desc Post a new track
+ * @access Public
+ * @param {string} req.body.accessToken The access token required to authenticate the request.
+ * @param {string} req.query.trackName The tracks to be fetched.
+ * @return {number} res.status The status code of the HTTP response.
+ * @return {object} res.body The fetched tracks.
+ */
+router.get('/',
+    asyncErrorHandler(getTracksWithQuery)
 )
 
 export default router
