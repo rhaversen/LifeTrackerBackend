@@ -23,8 +23,9 @@ const trackSchema = new Schema<ITrack>({
 })
 
 // Adding indexes
-trackSchema.index({ userId: 1 }) // Index for sorting by userId in ascending order (Or to find all tracks by a user id)
-trackSchema.index({ createdAt: -1 }) // Index for sorting by creation date in descending order
+trackSchema.index({ userId: 1 })
+trackSchema.index({ trackName: 1 })
+trackSchema.index({ createdAt: -1 })
 
 // Pre-save middleware
 trackSchema.pre('save', function (next) {

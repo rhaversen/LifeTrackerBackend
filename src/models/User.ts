@@ -22,6 +22,9 @@ const userSchema = new Schema<IUser>({
     signUpDate: { type: Date, required: true, default: Date.now }
 })
 
+// Adding indexes
+userSchema.index({ accessToken: 1 })
+
 // Pre-save middleware for User schema
 userSchema.pre('save', async function (next) {
     logger.silly('Saving user')
