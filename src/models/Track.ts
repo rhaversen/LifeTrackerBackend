@@ -9,6 +9,7 @@ import logger from '../utils/logger.js'
 // Destructuring and global variables
 
 export interface ITrack extends Document {
+    // Properties
     _id: Types.ObjectId
     trackName: string
     date: Date // The date the track took place

@@ -9,10 +9,13 @@ import logger from '../utils/logger.js'
 import TrackModel from './Track.js'
 
 export interface IUser extends Document {
+    // Properties
     _id: Types.ObjectId
     userName: string // Username of the user
     accessToken: string // Unique access token for user authentication
     signUpDate: Date // The date the user signed up
+
+    // Methods
     deleteUserAndAllAssociatedData: () => Promise<void>
 }
 
