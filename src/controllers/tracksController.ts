@@ -2,7 +2,6 @@
 
 // Third-party libraries
 import { type NextFunction, type Request, type Response } from 'express'
-import validator from 'validator'
 
 // Own modules
 import TrackModel from '../models/Track.js'
@@ -54,7 +53,7 @@ export async function createTrack (req: Request, res: Response, next: NextFuncti
     }
 
     const newTrack = new TrackModel({
-        trackName: trackName,
+        trackName,
         date,
         userId: user._id
     })
