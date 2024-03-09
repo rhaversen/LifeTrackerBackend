@@ -1,11 +1,10 @@
 // Node.js built-in modules
 
 // Third-party libraries
-import mongoose, { type Document, model } from 'mongoose'
+import mongoose, { type Document, model, type Types } from 'mongoose'
 
 // Own modules
 import logger from '../utils/logger.js'
-import { type IUser } from './User.js'
 
 // Destructuring and global variables
 const { Schema } = mongoose
@@ -13,7 +12,7 @@ const { Schema } = mongoose
 export interface ITrack extends Document {
     trackName: string
     date: Date // The date the track took place
-    userId: IUser['_id']
+    userId: Types.ObjectId // The user who created the track
     createdAt: Date // The date the track was created in the system
 }
 
