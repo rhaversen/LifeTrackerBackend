@@ -1,13 +1,12 @@
 // Node.js built-in modules
 
 // Third-party libraries
-import mongoose, { type Document, model, type Types } from 'mongoose'
+import { type Document, model, type Types, Schema } from 'mongoose'
 
 // Own modules
 import logger from '../utils/logger.js'
 
 // Destructuring and global variables
-const { Schema } = mongoose
 
 export interface ITrack extends Document {
     trackName: string
@@ -19,7 +18,7 @@ export interface ITrack extends Document {
 const trackSchema = new Schema<ITrack>({
     trackName: { type: String, required: true },
     date: { type: Date, required: true, default: Date.now },
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     createdAt: { type: Date, required: true, default: Date.now }
 })
 

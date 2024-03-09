@@ -1,15 +1,12 @@
 // Node.js built-in modules
 
 // Third-party libraries
-import mongoose, { type Document, model } from 'mongoose'
+import mongoose, { type Document, model, Schema } from 'mongoose'
 import { nanoid } from 'nanoid'
 
 // Own modules
 import logger from '../utils/logger.js'
 import TrackModel from './Track.js'
-
-// Destructuring and global variables
-const { Schema } = mongoose
 
 export interface IUser extends Document {
     userName: string // Username of the user
