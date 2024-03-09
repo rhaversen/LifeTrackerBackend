@@ -1,7 +1,7 @@
 // Node.js built-in modules
 
 // Third-party libraries
-import mongoose, { type Document, model, Schema } from 'mongoose'
+import mongoose, { type Document, model, Schema, type Types } from 'mongoose'
 import { nanoid } from 'nanoid'
 
 // Own modules
@@ -9,6 +9,7 @@ import logger from '../utils/logger.js'
 import TrackModel from './Track.js'
 
 export interface IUser extends Document {
+    _id: Types.ObjectId
     userName: string // Username of the user
     accessToken: string // Unique access token for user authentication
     signUpDate: Date // The date the user signed up
