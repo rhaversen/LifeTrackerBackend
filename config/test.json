@@ -1,21 +1,21 @@
 {
-    "apiLimiter": {
-        "sensitivity": {
-            "low": {
-                "max": 1000,
-                "windowMs": 1,
-                "standardHeaders": true
-            },
-            "medium": {
-                "max": 1000,
-                "windowMs": 1,
-                "standardHeaders": true
-            },
-            "high": {
-                "max": 1000,
-                "windowMs": 1,
-                "standardHeaders": true
-            }
-        }
-    }
+	"apiLimiter": {
+		"sensitivity": {
+			"low": {
+				"max": 1000,
+				"windowMs": 1,
+				"standardHeaders": true
+			},
+			"medium": {
+				"max": 1000,
+				"windowMs": 1,
+				"standardHeaders": true
+			},
+			"high": {
+				"max": 1000,
+				"windowMs": 1,
+				"standardHeaders": true
+			}
+		}
+	}
 }

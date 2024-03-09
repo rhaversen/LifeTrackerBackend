@@ -1,33 +1,33 @@
 {
-    "apiLimiter": {
-        "sensitivity": {
-            "low": {
-                "max": 100,
-                "windowMs": 60000,
-                "standardHeaders": true
-            },
-            "medium": {
-                "max": 10,
-                "windowMs": 60000,
-                "standardHeaders": true
-            },
-            "high": {
-                "max": 1,
-                "windowMs": 60000,
-                "standardHeaders": true
-            }
-        }
-    },
-    "expressPort": 5001,
-    "mongoose": {
-        "retrySettings": {
-            "maxAttempts": 5,
-            "interval": 5000
-        },
-        "options": {
-            "retryWrites": "true",
-            "w": "majority",
-            "appName": "main"
-        }
-    }
+	"apiLimiter": {
+		"sensitivity": {
+			"low": {
+				"max": 100,
+				"windowMs": 60000,
+				"standardHeaders": true
+			},
+			"medium": {
+				"max": 10,
+				"windowMs": 60000,
+				"standardHeaders": true
+			},
+			"high": {
+				"max": 1,
+				"windowMs": 60000,
+				"standardHeaders": true
+			}
+		}
+	},
+	"expressPort": 5001,
+	"mongoose": {
+		"retrySettings": {
+			"maxAttempts": 5,
+			"interval": 5000
+		},
+		"options": {
+			"retryWrites": "true",
+			"w": "majority",
+			"appName": "main"
+		}
+	}
 }
