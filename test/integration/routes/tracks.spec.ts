@@ -22,7 +22,10 @@ describe('POST api/v1/tracks', function () {
                 userName: 'TestUser'
             })
             await testUser.save()
-            track = { trackName: 'test', accessToken: testUser.accessToken }
+            track = {
+                trackName: 'test',
+                accessToken: testUser.accessToken
+            }
         })
 
         it('should create a track', async function () {
@@ -58,7 +61,10 @@ describe('POST api/v1/tracks', function () {
         })
 
         it('should not create a track if accessToken is invalid', async function () {
-            track = { ...track, accessToken: 'invalidCode' }
+            track = {
+                ...track,
+                accessToken: 'invalidCode'
+            }
             await agent.post('/v1/tracks').send(track)
             const allTracks = await TrackModel.find({}).exec()
             expect(allTracks.length).to.equal(0)
@@ -74,7 +80,11 @@ describe('POST api/v1/tracks', function () {
                 userName: 'TestUser'
             })
             await testUser.save()
-            track = { trackName: 'test', accessToken: testUser.accessToken, timeOffset: 10 }
+            track = {
+                trackName: 'test',
+                accessToken: testUser.accessToken,
+                timeOffset: 10
+            }
         })
 
         it('should create a track', async function () {
@@ -119,7 +129,11 @@ describe('POST api/v1/tracks', function () {
                 userName: 'TestUser'
             })
             await testUser.save()
-            track = { trackName: 'test', accessToken: testUser.accessToken, timeOffset: -10 }
+            track = {
+                trackName: 'test',
+                accessToken: testUser.accessToken,
+                timeOffset: -10
+            }
         })
 
         it('should create a track', async function () {
@@ -164,7 +178,11 @@ describe('POST api/v1/tracks', function () {
                 userName: 'TestUser'
             })
             await testUser.save()
-            track = { trackName: 'test', accessToken: testUser.accessToken, timeOffset: Number.MAX_VALUE }
+            track = {
+                trackName: 'test',
+                accessToken: testUser.accessToken,
+                timeOffset: Number.MAX_VALUE
+            }
         })
 
         it('should not create a track with large offset', async function () {
@@ -188,7 +206,11 @@ describe('POST api/v1/tracks', function () {
                 userName: 'TestUser'
             })
             await testUser.save()
-            track = { trackName: 'test', accessToken: testUser.accessToken, timeOffset: -Number.MAX_VALUE }
+            track = {
+                trackName: 'test',
+                accessToken: testUser.accessToken,
+                timeOffset: -Number.MAX_VALUE
+            }
         })
 
         it('should not create a track with large offset', async function () {

@@ -1,7 +1,7 @@
 // Node.js built-in modules
 
 // Third-party libraries
-import { type Document, model, type Types, Schema } from 'mongoose'
+import { type Document, model, Schema, type Types } from 'mongoose'
 
 // Own modules
 import logger from '../utils/logger.js'
@@ -18,10 +18,25 @@ export interface ITrack extends Document {
 }
 
 const trackSchema = new Schema<ITrack>({
-    trackName: { type: String, required: true },
-    date: { type: Date, required: true, default: Date.now },
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    createdAt: { type: Date, required: true, default: Date.now }
+    trackName: {
+        type: String,
+        required: true
+    },
+    date: {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    createdAt: {
+        type: Date,
+        required: true,
+        default: Date.now
+    }
 })
 
 // Adding indexes

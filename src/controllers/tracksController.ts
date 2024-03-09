@@ -123,7 +123,10 @@ export async function getTracksWithQuery (req: Request, res: Response, next: Nex
         return
     }
 
-    const tracks = await TrackModel.find({ userId: user._id, trackName })
+    const tracks = await TrackModel.find({
+        userId: user._id,
+        trackName
+    })
 
     res.status(200).send(tracks)
 }

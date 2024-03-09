@@ -1,4 +1,4 @@
-import { type RequestHandler, type NextFunction, type Request, type Response } from 'express'
+import { type NextFunction, type Request, type RequestHandler, type Response } from 'express'
 import logger from './logger.js'
 
 type AsyncMiddleware = (req: Request, res: Response, next: NextFunction) => Promise<void>

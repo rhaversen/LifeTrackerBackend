@@ -71,9 +71,13 @@ const values = [
 
     // Objects (including special object types and nested objects)
     {}, // object
-    { a: 1, b: 2 }, // object
+    {
+        a: 1,
+        b: 2
+    }, // object
     { a: { b: { c: { d: 1 } } } }, // deeply nested object
-    function () { } // a function object returning void
+    function () {
+    } // a function object returning void
 ]
 
 describe('POST api/v1/tracks', function () {
@@ -91,7 +95,10 @@ describe('POST api/v1/tracks', function () {
 
         for (const trackName of values) {
             for (const timeOffset of values) {
-                const testString = JSON.stringify({ trackName, timeOffset })
+                const testString = JSON.stringify({
+                    trackName,
+                    timeOffset
+                })
 
                 it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
                     track = {
@@ -115,7 +122,10 @@ describe('POST api/v1/tracks', function () {
             for (const accessToken of values) {
                 for (const trackName of values) {
                     for (const timeOffset of values) {
-                        const testString = JSON.stringify({ trackName, timeOffset })
+                        const testString = JSON.stringify({
+                            trackName,
+                            timeOffset
+                        })
 
                         it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
                             track = {
@@ -178,7 +188,10 @@ describe('DELETE api/v1/users', function () {
 
         for (const userName of values) {
             for (const confirmDeletion of values) {
-                const testString = JSON.stringify({ userName, confirmDeletion })
+                const testString = JSON.stringify({
+                    userName,
+                    confirmDeletion
+                })
 
                 it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
                     user = {
@@ -204,7 +217,11 @@ describe('DELETE api/v1/users', function () {
         for (const userName of values) {
             for (const accessToken of values) {
                 for (const confirmDeletion of values) {
-                    const testString = JSON.stringify({ userName, confirmDeletion, accessToken })
+                    const testString = JSON.stringify({
+                        userName,
+                        confirmDeletion,
+                        accessToken
+                    })
 
                     it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
                         user = {

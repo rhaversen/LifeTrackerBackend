@@ -21,9 +21,20 @@ export interface IUser extends Document {
 
 // User schema definition
 const userSchema = new Schema<IUser>({
-    userName: { type: String, required: true },
-    accessToken: { type: String, required: false, unique: true },
-    signUpDate: { type: Date, required: true, default: Date.now }
+    userName: {
+        type: String,
+        required: true
+    },
+    accessToken: {
+        type: String,
+        required: false,
+        unique: true
+    },
+    signUpDate: {
+        type: Date,
+        required: true,
+        default: Date.now
+    }
 })
 
 // Adding indexes

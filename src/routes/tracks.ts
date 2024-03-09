@@ -7,11 +7,7 @@ import Router from 'express'
 import asyncErrorHandler from '../utils/asyncErrorHandler.js'
 
 // Controller functions
-import {
-    createTrack,
-    deleteLastTrack,
-    getTracksWithQuery
-} from '../controllers/tracksController.js'
+import { createTrack, deleteLastTrack, getTracksWithQuery } from '../controllers/tracksController.js'
 
 // Destructuring and global variables
 const router = Router()

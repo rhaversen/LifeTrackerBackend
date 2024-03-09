@@ -29,9 +29,18 @@ const winstonLogger = createLogger({
     ),
     defaultMeta: { service: 'group-scheduler-backend' }, // Set a default metadata field
     transports: [
-        new _transports.File({ filename: join(_dirname, '../../logs/error.log'), level: 'error' }),
-        new _transports.File({ filename: join(_dirname, '../../logs/info.log'), level: 'info' }),
-        new _transports.File({ filename: join(_dirname, '../../logs/combined.log'), level: 'silly' }),
+        new _transports.File({
+            filename: join(_dirname, '../../logs/error.log'),
+            level: 'error'
+        }),
+        new _transports.File({
+            filename: join(_dirname, '../../logs/info.log'),
+            level: 'info'
+        }),
+        new _transports.File({
+            filename: join(_dirname, '../../logs/combined.log'),
+            level: 'silly'
+        }),
         new _transports.Console({
             format: _format.combine(
                 _format.colorize(),
