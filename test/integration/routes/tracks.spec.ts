@@ -19,8 +19,7 @@ describe('POST api/v1/tracks', function () {
 
         beforeEach(async function () {
             testUser = new UserModel({
-                userName: 'TestUser',
-                signUpDate: new Date()
+                userName: 'TestUser'
             })
             await testUser.save()
             track = { trackName: 'test', accessToken: testUser.accessToken }
@@ -72,8 +71,7 @@ describe('POST api/v1/tracks', function () {
 
         beforeEach(async function () {
             testUser = new UserModel({
-                userName: 'TestUser',
-                signUpDate: new Date()
+                userName: 'TestUser'
             })
             await testUser.save()
             track = { trackName: 'test', accessToken: testUser.accessToken, timeOffset: 10 }
@@ -118,8 +116,7 @@ describe('POST api/v1/tracks', function () {
 
         beforeEach(async function () {
             testUser = new UserModel({
-                userName: 'TestUser',
-                signUpDate: new Date()
+                userName: 'TestUser'
             })
             await testUser.save()
             track = { trackName: 'test', accessToken: testUser.accessToken, timeOffset: -10 }
@@ -164,8 +161,7 @@ describe('POST api/v1/tracks', function () {
 
         beforeEach(async function () {
             testUser = new UserModel({
-                userName: 'TestUser',
-                signUpDate: new Date()
+                userName: 'TestUser'
             })
             await testUser.save()
             track = { trackName: 'test', accessToken: testUser.accessToken, timeOffset: Number.MAX_VALUE }
@@ -189,8 +185,7 @@ describe('POST api/v1/tracks', function () {
 
         beforeEach(async function () {
             testUser = new UserModel({
-                userName: 'TestUser',
-                signUpDate: new Date()
+                userName: 'TestUser'
             })
             await testUser.save()
             track = { trackName: 'test', accessToken: testUser.accessToken, timeOffset: -Number.MAX_VALUE }
@@ -215,13 +210,11 @@ describe('DELETE api/v1/tracks/last', function () {
 
     beforeEach(async function () {
         testUserA = new UserModel({
-            userName: 'testUserA',
-            signUpDate: new Date()
+            userName: 'testUserA'
         })
         await testUserA.save()
         testTrackA1 = new TrackModel({
             trackName: 'testTrackA1',
-            date: new Date(),
             userId: testUserA._id
         })
         await testTrackA1.save()
@@ -323,7 +316,6 @@ describe('DELETE api/v1/tracks/last', function () {
         beforeEach(async function () {
             const newTrack = new TrackModel({
                 trackName: 'newTrack',
-                date: new Date(),
                 userId: testUserA._id
             })
             await newTrack.save()
@@ -381,13 +373,11 @@ describe('DELETE api/v1/tracks/last', function () {
 
         beforeEach(async function () {
             testUserB = new UserModel({
-                userName: 'testUserB',
-                signUpDate: new Date()
+                userName: 'testUserB'
             })
             await testUserB.save()
             testTrackB1 = new TrackModel({
                 trackName: 'testTrackB1',
-                date: new Date(),
                 userId: testUserB._id
             })
             await testTrackB1.save()
@@ -451,13 +441,11 @@ describe('DELETE api/v1/tracks/last', function () {
             beforeEach(async function () {
                 testTrackA2 = new TrackModel({
                     trackName: 'testTrackA2',
-                    date: new Date(),
                     userId: testUserA._id
                 })
                 await testTrackA2.save()
                 testTrackB2 = new TrackModel({
                     trackName: 'testTrackB2',
-                    date: new Date(),
                     userId: testUserB._id
                 })
                 await testTrackB2.save()
