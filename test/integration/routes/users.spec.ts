@@ -129,6 +129,64 @@ describe('DELETE api/v1/users', function () {
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(res.body).to.be.empty
         })
+
+        it('should delete all tracks associated with the user', async function () {
+            for (let i = 0; i < 3; i++) {
+                new TrackModel({
+                    userId: testUser._id,
+                    trackName: 'TestTrack'
+                }).save()
+            }
+
+            await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
+
+            const allTracks = await UserModel.find({}).exec()
+            expect(allTracks.length).to.equal(0)
+        })
+
+        it('should not delete any tracks not associated with the user', async function () {
+            const otherUser = new UserModel({
+                userName: 'OtherUser',
+                signUpDate: new Date()
+            })
+            await otherUser.save()
+
+            for (let i = 0; i < 3; i++) {
+                new TrackModel({
+                    userId: testUser._id,
+                    trackName: 'TestTrack'
+                }).save()
+            }
+
+            await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
+
+            const allTracks = await UserModel.find({}).exec()
+            expect(allTracks.length).to.equal(1)
+        })
+
+        it('should delete users tracks but not other users tracks', async function () {
+            const otherUser = new UserModel({
+                userName: 'OtherUser',
+                signUpDate: new Date()
+            })
+            await otherUser.save()
+
+            for (let i = 0; i < 3; i++) {
+                new TrackModel({
+                    userId: testUser._id,
+                    trackName: 'TestTrack'
+                }).save()
+                new TrackModel({
+                    userId: otherUser._id,
+                    trackName: 'TestTrack'
+                }).save()
+            }
+
+            await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
+
+            const allTracks = await UserModel.find({}).exec()
+            expect(allTracks.length).to.equal(1)
+        })
     })
 
     describe('Delete a user with an invalid accessToken', function () {
