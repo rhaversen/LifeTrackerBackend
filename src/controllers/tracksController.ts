@@ -54,7 +54,7 @@ export async function createTrack (req: Request, res: Response, next: NextFuncti
     }
 
     const newTrack = new TrackModel({
-        trackName: validator.escape(trackName),
+        trackName: trackName,
         date,
         userId: user._id
     })
