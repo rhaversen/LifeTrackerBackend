@@ -8,6 +8,7 @@ import { expect } from 'chai'
 // Own modules
 import { chaiAppServer as agent } from '../../testSetup.js'
 import UserModel, { type IUser } from '../../../src/models/User.js'
+import TrackModel from '../../../src/models/Track.js'
 
 describe('POST api/v1/users', function () {
     describe('Post a new user', function () {
@@ -130,62 +131,45 @@ describe('DELETE api/v1/users', function () {
             expect(res.body).to.be.empty
         })
 
-        it('should delete all tracks associated with the user', async function () {
-            for (let i = 0; i < 3; i++) {
-                new TrackModel({
-                    userId: testUser._id,
-                    trackName: 'TestTrack'
-                }).save()
-            }
+        describe('Delete user data', function () {
+            let otherUser: IUser
 
-            await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
+            beforeEach(async function () {
+                otherUser = new UserModel({
+                    userName: 'OtherUser'
+                })
+                await otherUser.save()
 
-            const allTracks = await UserModel.find({}).exec()
-            expect(allTracks.length).to.equal(0)
-        })
-
-        it('should not delete any tracks not associated with the user', async function () {
-            const otherUser = new UserModel({
-                userName: 'OtherUser',
-                signUpDate: new Date()
+                for (let i = 0; i < 3; i++) {
+                    await TrackModel.create({
+                        userId: testUser._id,
+                        trackName: 'TestTrack'
+                    })
+                    await TrackModel.create({
+                        userId: otherUser._id,
+                        trackName: 'OtherTrack'
+                    })
+                }
             })
-            await otherUser.save()
 
-            for (let i = 0; i < 3; i++) {
-                new TrackModel({
-                    userId: testUser._id,
-                    trackName: 'TestTrack'
-                }).save()
-            }
+            it('should delete all tracks associated with the user', async function () {
+                await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
 
-            await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
-
-            const allTracks = await UserModel.find({}).exec()
-            expect(allTracks.length).to.equal(1)
-        })
-
-        it('should delete users tracks but not other users tracks', async function () {
-            const otherUser = new UserModel({
-                userName: 'OtherUser',
-                signUpDate: new Date()
+                const allTracks = await TrackModel.find({}).exec()
+                expect(allTracks.length).to.equal(3)
+                const userTracks = await TrackModel.find({ userId: testUser._id }).exec()
+                expect(userTracks.length).to.equal(0)
             })
-            await otherUser.save()
 
-            for (let i = 0; i < 3; i++) {
-                new TrackModel({
-                    userId: testUser._id,
-                    trackName: 'TestTrack'
-                }).save()
-                new TrackModel({
-                    userId: otherUser._id,
-                    trackName: 'TestTrack'
-                }).save()
-            }
+            it('should not delete any tracks not associated with the user', async function () {
+                await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
 
-            await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
+                const allTracks = await TrackModel.find({}).exec()
+                expect(allTracks.length).to.equal(3)
 
-            const allTracks = await UserModel.find({}).exec()
-            expect(allTracks.length).to.equal(1)
+                const userTracks = await TrackModel.find({ userId: otherUser._id }).exec()
+                expect(userTracks.length).to.equal(3)
+            })
         })
     })
 
