@@ -69,7 +69,7 @@ export async function deleteUser (req: Request, res: Response, next: NextFunctio
         return
     }
 
-    await UserModel.deleteOne({ accessToken })
+    await user.deleteUserAndAllAssociatedData() // Starts a transaction
 
     res.status(204).send()
 }
