@@ -93,30 +93,32 @@ describe('POST api/v1/tracks', function () {
             await testUser.save()
         })
 
-        for (const trackName of values) {
-            for (const timeOffset of values) {
-                const testString = JSON.stringify({
-                    trackName,
-                    timeOffset
-                })
-
-                it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
-                    track = {
+        describe('Valid Access Token', function () {
+            for (const trackName of values) {
+                for (const timeOffset of values) {
+                    const testString = JSON.stringify({
                         trackName,
-                        accessToken: testUser.accessToken,
                         timeOffset
-                    }
+                    })
 
-                    const res = await agent.post('/v1/tracks').send(track)
+                    it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
+                        track = {
+                            trackName,
+                            accessToken: testUser.accessToken,
+                            timeOffset
+                        }
 
-                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                    expect(res.status).to.not.be.undefined
-                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                    expect(res.body).to.not.be.undefined
-                    expect(res).to.not.have.status(500)
-                })
+                        const res = await agent.post('/v1/tracks').send(track)
+
+                        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                        expect(res.status).to.not.be.undefined
+                        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                        expect(res.body).to.not.be.undefined
+                        expect(res).to.not.have.status(500)
+                    })
+                }
             }
-        }
+        })
 
         describe('Invalid Access Token', function () {
             let track: { trackName?: any, accessToken?: any, timeOffset?: any }
