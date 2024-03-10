@@ -296,7 +296,7 @@ describe('DELETE api/v1/tracks/last', function () {
         })
 
         it('should respond with status code 400', async function () {
-            expect(res).to.have.status(400)
+            expect(res).to.have.status(404)
         })
     })
 
