@@ -114,7 +114,8 @@ describe('POST api/v1/tracks', function () {
                         expect(res.status).to.not.be.undefined
                         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                         expect(res.body).to.not.be.undefined
-                        expect(res).to.not.have.status(500)
+
+                        expect(res.status).to.be.greaterThanOrEqual(200).and.to.be.lessThan(500)
                     })
                 }
             }
@@ -141,7 +142,7 @@ describe('POST api/v1/tracks', function () {
                             const allTracks = await TrackModel.find({}).exec()
 
                             expect(allTracks.length).to.equal(0)
-                            expect(res.status).to.be.above(400).and.to.be.below(500)
+                            expect(res.status).to.be.greaterThanOrEqual(400).and.to.be.lessThan(500)
 
                             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                             expect(res.status).to.not.be.undefined
@@ -172,7 +173,8 @@ describe('POST api/v1/users', function () {
             expect(res.status).to.not.be.undefined
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(res.body).to.not.be.undefined
-            expect(res).to.not.have.status(500)
+
+            expect(res.status).to.be.greaterThanOrEqual(200).and.to.be.lessThanOrEqual(400)
         })
     }
 })
@@ -210,7 +212,9 @@ describe('DELETE api/v1/users', function () {
                     expect(res.status).to.not.be.undefined
                     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                     expect(res.body).to.not.be.undefined
-                    expect(res).to.not.have.status(500)
+
+                    expect(res.status).to.be.greaterThanOrEqual(400).and.to.be.lessThan(500)
+                    expect(res).to.not.have.status(404)
                 })
             }
         }
@@ -239,7 +243,7 @@ describe('DELETE api/v1/users', function () {
                         const allUsers = await UserModel.find({}).exec()
 
                         expect(allUsers.length).to.equal(1)
-                        expect(res.status).to.be.above(400).and.to.be.below(500)
+                        expect(res.status).to.be.greaterThanOrEqual(400).and.to.be.lessThan(500)
 
                         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                         expect(res.status).to.not.be.undefined
@@ -282,7 +286,7 @@ describe('DELETE api/v1/tracks/last', function () {
             const allTracks = await TrackModel.find({}).exec()
 
             expect(allTracks.length).to.equal(1)
-            expect(res.status).to.be.above(400).and.to.be.below(500)
+            expect(res.status).to.be.greaterThanOrEqual(400).and.to.be.lessThan(500)
 
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(res.status).to.not.be.undefined
