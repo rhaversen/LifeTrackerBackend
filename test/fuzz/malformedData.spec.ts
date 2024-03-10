@@ -295,3 +295,94 @@ describe('DELETE api/v1/tracks/last', function () {
         })
     }
 })
+
+describe('GET api/v1/tracks', function () {
+    describe('Valid Access Token', function () {
+        let testUser: IUser
+
+        beforeEach(async function () {
+            testUser = await UserModel.create({
+                userName: 'TestUser',
+                signUpDate: new Date()
+            })
+            await TrackModel.create({
+                trackName: 'TestTrack',
+                userId: testUser._id,
+            })
+        })
+
+        for (const query of values) {
+            const testString = JSON.stringify({
+                accessToken: 'accessToken',
+                query
+            })
+
+            it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
+                const res = await agent.get(`/v1/tracks?trackName=${query}`).send({accessToken: testUser.accessToken})
+
+                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                expect(res.body).to.not.be.undefined
+                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                expect(res.status).to.not.be.undefined
+
+                expect(res).to.have.status(404)
+            })
+        }
+    })
+
+    describe('Invalid Access Token', function () {
+
+        beforeEach(async function () {
+            const testUser = await UserModel.create({
+                userName: 'TestUser',
+                signUpDate: new Date()
+            })
+            await TrackModel.create({
+                trackName: 'TestTrack',
+                userId: testUser._id,
+            })
+        })
+
+        describe('Random query', function () {
+            for (const accessToken of values) {
+                for (const query of values) {
+                    const testString = JSON.stringify({
+                        accessToken,
+                        query
+                    })
+    
+                    it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
+                        const res = await agent.get(`/v1/tracks?trackName=${query}`).send({accessToken})
+    
+                        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                        expect(res.body).to.not.be.undefined
+                        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                        expect(res.status).to.not.be.undefined
+
+                        expect(res).to.have.status(404)
+                    })
+                }
+            }    
+        })
+
+        describe('Valid query', function () {
+            for (const accessToken of values) {
+                const testString = JSON.stringify({
+                    accessToken,
+                    query: 'TestTrack'
+                })
+
+                it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
+                    const res = await agent.get(`/v1/tracks?trackName=TestTrack`).send({accessToken})
+                    
+                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                    expect(res.body).to.not.be.undefined
+                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                    expect(res.status).to.not.be.undefined
+
+                    expect(res).to.have.status(404)
+                })
+            }    
+        })
+    })
+})
