@@ -52,15 +52,13 @@ export async function createTrack (req: Request, res: Response, next: NextFuncti
         return
     }
 
-    const newTrack = new TrackModel({
+    const newTrack = await TrackModel.create({
         trackName,
         date,
         userId: user._id
     })
 
-    const savedTrack = await newTrack.save()
-
-    res.status(201).json(savedTrack)
+    res.status(201).json(newTrack)
 }
 
 export async function deleteLastTrack (req: Request, res: Response, next: NextFunction): Promise<void> {
