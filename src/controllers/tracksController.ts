@@ -48,7 +48,7 @@ export async function createTrack (req: Request, res: Response, next: NextFuncti
     const user = await UserModel.findOne({ accessToken })
 
     if (user === null) {
-        res.status(400).json({ error: 'accessToken is not valid.' })
+        res.status(404).json({ error: 'accessToken is not valid.' })
         return
     }
 
@@ -80,7 +80,7 @@ export async function deleteLastTrack (req: Request, res: Response, next: NextFu
     const user = await UserModel.findOne({ accessToken })
 
     if (user === null) {
-        res.status(400).json({ error: 'accessToken is not valid.' })
+        res.status(404).json({ error: 'accessToken is not valid.' })
         return
     }
 
@@ -119,7 +119,7 @@ export async function getTracksWithQuery (req: Request, res: Response, next: Nex
     const user = await UserModel.findOne({ accessToken })
 
     if (user === null) {
-        res.status(400).json({ error: 'accessToken is not valid.' })
+        res.status(404).json({ error: 'accessToken is not valid.' })
         return
     }
 
@@ -127,6 +127,11 @@ export async function getTracksWithQuery (req: Request, res: Response, next: Nex
         userId: user._id,
         trackName
     })
+
+    if (tracks.length === 0) {
+        res.status(404).json({ error: 'No tracks found with the provided query.' })
+        return
+    }
 
     res.status(200).send(tracks)
 }
