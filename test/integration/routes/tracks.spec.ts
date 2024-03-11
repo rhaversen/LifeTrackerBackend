@@ -506,16 +506,16 @@ describe('GET api/v1/tracks', function () {
     let userB: IUser
 
     beforeEach(async function () {
-        userA = await UserModel.create({ userName: 'testUserA' });
-        userB = await UserModel.create({ userName: 'testUserB' });
-        
+        userA = await UserModel.create({ userName: 'testUserA' })
+        userB = await UserModel.create({ userName: 'testUserB' })
+
         await TrackModel.insertMany([
             { trackName: 'testTrackA1', userId: userA._id },
             { trackName: 'testTrackA1', userId: userA._id },
             { trackName: 'testTrackA2', userId: userA._id },
-            { trackName: 'testTrackB1', userId: userB._id }, 
+            { trackName: 'testTrackB1', userId: userB._id },
             { trackName: 'testTrackB2', userId: userB._id }
-        ])        
+        ])
     })
 
     describe('Fetch all tracks', function () {
@@ -554,9 +554,9 @@ describe('GET api/v1/tracks', function () {
         let res: Response
 
         beforeEach(async function () {
-            res = await agent.get('/v1/tracks?trackName=testTrackA1').send({ accessToken: userA.accessToken} )
+            res = await agent.get('/v1/tracks?trackName=testTrackA1').send({ accessToken: userA.accessToken })
         })
-    
+
         it('should respond with status code 200', async function () {
             expect(res).to.have.status(200)
         })

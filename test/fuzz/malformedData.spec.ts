@@ -307,7 +307,7 @@ describe('GET api/v1/tracks', function () {
             })
             await TrackModel.create({
                 trackName: 'TestTrack',
-                userId: testUser._id,
+                userId: testUser._id
             })
         })
 
@@ -318,7 +318,8 @@ describe('GET api/v1/tracks', function () {
             })
 
             it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
-                const res = await agent.get(`/v1/tracks?trackName=${query}`).send({accessToken: testUser.accessToken})
+                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                const res = await agent.get(`/v1/tracks?trackName=${query}`).send({ accessToken: testUser.accessToken })
 
                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                 expect(res.body).to.not.be.undefined
@@ -331,7 +332,6 @@ describe('GET api/v1/tracks', function () {
     })
 
     describe('Invalid Access Token', function () {
-
         beforeEach(async function () {
             const testUser = await UserModel.create({
                 userName: 'TestUser',
@@ -339,7 +339,7 @@ describe('GET api/v1/tracks', function () {
             })
             await TrackModel.create({
                 trackName: 'TestTrack',
-                userId: testUser._id,
+                userId: testUser._id
             })
         })
 
@@ -350,10 +350,11 @@ describe('GET api/v1/tracks', function () {
                         accessToken,
                         query
                     })
-    
+
                     it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
-                        const res = await agent.get(`/v1/tracks?trackName=${query}`).send({accessToken})
-    
+                        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                        const res = await agent.get(`/v1/tracks?trackName=${query}`).send({ accessToken })
+
                         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                         expect(res.body).to.not.be.undefined
                         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -362,7 +363,7 @@ describe('GET api/v1/tracks', function () {
                         expect(res).to.have.status(404)
                     })
                 }
-            }    
+            }
         })
 
         describe('Valid query', function () {
@@ -373,8 +374,8 @@ describe('GET api/v1/tracks', function () {
                 })
 
                 it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
-                    const res = await agent.get(`/v1/tracks?trackName=TestTrack`).send({accessToken})
-                    
+                    const res = await agent.get('/v1/tracks?trackName=TestTrack').send({ accessToken })
+
                     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                     expect(res.body).to.not.be.undefined
                     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -382,7 +383,7 @@ describe('GET api/v1/tracks', function () {
 
                     expect(res).to.have.status(404)
                 })
-            }    
+            }
         })
     })
 })

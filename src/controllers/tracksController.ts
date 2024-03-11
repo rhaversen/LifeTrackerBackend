@@ -123,7 +123,7 @@ export async function getTracksWithQuery (req: Request, res: Response, next: Nex
 
     const tracks = await TrackModel.find({
         userId: user._id,
-        ...(trackName && { trackName })
+        ...(trackName !== undefined && { trackName })
     })
 
     if (tracks.length === 0) {
