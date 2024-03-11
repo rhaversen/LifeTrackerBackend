@@ -1,4 +1,4 @@
-name: Integration and Unit Tests CI
+name: Linting Test CI
 
 on:
   push:
@@ -21,13 +21,5 @@ jobs:
           node-version: 'lts/*'
       - name: Install Dependencies
         run: npm install
-      - name: Build
-        run: npm run build
-      - name: Integration tests
-        run: NODE_ENV=test npm run test:integration
-      - name: Unit tests
-        run: NODE_ENV=test npm run test:unit
-      - name: Test build Docker image
-        run: |
-          docker buildx create --use
-          docker buildx build --output type=docker --file Dockerfile --platform linux/arm64 .
+      - name: Lint
+        run: npm run lint

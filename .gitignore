@@ -5,3 +5,4 @@ logs/
 .env
 .nyc_output/
 coverage/
+.idea/

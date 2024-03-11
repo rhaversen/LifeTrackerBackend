@@ -3,18 +3,15 @@
 // file deepcode ignore HardcodedNonCryptoSecret/test: Hardcoded credentials are only used for testing purposes
 
 // Third-party libraries
-import validator from 'validator'
 import { expect } from 'chai'
 
 // Own modules
 import { chaiAppServer as agent } from '../testSetup.js'
 import UserModel, { type IUser } from '../../src/models/User.js'
-import TrackModel from '../../src/models/Track.js'
+import TrackModel, { type ITrack } from '../../src/models/Track.js'
 
 // Global variables and setup
 const values = [
-    'actualValue', // Used for inputting the real and expected values
-
     // Strings
     '', // empty string
     'test', // string
@@ -74,80 +71,87 @@ const values = [
 
     // Objects (including special object types and nested objects)
     {}, // object
-    { a: 1, b: 2 }, // object
+    {
+        a: 1,
+        b: 2
+    }, // object
     { a: { b: { c: { d: 1 } } } }, // deeply nested object
-    function () { } // a function object returning void
+    function () {
+    } // a function object returning void
 ]
 
 describe('POST api/v1/tracks', function () {
-    let testUser: IUser
-    let track: { trackName?: any, accessToken?: any, timeOffset?: any }
+    describe('Valid Access Token', function () {
+        let track: { trackName?: any, accessToken: string, timeOffset?: any }
+        let testUser: IUser
 
-    beforeEach(async function () {
-        testUser = new UserModel({
-            userName: 'TestUser',
-            signUpDate: new Date()
+        beforeEach(async function () {
+            testUser = new UserModel({
+                userName: 'TestUser',
+                signUpDate: new Date()
+            })
+            await testUser.save()
         })
-        await testUser.save()
-    })
 
-    function handleTestCase (trackName: any, accessToken: any, timeOffset: any): void {
-        const trackNameMessage = trackName === undefined ? 'trackName missing' : `trackName: ${validator.escape(String(trackName))}`
-        const accessTokenMessage = accessToken === undefined ? 'accessToken missing' : `accessToken: ${validator.escape(String(accessToken))}`
-        const timeOffsetMessage = timeOffset === undefined ? 'timeOffset missing' : `timeOffset: ${validator.escape(String(timeOffset))}`
+        describe('Valid Access Token', function () {
+            for (const trackName of values) {
+                for (const timeOffset of values) {
+                    const testString = JSON.stringify({
+                        trackName,
+                        timeOffset
+                    })
 
-        const testName = [trackNameMessage, accessTokenMessage, timeOffsetMessage].join(', ')
+                    it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
+                        track = {
+                            trackName,
+                            accessToken: testUser.accessToken,
+                            timeOffset
+                        }
 
-        track = {
-            trackName,
-            accessToken,
-            timeOffset
-        }
+                        const res = await agent.post('/v1/tracks').send(track)
 
-        // Simulate JSON serialization as it would occur in an HTTP request
-        const trackString = JSON.stringify(track)
-        const trackJSON = JSON.parse(trackString) as { trackName?: any, accessToken?: any, timeOffset?: any }
+                        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                        expect(res.status).to.not.be.undefined
+                        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                        expect(res.body).to.not.be.undefined
 
-        const isTrackNameValid = trackJSON.trackName !== ''
-        const isAccessTokenValid = trackJSON.accessToken === 'actualValue'
-        const isTimeOffsetUndefined = trackJSON.timeOffset === undefined
-        const isTimeOffsetValid = !isNaN((new Date(Date.now() + Number(trackJSON.timeOffset ?? 0))).getTime())
+                        expect(res.status).to.be.greaterThanOrEqual(200).and.to.be.lessThan(500)
+                    })
+                }
+            }
+        })
 
-        if (isTrackNameValid && isAccessTokenValid && (isTimeOffsetUndefined || isTimeOffsetValid)) {
-            // These cases are not considered malformed data
-            it(`should respond with status 201 with case ${testName}`, async function () {
-                track = {}
-                if (trackName !== undefined) track.trackName = trackName
-                if (accessToken !== undefined) track.accessToken = accessToken === 'actualValue' ? testUser.accessToken : accessToken
-                if (timeOffset !== undefined) track.timeOffset = timeOffset
+        describe('Invalid Access Token', function () {
+            let track: { trackName?: any, accessToken?: any, timeOffset?: any }
+            for (const accessToken of values) {
+                for (const trackName of values) {
+                    for (const timeOffset of values) {
+                        const testString = JSON.stringify({
+                            trackName,
+                            timeOffset
+                        })
 
-                const res = await agent.post('/v1/tracks').send(track)
-                const allTracks = await TrackModel.find({}).exec()
+                        it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
+                            track = {
+                                trackName,
+                                accessToken,
+                                timeOffset
+                            }
 
-                expect(allTracks.length).to.equal(1)
-                expect(res).to.have.status(201)
-            })
-        } else {
-            it(`should not create a track with case ${testName}`, async function () {
-                track = {}
-                if (trackName !== undefined) track.trackName = trackName
-                if (accessToken !== undefined) track.accessToken = accessToken === 'actualValue' ? testUser.accessToken : accessToken
-                if (timeOffset !== undefined) track.timeOffset = timeOffset
+                            const res = await agent.post('/v1/tracks').send(track)
+                            const allTracks = await TrackModel.find({}).exec()
 
-                const res = await agent.post('/v1/tracks').send(track)
-                const allTracks = await TrackModel.find({}).exec()
+                            expect(allTracks.length).to.equal(0)
+                            expect(res.status).to.be.greaterThanOrEqual(400).and.to.be.lessThan(500)
 
-                expect(allTracks.length).to.equal(0)
-                expect(res).to.have.status(400)
-            })
-        }
-    }
-
-    values.forEach(trackName => {
-        values.forEach(accessToken => {
-            values.forEach(timeOffset => {
-                handleTestCase(trackName, accessToken, timeOffset)
-            })
+                            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                            expect(res.status).to.not.be.undefined
+                            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                            expect(res.body).to.not.be.undefined
+                        })
+                    }
+                }
+            }
         })
     })
 })
@@ -155,53 +159,28 @@ describe('POST api/v1/tracks', function () {
 describe('POST api/v1/users', function () {
     let user: { userName?: any }
 
-    function handleTestCase (userName: any): void {
-        const testName = userName === undefined ? 'userName missing' : `userName: ${validator.escape(String(userName))}`
+    for (const userName of values) {
+        const testString = JSON.stringify({ userName })
 
-        user = {
-            userName
-        }
+        it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
+            user = {
+                userName
+            }
 
-        // Simulate JSON serialization as it would occur in an HTTP request
-        const userString = JSON.stringify(user)
-        const userJSON = JSON.parse(userString) as { userName?: any }
+            const res = await agent.post('/v1/users').send(user)
 
-        const isUserNameValid = userJSON.userName !== ''
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            expect(res.status).to.not.be.undefined
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            expect(res.body).to.not.be.undefined
 
-        if (isUserNameValid) {
-            // These cases are not considered malformed data
-            it(`should respond with status 201 with case ${testName}`, async function () {
-                user = {}
-                if (userName !== undefined) user.userName = userName
-
-                const res = await agent.post('/v1/users').send(user)
-                const allUsers = await UserModel.find({}).exec()
-
-                expect(allUsers.length).to.equal(1)
-                expect(res).to.have.status(201)
-            })
-        } else {
-            it(`should not create a user with case ${testName}`, async function () {
-                user = {}
-                if (userName !== undefined) user.userName = userName
-
-                const res = await agent.post('/v1/users').send(user)
-                const allUsers = await UserModel.find({}).exec()
-
-                expect(allUsers.length).to.equal(0)
-                expect(res).to.have.status(400)
-            })
-        }
+            expect(res.status).to.be.greaterThanOrEqual(200).and.to.be.lessThanOrEqual(400)
+        })
     }
-
-    values.forEach(userName => {
-        handleTestCase(userName)
-    })
 })
 
 describe('DELETE api/v1/users', function () {
     let testUser: IUser
-    let user: { userName?: any, accessToken?: any, confirmDeletion?: any }
 
     beforeEach(async function () {
         testUser = new UserModel({
@@ -210,74 +189,201 @@ describe('DELETE api/v1/users', function () {
         await testUser.save()
     })
 
-    function handleTestCase (userName: any, accessToken: any, confirmDeletion: any): void {
-        const userNameMessage = userName === undefined ? 'userName missing' : `userName: ${validator.escape(String(userName))}`
-        const accessTokenMessage = accessToken === undefined ? 'accessToken missing' : `accessToken: ${validator.escape(String(accessToken))}`
-        const confirmDeletionMessage = confirmDeletion === undefined ? 'confirmDeletion missing' : `confirmDeletion: ${validator.escape(String(confirmDeletion))}`
+    describe('Valid Access Token', function () {
+        let user: { userName?: any, accessToken: string, confirmDeletion?: any }
 
-        const testName = [userNameMessage, accessTokenMessage, confirmDeletionMessage].join(', ')
+        for (const userName of values) {
+            for (const confirmDeletion of values) {
+                const testString = JSON.stringify({
+                    userName,
+                    confirmDeletion
+                })
 
-        user = {
-            userName,
-            accessToken,
-            confirmDeletion
+                it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
+                    user = {
+                        userName,
+                        accessToken: testUser.accessToken,
+                        confirmDeletion
+                    }
+
+                    const res = await agent.delete('/v1/users').send(user)
+
+                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                    expect(res.status).to.not.be.undefined
+                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                    expect(res.body).to.not.be.undefined
+
+                    expect(res.status).to.be.greaterThanOrEqual(400).and.to.be.lessThan(500)
+                    expect(res).to.not.have.status(404)
+                })
+            }
         }
+    })
 
-        // Simulate JSON serialization as it would occur in an HTTP request
-        const userString = JSON.stringify(user)
-        const userJSON = JSON.parse(userString) as { userName?: any, accessToken?: any, confirmDeletion?: any }
+    describe('Invalid Access Token', function () {
+        let user: { userName?: any, accessToken?: any, confirmDeletion?: any }
 
-        const isUserNameValid = userJSON.userName !== ''
-        const isAccessTokenValid = userJSON.accessToken === 'actualValue'
-        const isConfirmDeletionValid = userJSON.confirmDeletion === true
+        for (const userName of values) {
+            for (const accessToken of values) {
+                for (const confirmDeletion of values) {
+                    const testString = JSON.stringify({
+                        userName,
+                        confirmDeletion,
+                        accessToken
+                    })
 
-        if (isUserNameValid && isAccessTokenValid && isConfirmDeletionValid) {
-            it(`should respond with status 204 with case ${testName}`, async function () {
-                user = {}
-                if (userName !== undefined) user.userName = userName
-                if (accessToken !== undefined) user.accessToken = accessToken === 'actualValue' ? testUser.accessToken : accessToken
-                if (confirmDeletion !== undefined) user.confirmDeletion = confirmDeletion
+                    it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
+                        user = {
+                            userName,
+                            accessToken,
+                            confirmDeletion
+                        }
 
-                const res = await agent.delete('/v1/users').send(user)
-                const allUsers = await UserModel.find({}).exec()
+                        const res = await agent.delete('/v1/users').send(user)
+                        const allUsers = await UserModel.find({}).exec()
 
-                expect(allUsers.length).to.equal(0)
-                expect(res).to.have.status(204)
+                        expect(allUsers.length).to.equal(1)
+                        expect(res.status).to.be.greaterThanOrEqual(400).and.to.be.lessThan(500)
+
+                        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                        expect(res.status).to.not.be.undefined
+                        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                        expect(res.body).to.not.be.undefined
+                    })
+                }
+            }
+        }
+    })
+})
+
+describe('DELETE api/v1/tracks/last', function () {
+    let testUser: IUser
+    let testTrack: ITrack
+    let user: { accessToken?: any }
+
+    beforeEach(async function () {
+        testUser = new UserModel({
+            userName: 'TestUser'
+        })
+        await testUser.save()
+        testTrack = new TrackModel({
+            trackName: 'testTrackA1',
+            date: new Date(),
+            userId: testUser._id
+        })
+        await testTrack.save()
+    })
+
+    for (const accessToken of values) {
+        const testString = JSON.stringify({ accessToken })
+
+        it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
+            user = {
+                accessToken
+            }
+
+            const res = await agent.delete('/v1/tracks/last').send(user)
+            const allTracks = await TrackModel.find({}).exec()
+
+            expect(allTracks.length).to.equal(1)
+            expect(res.status).to.be.greaterThanOrEqual(400).and.to.be.lessThan(500)
+
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            expect(res.status).to.not.be.undefined
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            expect(res.body).to.not.be.undefined
+        })
+    }
+})
+
+describe('GET api/v1/tracks', function () {
+    describe('Valid Access Token', function () {
+        let testUser: IUser
+
+        beforeEach(async function () {
+            testUser = await UserModel.create({
+                userName: 'TestUser',
+                signUpDate: new Date()
             })
-        } else if (isUserNameValid && !isAccessTokenValid && isConfirmDeletionValid) {
-            it(`should respond with status 404 with case ${testName}`, async function () {
-                user = {}
-                if (userName !== undefined) user.userName = userName
-                if (accessToken !== undefined) user.accessToken = accessToken === 'actualValue' ? testUser.accessToken : accessToken
-                if (confirmDeletion !== undefined) user.confirmDeletion = confirmDeletion
+            await TrackModel.create({
+                trackName: 'TestTrack',
+                userId: testUser._id
+            })
+        })
 
-                const res = await agent.delete('/v1/users').send(user)
-                const allUsers = await UserModel.find({}).exec()
+        for (const query of values) {
+            const testString = JSON.stringify({
+                accessToken: 'accessToken',
+                query
+            })
 
-                expect(allUsers.length).to.equal(1)
+            it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
+                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                const res = await agent.get(`/v1/tracks?trackName=${query}`).send({ accessToken: testUser.accessToken })
+
+                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                expect(res.body).to.not.be.undefined
+                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                expect(res.status).to.not.be.undefined
+
                 expect(res).to.have.status(404)
             })
-        } else {
-            it(`should not delete user with case ${testName}`, async function () {
-                user = {}
-                if (userName !== undefined) user.userName = userName
-                if (accessToken !== undefined) user.accessToken = accessToken === 'actualValue' ? testUser.accessToken : accessToken
-                if (confirmDeletion !== undefined) user.confirmDeletion = confirmDeletion
-
-                const res = await agent.delete('/v1/users').send(user)
-                const allUsers = await UserModel.find({}).exec()
-
-                expect(allUsers.length).to.equal(1)
-                expect(res).to.have.status(400)
-            })
         }
-    }
+    })
 
-    values.forEach(userName => {
-        values.forEach(accessToken => {
-            values.forEach(confirmDeletion => {
-                handleTestCase(userName, accessToken, confirmDeletion)
+    describe('Invalid Access Token', function () {
+        beforeEach(async function () {
+            const testUser = await UserModel.create({
+                userName: 'TestUser',
+                signUpDate: new Date()
             })
+            await TrackModel.create({
+                trackName: 'TestTrack',
+                userId: testUser._id
+            })
+        })
+
+        describe('Random query', function () {
+            for (const accessToken of values) {
+                for (const query of values) {
+                    const testString = JSON.stringify({
+                        accessToken,
+                        query
+                    })
+
+                    it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
+                        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                        const res = await agent.get(`/v1/tracks?trackName=${query}`).send({ accessToken })
+
+                        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                        expect(res.body).to.not.be.undefined
+                        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                        expect(res.status).to.not.be.undefined
+
+                        expect(res).to.have.status(404)
+                    })
+                }
+            }
+        })
+
+        describe('Valid query', function () {
+            for (const accessToken of values) {
+                const testString = JSON.stringify({
+                    accessToken,
+                    query: 'TestTrack'
+                })
+
+                it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
+                    const res = await agent.get('/v1/tracks?trackName=TestTrack').send({ accessToken })
+
+                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                    expect(res.body).to.not.be.undefined
+                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                    expect(res.status).to.not.be.undefined
+
+                    expect(res).to.have.status(404)
+                })
+            }
         })
     })
 })

@@ -2,7 +2,6 @@
 
 // Third-party libraries
 import { type NextFunction, type Request, type Response } from 'express'
-import validator from 'validator'
 
 // Own modules
 import TrackModel from '../models/Track.js'
@@ -49,19 +48,17 @@ export async function createTrack (req: Request, res: Response, next: NextFuncti
     const user = await UserModel.findOne({ accessToken })
 
     if (user === null) {
-        res.status(400).json({ error: 'accessToken is not valid.' })
+        res.status(404).json({ error: 'accessToken is not valid.' })
         return
     }
 
-    const newTrack = new TrackModel({
-        trackName: validator.escape(trackName),
+    const newTrack = await TrackModel.create({
+        trackName,
         date,
         userId: user._id
     })
 
-    const savedTrack = await newTrack.save()
-
-    res.status(201).json(savedTrack)
+    res.status(201).json(newTrack)
 }
 
 export async function deleteLastTrack (req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -81,7 +78,7 @@ export async function deleteLastTrack (req: Request, res: Response, next: NextFu
     const user = await UserModel.findOne({ accessToken })
 
     if (user === null) {
-        res.status(400).json({ error: 'accessToken is not valid.' })
+        res.status(404).json({ error: 'accessToken is not valid.' })
         return
     }
 
@@ -89,4 +86,50 @@ export async function deleteLastTrack (req: Request, res: Response, next: NextFu
     await TrackModel.findOneAndDelete({ userId: user._id }).sort({ createdAt: -1 })
 
     res.status(204).send()
+}
+
+export async function getTracksWithQuery (req: Request, res: Response, next: NextFunction): Promise<void> {
+    logger.silly('Fetching tracks with query')
+
+    const {
+        accessToken
+    } = req.body as {
+        accessToken?: unknown
+    }
+
+    const {
+        trackName
+    } = req.query as {
+        trackName?: unknown
+    }
+
+    if (typeof accessToken !== 'string' || accessToken === '') {
+        res.status(400).json({ error: 'accessToken must be a non-empty string.' })
+        return
+    }
+
+    // If trackName is provided, it must be a non-empty string
+    if (trackName !== undefined && (typeof trackName !== 'string' || trackName === '')) {
+        res.status(400).json({ error: 'trackName must be a non-empty string.' })
+        return
+    }
+
+    const user = await UserModel.findOne({ accessToken })
+
+    if (user === null) {
+        res.status(404).json({ error: 'accessToken is not valid.' })
+        return
+    }
+
+    const tracks = await TrackModel.find({
+        userId: user._id,
+        ...(trackName !== undefined && { trackName })
+    })
+
+    if (tracks.length === 0) {
+        res.status(404).json({ error: 'No tracks found with the provided query.' })
+        return
+    }
+
+    res.status(200).send(tracks)
 }

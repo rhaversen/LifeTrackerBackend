@@ -1,4 +1,4 @@
-import { type RequestHandler, type NextFunction, type Request, type Response } from 'express'
+import { type NextFunction, type Request, type RequestHandler, type Response } from 'express'
 import logger from './logger.js'
 
 type AsyncMiddleware = (req: Request, res: Response, next: NextFunction) => Promise<void>
@@ -6,7 +6,7 @@ type AsyncMiddleware = (req: Request, res: Response, next: NextFunction) => Prom
 const asyncErrorHandler = (fn: AsyncMiddleware): RequestHandler =>
     async (req, res, next) => {
         await fn(req, res, next).catch(error => {
-            logger.error('Error caught by asyncErrorHandler:', error)
+            logger.info('Error caught by asyncErrorHandler')
             next(error)
         })
     }

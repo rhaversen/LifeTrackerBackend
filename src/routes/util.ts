@@ -1,7 +1,7 @@
 // Node.js built-in modules
 
 // Third-party libraries
-import { Router, type NextFunction, type Request, type Response } from 'express'
+import { type NextFunction, type Request, type Response, Router } from 'express'
 import mongoose from 'mongoose'
 
 // Own modules

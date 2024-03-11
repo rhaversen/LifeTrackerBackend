@@ -21,12 +21,11 @@ export async function createUser (req: Request, res: Response, next: NextFunctio
         return
     }
 
-    const newUser = new UserModel({
+    const newUser = await UserModel.create({
         userName
     })
-    const savedUser = await newUser.save()
 
-    res.status(201).json(savedUser.accessToken)
+    res.status(201).json(newUser.accessToken)
 }
 
 export async function deleteUser (req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -69,7 +68,7 @@ export async function deleteUser (req: Request, res: Response, next: NextFunctio
         return
     }
 
-    await UserModel.deleteOne({ accessToken })
+    await user.deleteUserAndAllAssociatedData() // Starts a transaction
 
     res.status(204).send()
 }

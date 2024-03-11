@@ -1,32 +1,48 @@
 // Node.js built-in modules
 
 // Third-party libraries
-import mongoose, { type Document, model } from 'mongoose'
+import { type Document, model, Schema, type Types } from 'mongoose'
 
 // Own modules
 import logger from '../utils/logger.js'
-import { type IUser } from './User.js'
 
 // Destructuring and global variables
-const { Schema } = mongoose
 
 export interface ITrack extends Document {
+    // Properties
+    _id: Types.ObjectId
     trackName: string
     date: Date // The date the track took place
-    userId: IUser['_id']
+    userId: Types.ObjectId // The user who created the track
     createdAt: Date // The date the track was created in the system
 }
 
 const trackSchema = new Schema<ITrack>({
-    trackName: { type: String, required: true },
-    date: { type: Date, required: true, default: Date.now },
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    createdAt: { type: Date, required: true, default: Date.now }
+    trackName: {
+        type: String,
+        required: true
+    },
+    date: {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    createdAt: {
+        type: Date,
+        required: true,
+        default: Date.now
+    }
 })
 
 // Adding indexes
-trackSchema.index({ userId: 1 }) // Index for sorting by userId in ascending order (Or to find all tracks by a user id)
-trackSchema.index({ createdAt: -1 }) // Index for sorting by creation date in descending order
+trackSchema.index({ userId: 1 })
+trackSchema.index({ trackName: 1 })
+trackSchema.index({ createdAt: -1 })
 
 // Pre-save middleware
 trackSchema.pre('save', function (next) {

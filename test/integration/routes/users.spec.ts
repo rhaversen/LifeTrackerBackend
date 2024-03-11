@@ -8,6 +8,7 @@ import { expect } from 'chai'
 // Own modules
 import { chaiAppServer as agent } from '../../testSetup.js'
 import UserModel, { type IUser } from '../../../src/models/User.js'
+import TrackModel from '../../../src/models/Track.js'
 
 describe('POST api/v1/users', function () {
     describe('Post a new user', function () {
@@ -111,28 +112,91 @@ describe('DELETE api/v1/users', function () {
     })
 
     describe('Delete a user', function () {
-        const user = { userName: 'TestUser', confirmDeletion: true }
+        const user = {
+            userName: 'TestUser',
+            confirmDeletion: true
+        }
 
         it('should delete the user', async function () {
-            await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
+            await agent.delete('/v1/users').send({
+                ...user,
+                accessToken: testUser.accessToken
+            })
             const allUsers = await UserModel.find({}).exec()
             expect(allUsers.length).to.equal(0)
         })
 
         it('should respond with status code 204', async function () {
-            const res = await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
+            const res = await agent.delete('/v1/users').send({
+                ...user,
+                accessToken: testUser.accessToken
+            })
             expect(res).to.have.status(204)
         })
 
         it('should respond with an empty body', async function () {
-            const res = await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
+            const res = await agent.delete('/v1/users').send({
+                ...user,
+                accessToken: testUser.accessToken
+            })
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(res.body).to.be.empty
+        })
+
+        describe('Delete user data', function () {
+            let otherUser: IUser
+
+            beforeEach(async function () {
+                otherUser = new UserModel({
+                    userName: 'OtherUser'
+                })
+                await otherUser.save()
+
+                for (let i = 0; i < 3; i++) {
+                    await TrackModel.create({
+                        userId: testUser._id,
+                        trackName: 'TestTrack'
+                    })
+                    await TrackModel.create({
+                        userId: otherUser._id,
+                        trackName: 'OtherTrack'
+                    })
+                }
+            })
+
+            it('should delete all tracks associated with the user', async function () {
+                await agent.delete('/v1/users').send({
+                    ...user,
+                    accessToken: testUser.accessToken
+                })
+
+                const allTracks = await TrackModel.find({}).exec()
+                expect(allTracks.length).to.equal(3)
+                const userTracks = await TrackModel.find({ userId: testUser._id }).exec()
+                expect(userTracks.length).to.equal(0)
+            })
+
+            it('should not delete any tracks not associated with the user', async function () {
+                await agent.delete('/v1/users').send({
+                    ...user,
+                    accessToken: testUser.accessToken
+                })
+
+                const allTracks = await TrackModel.find({}).exec()
+                expect(allTracks.length).to.equal(3)
+
+                const userTracks = await TrackModel.find({ userId: otherUser._id }).exec()
+                expect(userTracks.length).to.equal(3)
+            })
         })
     })
 
     describe('Delete a user with an invalid accessToken', function () {
-        const user = { userName: 'TestUser', confirmDeletion: true, accessToken: 'invalidCode' }
+        const user = {
+            userName: 'TestUser',
+            confirmDeletion: true,
+            accessToken: 'invalidCode'
+        }
 
         it('should respond with status code 404', async function () {
             const res = await agent.delete('/v1/users').send(user)
@@ -147,15 +211,24 @@ describe('DELETE api/v1/users', function () {
     })
 
     describe('Delete a user with an invalid username', function () {
-        const user = { userName: 'incorrectUsername', confirmDeletion: true }
+        const user = {
+            userName: 'incorrectUsername',
+            confirmDeletion: true
+        }
 
         it('should respond with status code 403', async function () {
-            const res = await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
+            const res = await agent.delete('/v1/users').send({
+                ...user,
+                accessToken: testUser.accessToken
+            })
             expect(res).to.have.status(403)
         })
 
         it('should not delete a user', async function () {
-            await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
+            await agent.delete('/v1/users').send({
+                ...user,
+                accessToken: testUser.accessToken
+            })
             const allUsers = await UserModel.find({}).exec()
             expect(allUsers.length).to.equal(1)
         })
@@ -166,18 +239,27 @@ describe('DELETE api/v1/users', function () {
             const user = { confirmDeletion: true }
 
             it('should respond with status code 400', async function () {
-                const res = await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
+                const res = await agent.delete('/v1/users').send({
+                    ...user,
+                    accessToken: testUser.accessToken
+                })
                 expect(res).to.have.status(400)
             })
 
             it('should not delete a user', async function () {
-                await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
+                await agent.delete('/v1/users').send({
+                    ...user,
+                    accessToken: testUser.accessToken
+                })
                 const allUsers = await UserModel.find({}).exec()
                 expect(allUsers.length).to.equal(1)
             })
 
             it('should respond with an error message', async function () {
-                const res = await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
+                const res = await agent.delete('/v1/users').send({
+                    ...user,
+                    accessToken: testUser.accessToken
+                })
                 expect(res.body.error).to.equal('userName must be a non-empty string.')
             })
         })
@@ -186,24 +268,36 @@ describe('DELETE api/v1/users', function () {
             const user = { userName: 'TestUser' }
 
             it('should respond with status code 400', async function () {
-                const res = await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
+                const res = await agent.delete('/v1/users').send({
+                    ...user,
+                    accessToken: testUser.accessToken
+                })
                 expect(res).to.have.status(400)
             })
 
             it('should not delete a user', async function () {
-                await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
+                await agent.delete('/v1/users').send({
+                    ...user,
+                    accessToken: testUser.accessToken
+                })
                 const allUsers = await UserModel.find({}).exec()
                 expect(allUsers.length).to.equal(1)
             })
 
             it('should respond with an error message', async function () {
-                const res = await agent.delete('/v1/users').send({ ...user, accessToken: testUser.accessToken })
+                const res = await agent.delete('/v1/users').send({
+                    ...user,
+                    accessToken: testUser.accessToken
+                })
                 expect(res.body.error).to.equal('confirmDeletion must be true.')
             })
         })
 
         describe('Delete a user with no accessToken', function () {
-            const user = { userName: 'TestUser', confirmDeletion: true }
+            const user = {
+                userName: 'TestUser',
+                confirmDeletion: true
+            }
 
             it('should respond with status code 400', async function () {
                 const res = await agent.delete('/v1/users').send(user)
