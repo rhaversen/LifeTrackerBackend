@@ -15,7 +15,7 @@ import config from './utils/setupConfig.js'
 // Routes
 import userRoutes from './routes/users.js'
 import trackRoutes from './routes/tracks.js'
-import utilRoutes from './routes/util.js'
+import serviceRoutes from './routes/service.js'
 import mongoose from 'mongoose'
 import globalErrorHandler from './middleware/globalErrorHandler.js'
 
@@ -49,14 +49,14 @@ const highSensitivityApiLimiter = RateLimit(highSensitivityApiLimiterConfig)
 // Use all routes with medium sensitivity rate limiter
 app.use('/v1/users', mediumSensitivityApiLimiter, userRoutes)
 app.use('/v1/tracks', mediumSensitivityApiLimiter, trackRoutes)
-app.use('/v1/util', mediumSensitivityApiLimiter, utilRoutes)
+app.use('/service', mediumSensitivityApiLimiter, serviceRoutes)
 
 // Apply medium sensitivity for all database operation routes
 app.use('/v1/users', mediumSensitivityApiLimiter)
 app.use('/v1/tracks', mediumSensitivityApiLimiter)
 
-// Apply low sensitivity for utility routes
-app.use('/v1/util', lowSensitivityApiLimiter)
+// Apply low sensitivity for service routes
+app.use('/service', lowSensitivityApiLimiter)
 
 // Apply stricter rate limiters to routes
 app.use('/v1/users/', highSensitivityApiLimiter)
