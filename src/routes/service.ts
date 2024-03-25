@@ -43,7 +43,7 @@ router.get('/healthcheck',
     asyncErrorHandler(checkHealth)
 )
 
-router.get('/healthz', (req, res) => {
+router.get('/livez', (req, res) => {
     res.status(200).send('OK')
 })
 
