@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: life-tracker-backend-staging
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: life-tracker-backend-staging
+  template:
+    metadata:
+      labels:
+        app: life-tracker-backend-staging
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: life-tracker-backend-staging
+          resources:
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+            requests:
+              cpu: "0.5"
+              memory: "256Mi"
+          image: 'rhaversen/life-tracker-backend:staging'
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: service/livez
+              port: 5001
+            periodSeconds: 30
+            initialDelaySeconds: 10
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: service/readyz
+              port: 5001
+            periodSeconds: 30
+            initialDelaySeconds: 10
+            failureThreshold: 5
+          ports:
+            - containerPort: 5001
+          envFrom:
+            - secretRef:
+                name: life-tracker-backend-secrets

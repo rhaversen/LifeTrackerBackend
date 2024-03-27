@@ -90,9 +90,9 @@ jobs:
         with:
           namespace: default
           manifests: |
-            k8s/deployment.yaml
-            k8s/ingress.yaml
-            k8s/service.yaml
-            k8s/hpa.yaml
+            k8s/prod/deployment.yaml
+            k8s/prod/ingress.yaml
+            k8s/prod/service.yaml
+            k8s/prod/hpa.yaml
           images: |
             ${{ secrets.DOCKER_USERNAME }}/life-tracker-backend:${{ github.sha }}
