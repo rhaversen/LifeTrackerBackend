@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: life-tracker-backend
+  name: life-tracker-backend-prod
 spec:
   replicas: 3
   strategy:
@@ -11,11 +11,11 @@ spec:
       maxSurge: 1
   selector:
     matchLabels:
-      app: life-tracker-backend
+      app: life-tracker-backend-prod
   template:
     metadata:
       labels:
-        app: life-tracker-backend
+        app: life-tracker-backend-prod
     spec:
       automountServiceAccountToken: false
       containers:

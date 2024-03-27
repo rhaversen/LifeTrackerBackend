@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: life-tracker-backend-ingress
+  name: life-tracker-backend-prod-ingress
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
@@ -13,7 +13,7 @@ spec:
             path: "/api"
             backend:
               service:
-                name: life-tracker-backend-service
+                name: life-tracker-backend-prod-service
                 port:
                   number: 80
   tls:
