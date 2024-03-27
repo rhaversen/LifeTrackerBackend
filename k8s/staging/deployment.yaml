@@ -47,4 +47,4 @@ spec:
             - containerPort: 5001
           envFrom:
             - secretRef:
-                name: life-tracker-backend-secrets
+                name: life-tracker-backend-staging-secrets
