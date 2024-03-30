@@ -1,4 +1,4 @@
-name: Fuzz Tests CI
+name: Fuzz Tests CI/CD
 
 on:
   push:

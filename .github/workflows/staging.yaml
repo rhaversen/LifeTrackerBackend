@@ -1,8 +1,8 @@
-name: Production Docker Image CI/CD
+name: Staging Testing and Docker Image CI/CD
 
 on:
   push:
-    branches: ["stating"]
+    branches: ["staging"]
 
 jobs:
   build:
