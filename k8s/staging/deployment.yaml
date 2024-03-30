@@ -32,19 +32,19 @@ spec:
           livenessProbe:
             httpGet:
               path: service/livez
-              port: 5001
+              port: 5000
             periodSeconds: 30
             initialDelaySeconds: 10
             failureThreshold: 5
           readinessProbe:
             httpGet:
               path: service/readyz
-              port: 5001
+              port: 5000
             periodSeconds: 30
             initialDelaySeconds: 10
             failureThreshold: 5
           ports:
-            - containerPort: 5001
+            - containerPort: 5000
           envFrom:
             - secretRef:
                 name: life-tracker-backend-staging-secrets

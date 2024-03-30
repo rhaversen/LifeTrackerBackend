@@ -29,7 +29,7 @@ USER life_tracker_backend_user
 RUN npm install --omit=dev
 
 # Expose the port Express.js runs on
-EXPOSE 5001
+EXPOSE 5000
 
 # Command to run the application
 CMD ["npm", "start"]
