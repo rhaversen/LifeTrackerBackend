@@ -5,8 +5,8 @@ import mongoose from 'mongoose'
 import { MongoMemoryReplSet } from 'mongodb-memory-server'
 
 // Own modules
-import logger from '../utils/logger.js'
-import config from '../utils/setupConfig.js'
+import logger from '../app/utils/logger.js'
+import config from '../app/utils/setupConfig.js'
 
 const { mongooseOpts } = config
 

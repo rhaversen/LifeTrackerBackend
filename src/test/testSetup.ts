@@ -9,7 +9,10 @@ import * as chai from 'chai'
 import logger from '../app/utils/logger.js'
 import UserModel from '../app/models/User.js'
 import TrackModel from '../app/models/Track.js'
-import { isMemoryDatabase } from '../app/database/databaseHandler.js'
+import { isMemoryDatabase } from '../app/utils/databaseConnector.js'
+
+// Connect to the database
+import './mongoMemoryReplSetConnector.js'
 
 // Test environment settings
 process.env.SESSION_SECRET = 'TEST_SESSION_SECRET'
