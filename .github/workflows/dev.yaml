@@ -10,12 +10,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v4
-        with:
-          node-version: "lts/*"
+      - name: Setup environment
+        uses: ./.github/actions/setup
       - name: Build
         run: npm run build
       - name: Archive production artifacts
