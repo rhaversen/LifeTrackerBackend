@@ -9,6 +9,7 @@ import { createLogger, format as _format, transports as _transports } from 'wins
 // Global variables
 const _filename = fileURLToPath(import.meta.url)
 const _dirname = dirname(_filename)
+const logDirectory = join(_dirname, (process.env.NODE_ENV === 'production' ? './logs/' : '../../logs/'))
 
 const winstonLogger = createLogger({
     levels: {
@@ -30,15 +31,15 @@ const winstonLogger = createLogger({
     defaultMeta: { service: 'group-scheduler-backend' }, // Set a default metadata field
     transports: [
         new _transports.File({
-            filename: join(_dirname, '../../logs/error.log'),
+            filename: join(logDirectory, '../../logs/error.log'),
             level: 'error'
         }),
         new _transports.File({
-            filename: join(_dirname, '../../logs/info.log'),
+            filename: join(logDirectory, '../../logs/info.log'),
             level: 'info'
         }),
         new _transports.File({
-            filename: join(_dirname, '../../logs/combined.log'),
+            filename: join(logDirectory, '../../logs/combined.log'),
             level: 'silly'
         }),
         new _transports.Console({

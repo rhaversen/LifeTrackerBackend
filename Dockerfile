@@ -14,8 +14,8 @@ WORKDIR /app
 # Create a user within the container
 RUN useradd -m life_tracker_backend_user
 
-# Copy the `dist` directory, package.json and Config
-COPY dist/ ./dist/
+# Copy the app directory, package.json, package-lock.json and Config directory
+COPY dist/app/ ./
 COPY package*.json ./
 COPY config/ ./config/
 

@@ -5,8 +5,8 @@ import { expect } from 'chai'
 import { describe, it } from 'mocha'
 
 // Own modules
-import UserModel, { type IUser } from '../../src/models/User.js'
-import TrackModel, { type ITrack } from '../../src/models/Track.js'
+import UserModel, { type IUser } from '../../app/models/User.js'
+import TrackModel, { type ITrack } from '../../app/models/Track.js'
 
 // Setup test environment
 import '../testSetup.js'
