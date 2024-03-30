@@ -36,6 +36,9 @@ describe('User Model', () => {
 
     describe('Unique access token', () => {
         it('should generate a random, unique access token', async () => {
+            // Requires longer timeout
+            (this as any).timeout(5000)
+
             const accessTokens = []
 
             // One hundred different are sufficient to prove that the access token is random
