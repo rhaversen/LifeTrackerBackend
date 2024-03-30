@@ -8,6 +8,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Setup environment
         uses: ./.github/actions/setup
       - name: Build
@@ -24,6 +26,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Setup environment
         uses: ./.github/actions/setup
       - name: Download build artifacts
@@ -38,6 +42,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Setup environment
         uses: ./.github/actions/setup
       - name: Download build artifacts
@@ -52,6 +58,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Setup environment
         uses: ./.github/actions/setup
       - name: Download build artifacts

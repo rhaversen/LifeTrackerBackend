@@ -4,8 +4,6 @@ description: "Checks out code, sets up Node.js and installs dependencies"
 runs:
   using: "composite"
   steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
     - name: Setup Node.js environment
       uses: actions/setup-node@v4
       with:
