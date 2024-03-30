@@ -81,9 +81,9 @@ jobs:
         with:
           namespace: default
           manifests: |
-            k8s/stating/deployment.yaml
-            k8s/stating/ingress.yaml
-            k8s/stating/service.yaml
-            k8s/stating/hpa.yaml
+            k8s/staging/deployment.yaml
+            k8s/staging/ingress.yaml
+            k8s/staging/service.yaml
+            k8s/staging/hpa.yaml
           images: |
             ${{ secrets.DOCKER_USERNAME }}/life-tracker-backend:${{ github.sha }}
