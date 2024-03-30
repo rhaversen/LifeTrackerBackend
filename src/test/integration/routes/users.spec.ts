@@ -7,8 +7,8 @@ import { expect } from 'chai'
 
 // Own modules
 import { chaiAppServer as agent } from '../../testSetup.js'
-import UserModel, { type IUser } from '../../../src/models/User.js'
-import TrackModel from '../../../src/models/Track.js'
+import UserModel, { type IUser } from '../../../app/models/User.js'
+import TrackModel from '../../../app/models/Track.js'
 
 describe('POST api/v1/users', function () {
     describe('Post a new user', function () {

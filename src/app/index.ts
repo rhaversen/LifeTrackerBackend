@@ -8,7 +8,7 @@ import helmet from 'helmet'
 
 // Own Modules
 import loadVaultSecrets from './utils/vault.js'
-import { initializeDatabaseConnection } from './database/databaseHandler.js'
+import { initializeDatabaseConnection } from './utils/databaseConnector.js'
 import logger from './utils/logger.js'
 import config from './utils/setupConfig.js'
 

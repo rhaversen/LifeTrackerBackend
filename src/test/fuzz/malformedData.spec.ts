@@ -7,8 +7,8 @@ import { expect } from 'chai'
 
 // Own modules
 import { chaiAppServer as agent } from '../testSetup.js'
-import UserModel, { type IUser } from '../../src/models/User.js'
-import TrackModel, { type ITrack } from '../../src/models/Track.js'
+import UserModel, { type IUser } from '../../app/models/User.js'
+import TrackModel, { type ITrack } from '../../app/models/Track.js'
 
 // Global variables and setup
 const values = [

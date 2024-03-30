@@ -1,12 +1,12 @@
 # Free to use event tracker
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/3e839962a2a54735a388ba6075ee9ccc)](https://app.codacy.com/gh/rhaversen/LifeTrackerBackend/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) [![Production Docker Image CI/CD](https://github.com/rhaversen/LifeTrackerBackend/actions/workflows/build-test-push-docker.yml/badge.svg)](https://github.com/rhaversen/LifeTrackerBackend/actions/workflows/build-test-push-docker.yml) [![Fuzz Tests CI](https://github.com/rhaversen/LifeTrackerBackend/actions/workflows/build-test-fuzz.yml/badge.svg)](https://github.com/rhaversen/LifeTrackerBackend/actions/workflows/build-test-fuzz.yml)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/3e839962a2a54735a388ba6075ee9ccc)](https://app.codacy.com/gh/rhaversen/LifeTrackerBackend/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) [![Production Docker Image CI/CD](https://github.com/rhaversen/LifeTrackerBackend/actions/workflows/build-test-push-docker.yml/badge.svg)](https://github.com/rhaversen/LifeTrackerBackend/actions/workflows/build-test-push-docker.yml) [![Fuzz Tests CI](https://github.com/rhaversen/LifeTrackerBackend/actions/workflows/build-test-fuzz.yml/badge.svg)](https://github.com/rhaversen/LifeTrackerBackend/actions/workflows/build-test-fuzz.yml) [![Dev Testing CI/CD](https://github.com/rhaversen/LifeTrackerBackend/actions/workflows/dev.yaml/badge.svg?branch=dev)](https://github.com/rhaversen/LifeTrackerBackend/actions/workflows/dev.yaml)
 
 This app is currently in a very early alpha stage. While it is not yet possible to retrieve or view your tracks, this functionality will be introduced soon. Start tracking today to take full advantage once this feature is available.
 
 Track events with **Life Stats** using a straightforward webhook. Below is the essential workflow.
 
->You can check the health of the service **[here](https://life-stats.net/api/v1/util/healthcheck)** (View uptime and database connection). The response is in simple JSON format, which can be more easily read with this [chrome extension](https://chromewebstore.google.com/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa).
+>You can check the health of the service **[here](https://life-stats.net/api/service/healthcheck)** (View uptime and database connection). The response is in simple JSON format, which can be more easily read with this [chrome extension](https://chromewebstore.google.com/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa).
 
 ## User creation
 

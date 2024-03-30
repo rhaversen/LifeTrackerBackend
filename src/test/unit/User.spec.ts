@@ -6,7 +6,7 @@ import { describe, it } from 'mocha'
 import { nanoid } from 'nanoid'
 
 // Own modules
-import UserModel from '../../src/models/User.js'
+import UserModel from '../../app/models/User.js'
 
 // Setup test environment
 import '../testSetup.js'

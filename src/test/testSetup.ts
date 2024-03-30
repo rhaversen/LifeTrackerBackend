@@ -6,17 +6,20 @@ import chaiHttp from 'chai-http'
 import * as chai from 'chai'
 
 // Own modules
-import logger from '../src/utils/logger.js'
-import UserModel from '../src/models/User.js'
-import TrackModel from '../src/models/Track.js'
-import { isMemoryDatabase } from '../src/database/databaseHandler.js'
+import logger from '../app/utils/logger.js'
+import UserModel from '../app/models/User.js'
+import TrackModel from '../app/models/Track.js'
+import { isMemoryDatabase } from '../app/utils/databaseConnector.js'
+
+// Connect to the database
+import './mongoMemoryReplSetConnector.js'
 
 // Test environment settings
 process.env.SESSION_SECRET = 'TEST_SESSION_SECRET'
 process.env.CSRF_TOKEN = 'TEST_CSRF_TOKEN'
 
 // Importing the server
-const app = await import('../src/index.js')
+const app = await import('../app/index.js')
 
 const chaiHttpObject = chai.use(chaiHttp)
 

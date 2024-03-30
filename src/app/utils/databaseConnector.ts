@@ -4,8 +4,11 @@
 import mongoose from 'mongoose'
 
 // Own modules
-import logger from '../utils/logger.js'
-import config from '../utils/setupConfig.js'
+import logger from './logger.js'
+import config from './setupConfig.js'
+
+// Define a variable to hold the type of the database connection
+let dbConnectionType: 'memoryDB' | 'production' | undefined
 
 const {
     mongooseOpts,
@@ -16,6 +19,19 @@ const {
     appName
 } = config
 const mongoUri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=${retryWrites}&w=${w}&appName=${appName}`
+
+async function initializeDatabaseConnection (): Promise<void> {
+    if (process.env.NODE_ENV === 'production') {
+        await connectToMongoDB()
+        dbConnectionType = 'production'
+    } else {
+        dbConnectionType = 'memoryDB'
+    }
+}
+
+function isMemoryDatabase (): boolean {
+    return dbConnectionType === 'memoryDB'
+}
 
 async function connectToMongoDB (): Promise<void> {
     for (let currentRetryAttempt = 0; currentRetryAttempt < maxRetryAttempts; currentRetryAttempt++) {
@@ -36,4 +52,4 @@ async function connectToMongoDB (): Promise<void> {
     process.exit(1)
 }
 
-await connectToMongoDB()
+export { initializeDatabaseConnection, isMemoryDatabase }
