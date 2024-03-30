@@ -8,7 +8,7 @@ import helmet from 'helmet'
 
 // Own Modules
 import loadVaultSecrets from './utils/vault.js'
-import { initializeDatabaseConnection } from './utils/databaseConnector.js'
+import databaseConnector from './utils/databaseConnector.js'
 import logger from './utils/logger.js'
 import config from './utils/setupConfig.js'
 
@@ -22,8 +22,8 @@ import globalErrorHandler from './middleware/globalErrorHandler.js'
 // Load environment
 await loadVaultSecrets()
 
-// Connect to MongoDB (Automatically connect to in-memory replica set if not production environment)
-await initializeDatabaseConnection()
+// Connect to MongoDB (Automatically skip connection if not production env)
+await databaseConnector.connectToMongoDB()
 
 // Configs
 const {
