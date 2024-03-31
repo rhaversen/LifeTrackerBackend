@@ -26,6 +26,8 @@ async function cleanDatabase (): Promise<void> {
     /// ////////////////////////////////////////////
     /// ///////////////////////////////////////////
     if (!databaseConnector.isMemoryDatabase()) {
+        logger.warn('Database wipe attempted in production environment! Shutting down.')
+        await app.shutDown()
         return
     }
     /// ////////////////////////////////////////////
