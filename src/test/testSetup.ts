@@ -27,7 +27,7 @@ async function cleanDatabase (): Promise<void> {
     /// ///////////////////////////////////////////
     if (!databaseConnector.isMemoryDatabase()) {
         logger.warn('Database wipe attempted in production environment! Shutting down.')
-        await app.shutDown()
+        await app.shutDown(1)
         return
     }
     /// ////////////////////////////////////////////
@@ -43,7 +43,7 @@ async function cleanDatabase (): Promise<void> {
             logger.error('Error dropping database: An unknown error occurred')
         }
         logger.error('Shutting down')
-        await app.shutDown()
+        await app.shutDown(1)
     }
 }
 

@@ -25,5 +25,5 @@ try {
     logger.info('Connected to in-memory MongoDB')
 } catch (error: any) {
     logger.error(`Error connecting to in-memory MongoDB: ${error.message !== undefined ? error.message : error}`)
-    await shutDown()
+    await shutDown(1)
 }
