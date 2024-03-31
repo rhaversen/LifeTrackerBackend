@@ -7,9 +7,7 @@ import * as chai from 'chai'
 
 // Own modules
 import logger from '../app/utils/logger.js'
-import UserModel from '../app/models/User.js'
-import TrackModel from '../app/models/Track.js'
-import { isMemoryDatabase } from '../app/utils/databaseConnector.js'
+import databaseConnector from '../app/utils/databaseConnector.js'
 
 // Connect to the database
 import './mongoMemoryReplSetConnector.js'
@@ -26,8 +24,7 @@ const chaiHttpObject = chai.use(chaiHttp)
 async function cleanDatabase (): Promise<void> {
     /// ////////////////////////////////////////////
     /// ///////////////////////////////////////////
-    if (!isMemoryDatabase()) {
-        logger.warn('Not cleaning database, not a memory database')
+    if (!databaseConnector.isMemoryDatabase()) {
         return
     }
     /// ////////////////////////////////////////////
