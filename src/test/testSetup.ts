@@ -4,6 +4,7 @@
 import sinon from 'sinon'
 import chaiHttp from 'chai-http'
 import * as chai from 'chai'
+import mongoose from 'mongoose'
 
 // Own modules
 import logger from '../app/utils/logger.js'
@@ -31,14 +32,13 @@ async function cleanDatabase (): Promise<void> {
     /// ///////////////////////////////////////////
     logger.debug('Cleaning databases')
     try {
-        await UserModel.deleteMany({})
-        await TrackModel.deleteMany({})
-        logger.silly('Indexes dropped successfully')
+        await mongoose.connection.db.dropDatabase()
+        logger.silly('Database dropped successfully')
     } catch (err) {
         if (err instanceof Error) {
-            logger.error(`Error dropping indexes: ${err.message}`)
+            logger.error(`Error dropping database: ${err.message}`)
         } else {
-            logger.error('Error dropping indexes: An unknown error occurred')
+            logger.error('Error dropping database: An unknown error occurred')
         }
         logger.error('Shutting down')
         await app.shutDown()
