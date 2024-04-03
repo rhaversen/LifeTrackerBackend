@@ -116,7 +116,7 @@ process.on('SIGTERM', (): void => {
 })
 
 // Shutdown function
-export async function shutDown (exitCode?: number | undefined ): Promise<void> {
+export async function shutDown (exitCode?: number | undefined): Promise<void> {
     try {
         logger.info('Closing server...')
         server.close()
