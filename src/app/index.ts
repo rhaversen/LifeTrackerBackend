@@ -7,7 +7,6 @@ import RateLimit from 'express-rate-limit'
 import helmet from 'helmet'
 
 // Own Modules
-import loadVaultSecrets from './utils/vault.js'
 import databaseConnector from './utils/databaseConnector.js'
 import logger from './utils/logger.js'
 import config from './utils/setupConfig.js'
@@ -18,9 +17,6 @@ import trackRoutes from './routes/tracks.js'
 import serviceRoutes from './routes/service.js'
 import mongoose from 'mongoose'
 import globalErrorHandler from './middleware/globalErrorHandler.js'
-
-// Load environment
-await loadVaultSecrets()
 
 // Connect to MongoDB if not test environment
 if (process.env.NODE_ENV !== 'test') {
