@@ -32,4 +32,4 @@ RUN npm install --omit=dev
 EXPOSE 5000
 
 # Command to run the application
-CMD ["npm", "start:production"]
+CMD ["npm", "start"]
