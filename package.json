@@ -47,7 +47,6 @@
 		"helmet": "^7.1.0",
 		"mongoose": "^8.2.4",
 		"nanoid": "^5.0.6",
-		"node-vault": "^0.10.2",
 		"winston": "^3.13.0"
 	},
 	"devDependencies": {
