@@ -3,7 +3,7 @@
 # for production
 
 # Use an official Node.js runtime as the base image
-FROM --platform=linux/arm64 node:iron-bookworm-slim
+FROM node:iron-bookworm-slim
 
 # Use a non-interactive frontend for debconf
 ENV DEBIAN_FRONTEND=noninteractive
@@ -14,8 +14,8 @@ WORKDIR /app
 # Create a user within the container
 RUN useradd -m life_tracker_backend_user
 
-# Copy the `dist` directory, package.json and Config
-COPY dist/ ./dist/
+# Copy the app directory, package.json, package-lock.json and Config directory
+COPY dist/app/ ./
 COPY package*.json ./
 COPY config/ ./config/
 
@@ -29,7 +29,7 @@ USER life_tracker_backend_user
 RUN npm install --omit=dev
 
 # Expose the port Express.js runs on
-EXPOSE 5001
+EXPOSE 5000
 
 # Command to run the application
-CMD ["npm", "start"]
+CMD ["npm", "start:production"]
