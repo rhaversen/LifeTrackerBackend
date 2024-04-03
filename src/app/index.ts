@@ -22,8 +22,10 @@ import globalErrorHandler from './middleware/globalErrorHandler.js'
 // Load environment
 await loadVaultSecrets()
 
-// Connect to MongoDB (Automatically skip connection if not production env)
-await databaseConnector.connectToMongoDB()
+// Connect to MongoDB if not test environment
+if (process.env.NODE_ENV !== 'test') {
+    await databaseConnector.connectToMongoDB()
+}
 
 // Configs
 const {
