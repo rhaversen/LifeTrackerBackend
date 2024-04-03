@@ -101,7 +101,7 @@ describe('POST api/v1/tracks', function () {
                         timeOffset
                     })
 
-                    it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
+                    it(`should handle invalid inputs gracefully (test case ${testString})`, async function () {
                         track = {
                             trackName,
                             accessToken: testUser.accessToken,
@@ -131,7 +131,7 @@ describe('POST api/v1/tracks', function () {
                             timeOffset
                         })
 
-                        it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
+                        it(`should handle invalid inputs gracefully (test case ${testString})`, async function () {
                             track = {
                                 trackName,
                                 accessToken,
@@ -162,7 +162,7 @@ describe('POST api/v1/users', function () {
     for (const userName of values) {
         const testString = JSON.stringify({ userName })
 
-        it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
+        it(`should handle invalid inputs gracefully (test case ${testString})`, async function () {
             user = {
                 userName
             }
@@ -199,7 +199,7 @@ describe('DELETE api/v1/users', function () {
                     confirmDeletion
                 })
 
-                it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
+                it(`should handle invalid inputs gracefully (test case ${testString})`, async function () {
                     user = {
                         userName,
                         accessToken: testUser.accessToken,
@@ -232,7 +232,7 @@ describe('DELETE api/v1/users', function () {
                         accessToken
                     })
 
-                    it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
+                    it(`should handle invalid inputs gracefully (test case ${testString})`, async function () {
                         user = {
                             userName,
                             accessToken,
@@ -267,7 +267,7 @@ describe('DELETE api/v1/tracks/last', function () {
         })
         await testUser.save()
         testTrack = new TrackModel({
-            trackName: 'testTrackA1',
+            trackName: 'TEST_TRACK_A1',
             date: new Date(),
             userId: testUser._id
         })
@@ -277,7 +277,7 @@ describe('DELETE api/v1/tracks/last', function () {
     for (const accessToken of values) {
         const testString = JSON.stringify({ accessToken })
 
-        it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
+        it(`should handle invalid inputs gracefully (test case ${testString})`, async function () {
             user = {
                 accessToken
             }
@@ -317,7 +317,7 @@ describe('GET api/v1/tracks', function () {
                 query
             })
 
-            it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
+            it(`should handle invalid inputs gracefully (test case ${testString})`, async function () {
                 // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                 const res = await agent.get(`/v1/tracks?trackName=${query}`).send({ accessToken: testUser.accessToken })
 
@@ -351,7 +351,7 @@ describe('GET api/v1/tracks', function () {
                         query
                     })
 
-                    it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
+                    it(`should handle invalid inputs gracefully (test case ${testString})`, async function () {
                         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                         const res = await agent.get(`/v1/tracks?trackName=${query}`).send({ accessToken })
 
@@ -373,7 +373,7 @@ describe('GET api/v1/tracks', function () {
                     query: 'TestTrack'
                 })
 
-                it(`should handle invalid inputs gracefully (test case ${testString})`, async () => {
+                it(`should handle invalid inputs gracefully (test case ${testString})`, async function () {
                     const res = await agent.get('/v1/tracks?trackName=TestTrack').send({ accessToken })
 
                     // eslint-disable-next-line @typescript-eslint/no-unused-expressions

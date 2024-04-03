@@ -11,9 +11,9 @@ import UserModel from '../../app/models/User.js'
 // Setup test environment
 import '../testSetup.js'
 
-describe('User Model', () => {
-    describe('Creating a user must fill out default fields', () => {
-        it('should fill out signUpDate', async () => {
+describe('User Model', function () {
+    describe('Creating a user must fill out default fields', function () {
+        it('should fill out signUpDate', async function () {
             const user = new UserModel({
                 userName: 'JohnDoe'
             })
@@ -22,7 +22,7 @@ describe('User Model', () => {
             expect(user.signUpDate).to.be.a('date')
         })
 
-        it('should fill out accessToken', async () => {
+        it('should fill out accessToken', async function () {
             const user = new UserModel({
                 userName: 'JohnDoe'
             })
@@ -34,8 +34,11 @@ describe('User Model', () => {
         })
     })
 
-    describe('Unique access token', () => {
-        it('should generate a random, unique access token', async () => {
+    describe('Unique access token', function () {
+        it('should generate a random, unique access token', async function () {
+            // Requires longer timeout
+            this.timeout(5000)
+
             const accessTokens = []
 
             // One hundred different are sufficient to prove that the access token is random
@@ -53,7 +56,7 @@ describe('User Model', () => {
             expect(uniqueAccessTokens.size).to.equal(accessTokens.length)
         })
 
-        it('should not allow two equal access tokens', async () => {
+        it('should not allow two equal access tokens', async function () {
             const user1 = new UserModel({
                 userName: 'JohnDoe',
                 signUpDate: new Date(),

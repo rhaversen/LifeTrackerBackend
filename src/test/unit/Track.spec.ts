@@ -11,70 +11,70 @@ import TrackModel, { type ITrack } from '../../app/models/Track.js'
 // Setup test environment
 import '../testSetup.js'
 
-describe('Track Model', () => {
+describe('Track Model', function () {
     let user: IUser
 
-    beforeEach(async () => {
+    beforeEach(async function () {
         user = new UserModel({
             userName: 'JohnDoe'
         })
         await user.save()
     })
 
-    describe('Creating a track must fill out default fields', () => {
-        describe('Date', () => {
+    describe('Creating a track must fill out default fields', function () {
+        describe('Date', function () {
             let track: ITrack
 
-            beforeEach(async () => {
+            beforeEach(async function () {
                 track = new TrackModel({
-                    trackName: 'TestTrack',
+                    trackName: 'TEST_TRACK',
                     userId: user._id
                 })
             })
 
-            it('should fill out date', async () => {
+            it('should fill out date', async function () {
                 await track.save()
                 expect(track.date).to.be.a('date')
             })
 
-            it('should set correct date', async () => {
+            it('should set correct date', async function () {
                 await track.save()
                 expect(track.date.getTime()).to.be.closeTo(new Date().getTime(), 1000)
             })
 
-            it('should set date before saving', async () => {
+            it('should set date before saving', async function () {
                 expect(track.date).to.be.a('date')
             })
         })
 
-        describe('createdAt', () => {
+        describe('createdAt', function () {
             let track: ITrack
 
-            beforeEach(async () => {
+            beforeEach(async function () {
                 track = new TrackModel({
-                    trackName: 'TestTrack',
+                    trackName: 'TEST_TRACK',
                     userId: user._id
                 })
             })
 
-            it('should fill out createdAt', async () => {
+            it('should fill out createdAt', async function () {
                 await track.save()
                 expect(track.createdAt).to.be.a('date')
             })
 
-            it('should set correct date', async () => {
+            it('should set correct date', async function () {
                 await track.save()
                 expect(track.createdAt.getTime()).to.be.closeTo(new Date().getTime(), 1000)
             })
 
-            it('should set createdAt before saving', async () => {
+            it('should set createdAt before saving', async function () {
                 expect(track.createdAt).to.be.a('date')
             })
         })
     })
 
-    describe('required fields', () => {
-        it('should require trackName', async () => {
+    describe('required fields', function () {
+        it('should require trackName', async function () {
             const track = new TrackModel({
                 userId: user._id
             })
@@ -84,9 +84,9 @@ describe('Track Model', () => {
             })
         })
 
-        it('should require userId', async () => {
+        it('should require userId', async function () {
             const track = new TrackModel({
-                trackName: 'TestTrack'
+                trackName: 'TEST_TRACK'
             })
             await track.save().catch((err) => {
                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions

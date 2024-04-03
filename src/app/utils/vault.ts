@@ -5,6 +5,7 @@ import nodeVault from 'node-vault'
 
 // Own modules
 import logger from './logger.js'
+import { shutDown } from '../index.js'
 
 const vaultAddr = process.env.VAULT_ADDR // Vault address
 const token = process.env.VAULT_TOKEN // Vault token
@@ -70,6 +71,6 @@ export default async function loadVaultSecrets (): Promise<void> {
             logger.error('Failed to load secrets: An unknown error occurred')
         }
         logger.error('Shutting down')
-        process.exit(1)
+        await shutDown(1)
     }
 }

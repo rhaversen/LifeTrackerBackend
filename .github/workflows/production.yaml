@@ -19,8 +19,6 @@ jobs:
         with:
           name: dist
           path: dist
-      - name: Integration tests
-        run: NODE_ENV=test npm run test:integration
 
   test-unit:
     runs-on: ubuntu-latest

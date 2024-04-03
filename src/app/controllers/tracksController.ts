@@ -2,6 +2,7 @@
 
 // Third-party libraries
 import { type NextFunction, type Request, type Response } from 'express'
+import mongoose from 'mongoose'
 
 // Own modules
 import TrackModel from '../models/Track.js'
@@ -52,13 +53,21 @@ export async function createTrack (req: Request, res: Response, next: NextFuncti
         return
     }
 
-    const newTrack = await TrackModel.create({
-        trackName,
-        date,
-        userId: user._id
-    })
+    try {
+        const newTrack = await TrackModel.create({
+            trackName,
+            date,
+            userId: user._id
+        })
 
-    res.status(201).json(newTrack)
+        res.status(201).json(newTrack)
+    } catch (error) {
+        if (error instanceof mongoose.Error.ValidationError) {
+            res.status(400).json({ error: error.message })
+        } else {
+            next(error)
+        }
+    }
 }
 
 export async function deleteLastTrack (req: Request, res: Response, next: NextFunction): Promise<void> {

@@ -4,12 +4,11 @@
 import sinon from 'sinon'
 import chaiHttp from 'chai-http'
 import * as chai from 'chai'
+import mongoose from 'mongoose'
 
 // Own modules
 import logger from '../app/utils/logger.js'
-import UserModel from '../app/models/User.js'
-import TrackModel from '../app/models/Track.js'
-import { isMemoryDatabase } from '../app/utils/databaseConnector.js'
+import databaseConnector from '../app/utils/databaseConnector.js'
 
 // Connect to the database
 import './mongoMemoryReplSetConnector.js'
@@ -26,25 +25,25 @@ const chaiHttpObject = chai.use(chaiHttp)
 async function cleanDatabase (): Promise<void> {
     /// ////////////////////////////////////////////
     /// ///////////////////////////////////////////
-    if (!isMemoryDatabase()) {
-        logger.warn('Not cleaning database, not a memory database')
+    if (!databaseConnector.isMemoryDatabase()) {
+        logger.warn('Database wipe attempted in production environment! Shutting down.')
+        await app.shutDown(1)
         return
     }
     /// ////////////////////////////////////////////
     /// ///////////////////////////////////////////
     logger.debug('Cleaning databases')
     try {
-        await UserModel.deleteMany({})
-        await TrackModel.deleteMany({})
-        logger.silly('Indexes dropped successfully')
+        await mongoose.connection.db.dropDatabase()
+        logger.silly('Database dropped successfully')
     } catch (err) {
         if (err instanceof Error) {
-            logger.error(`Error dropping indexes: ${err.message}`)
+            logger.error(`Error dropping database: ${err.message}`)
         } else {
-            logger.error('Error dropping indexes: An unknown error occurred')
+            logger.error('Error dropping database: An unknown error occurred')
         }
         logger.error('Shutting down')
-        await app.shutDown()
+        await app.shutDown(1)
     }
 }
 

@@ -8,7 +8,7 @@ import helmet from 'helmet'
 
 // Own Modules
 import loadVaultSecrets from './utils/vault.js'
-import { initializeDatabaseConnection } from './utils/databaseConnector.js'
+import databaseConnector from './utils/databaseConnector.js'
 import logger from './utils/logger.js'
 import config from './utils/setupConfig.js'
 
@@ -22,8 +22,10 @@ import globalErrorHandler from './middleware/globalErrorHandler.js'
 // Load environment
 await loadVaultSecrets()
 
-// Connect to MongoDB (Automatically connect to in-memory replica set if not production environment)
-await initializeDatabaseConnection()
+// Connect to MongoDB if not test environment
+if (process.env.NODE_ENV !== 'test') {
+    await databaseConnector.connectToMongoDB()
+}
 
 // Configs
 const {
@@ -80,7 +82,7 @@ process.on('unhandledRejection', (reason, promise): void => {
     // Log the detailed error message
     logger.error(`Unhandled Rejection at: ${promiseString}, reason: ${reasonDetail}`)
 
-    shutDown().catch(error => {
+    shutDown(1).catch(error => {
         // If 'error' is an Error object, log its stack trace; otherwise, convert to string
         const errorDetail = error instanceof Error ? error.stack ?? error.message : String(error)
         logger.error(`An error occurred during shutdown: ${errorDetail}`)
@@ -91,7 +93,7 @@ process.on('unhandledRejection', (reason, promise): void => {
 // Handle uncaught exceptions outside middleware
 process.on('uncaughtException', (err): void => {
     logger.error('Uncaught exception:', err)
-    shutDown().catch(error => {
+    shutDown(1).catch(error => {
         logger.error('An error occurred during shutdown:', error)
         process.exit(1)
     })
@@ -116,7 +118,7 @@ process.on('SIGTERM', (): void => {
 })
 
 // Shutdown function
-export async function shutDown (): Promise<void> {
+export async function shutDown (exitCode?: number | undefined): Promise<void> {
     try {
         logger.info('Closing server...')
         server.close()
@@ -125,7 +127,7 @@ export async function shutDown (): Promise<void> {
         await mongoose.disconnect()
         logger.info('Database disconnected')
         logger.info('Shutdown completed')
-        process.exit(0) // Exit with code 0 indicating successful termination
+        process.exit(exitCode ?? 0)
     } catch (error) {
         logger.error('An error occurred during shutdown:', error)
         process.exit(1) // Exit with code 1 indicating termination with error
