@@ -23,7 +23,7 @@ describe('POST api/v1/tracks', function () {
             })
             await testUser.save()
             track = {
-                trackName: 'test',
+                trackName: 'TEST_TRACK',
                 accessToken: testUser.accessToken
             }
         })
@@ -81,7 +81,7 @@ describe('POST api/v1/tracks', function () {
             })
             await testUser.save()
             track = {
-                trackName: 'test',
+                trackName: 'TEST_TRACK',
                 accessToken: testUser.accessToken,
                 timeOffset: 10
             }
@@ -130,7 +130,7 @@ describe('POST api/v1/tracks', function () {
             })
             await testUser.save()
             track = {
-                trackName: 'test',
+                trackName: 'TEST_TRACK',
                 accessToken: testUser.accessToken,
                 timeOffset: -10
             }
@@ -179,7 +179,7 @@ describe('POST api/v1/tracks', function () {
             })
             await testUser.save()
             track = {
-                trackName: 'test',
+                trackName: 'TEST_TRACK',
                 accessToken: testUser.accessToken,
                 timeOffset: Number.MAX_VALUE
             }
@@ -207,7 +207,7 @@ describe('POST api/v1/tracks', function () {
             })
             await testUser.save()
             track = {
-                trackName: 'test',
+                trackName: 'TEST_TRACK',
                 accessToken: testUser.accessToken,
                 timeOffset: -Number.MAX_VALUE
             }
@@ -236,7 +236,7 @@ describe('DELETE api/v1/tracks/last', function () {
         })
         await testUserA.save()
         testTrackA1 = new TrackModel({
-            trackName: 'testTrackA1',
+            trackName: 'TEST_TRACK_A1',
             userId: testUserA._id
         })
         await testTrackA1.save()
@@ -269,7 +269,7 @@ describe('DELETE api/v1/tracks/last', function () {
 
         beforeEach(async function () {
             earlierDateTrack = new TrackModel({
-                trackName: 'earlierDateTrack',
+                trackName: 'EARLIER_DATE_TRACK',
                 date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7), // A week ago
                 userId: testUserA._id
             })
@@ -279,7 +279,7 @@ describe('DELETE api/v1/tracks/last', function () {
 
         it('should delete the newest created track', async function () {
             const allTracks = await TrackModel.find({}).exec()
-            expect(allTracks[0].trackName).to.equal('testTrackA1')
+            expect(allTracks[0].trackName).to.equal('TEST_TRACK_A1')
         })
     })
 
@@ -337,7 +337,7 @@ describe('DELETE api/v1/tracks/last', function () {
     describe('Multiple tracks', function () {
         beforeEach(async function () {
             const newTrack = new TrackModel({
-                trackName: 'newTrack',
+                trackName: 'NEW_TRACK',
                 userId: testUserA._id
             })
             await newTrack.save()
@@ -351,7 +351,7 @@ describe('DELETE api/v1/tracks/last', function () {
 
         it('should delete last track', async function () {
             const allTracks = await TrackModel.find({}).exec()
-            expect(allTracks[0].trackName).to.equal('testTrackA1')
+            expect(allTracks[0].trackName).to.equal('TEST_TRACK_A1')
         })
 
         it('should respond with status code 204', async function () {
@@ -399,7 +399,7 @@ describe('DELETE api/v1/tracks/last', function () {
             })
             await testUserB.save()
             testTrackB1 = new TrackModel({
-                trackName: 'testTrackB1',
+                trackName: 'TEST_TRACK_B1',
                 userId: testUserB._id
             })
             await testTrackB1.save()
@@ -462,12 +462,12 @@ describe('DELETE api/v1/tracks/last', function () {
 
             beforeEach(async function () {
                 testTrackA2 = new TrackModel({
-                    trackName: 'testTrackA2',
+                    trackName: 'TEST_TRACK_A2',
                     userId: testUserA._id
                 })
                 await testTrackA2.save()
                 testTrackB2 = new TrackModel({
-                    trackName: 'testTrackB2',
+                    trackName: 'TEST_TRACK_B2',
                     userId: testUserB._id
                 })
                 await testTrackB2.save()
@@ -481,7 +481,7 @@ describe('DELETE api/v1/tracks/last', function () {
 
             it('should delete the last track', async function () {
                 const testUserATracks = await TrackModel.find({ userId: testUserA._id }).exec()
-                expect(testUserATracks[0].trackName).to.equal('testTrackA1')
+                expect(testUserATracks[0].trackName).to.equal('TEST_TRACK_A1')
             })
 
             it('should not delete any tracks of the other user', async function () {
@@ -510,11 +510,11 @@ describe('GET api/v1/tracks', function () {
         userB = await UserModel.create({ userName: 'testUserB' })
 
         await TrackModel.insertMany([
-            { trackName: 'testTrackA1', userId: userA._id },
-            { trackName: 'testTrackA1', userId: userA._id },
-            { trackName: 'testTrackA2', userId: userA._id },
-            { trackName: 'testTrackB1', userId: userB._id },
-            { trackName: 'testTrackB2', userId: userB._id }
+            { trackName: 'TEST_TRACK_A1', userId: userA._id },
+            { trackName: 'TEST_TRACK_A1', userId: userA._id },
+            { trackName: 'TEST_TRACK_A2', userId: userA._id },
+            { trackName: 'TEST_TRACK_B1', userId: userB._id },
+            { trackName: 'TEST_TRACK_B2', userId: userB._id }
         ])
     })
 
@@ -538,9 +538,9 @@ describe('GET api/v1/tracks', function () {
         })
 
         it('should respond with all tracks of the user', async function () {
-            expect(res.body[0].trackName).to.equal('testTrackA1')
-            expect(res.body[1].trackName).to.equal('testTrackA1')
-            expect(res.body[2].trackName).to.equal('testTrackA2')
+            expect(res.body[0].trackName).to.equal('TEST_TRACK_A1')
+            expect(res.body[1].trackName).to.equal('TEST_TRACK_A1')
+            expect(res.body[2].trackName).to.equal('TEST_TRACK_A2')
         })
 
         it('should not respond with any track of other users', async function () {
@@ -554,7 +554,7 @@ describe('GET api/v1/tracks', function () {
         let res: Response
 
         beforeEach(async function () {
-            res = await agent.get('/v1/tracks?trackName=testTrackA1').send({ accessToken: userA.accessToken })
+            res = await agent.get('/v1/tracks?trackName=TEST_TRACK_A1').send({ accessToken: userA.accessToken })
         })
 
         it('should respond with status code 200', async function () {
@@ -570,8 +570,8 @@ describe('GET api/v1/tracks', function () {
         })
 
         it('should respond with all tracks of the user', async function () {
-            expect(res.body[0].trackName).to.equal('testTrackA1')
-            expect(res.body[1].trackName).to.equal('testTrackA1')
+            expect(res.body[0].trackName).to.equal('TEST_TRACK_A1')
+            expect(res.body[1].trackName).to.equal('TEST_TRACK_A1')
         })
 
         it('should not respond with any track of other users', async function () {

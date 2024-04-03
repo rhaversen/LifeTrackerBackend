@@ -155,11 +155,11 @@ describe('DELETE api/v1/users', function () {
                 for (let i = 0; i < 3; i++) {
                     await TrackModel.create({
                         userId: testUser._id,
-                        trackName: 'TestTrack'
+                        trackName: 'TEST_TRACK'
                     })
                     await TrackModel.create({
                         userId: otherUser._id,
-                        trackName: 'OtherTrack'
+                        trackName: 'OTHER_TRACK'
                     })
                 }
             })

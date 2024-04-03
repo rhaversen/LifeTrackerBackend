@@ -267,7 +267,7 @@ describe('DELETE api/v1/tracks/last', function () {
         })
         await testUser.save()
         testTrack = new TrackModel({
-            trackName: 'testTrackA1',
+            trackName: 'TEST_TRACK_A1',
             date: new Date(),
             userId: testUser._id
         })

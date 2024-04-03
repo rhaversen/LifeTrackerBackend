@@ -27,7 +27,7 @@ describe('Track Model', () => {
 
             beforeEach(async () => {
                 track = new TrackModel({
-                    trackName: 'TestTrack',
+                    trackName: 'TEST_TRACK',
                     userId: user._id
                 })
             })
@@ -52,7 +52,7 @@ describe('Track Model', () => {
 
             beforeEach(async () => {
                 track = new TrackModel({
-                    trackName: 'TestTrack',
+                    trackName: 'TEST_TRACK',
                     userId: user._id
                 })
             })
@@ -86,7 +86,7 @@ describe('Track Model', () => {
 
         it('should require userId', async () => {
             const track = new TrackModel({
-                trackName: 'TestTrack'
+                trackName: 'TEST_TRACK'
             })
             await track.save().catch((err) => {
                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
