@@ -9,9 +9,6 @@ import mongoose from 'mongoose'
 // Own modules
 import logger from '../app/utils/logger.js'
 
-// Connect to the database
-import './mongoMemoryReplSetConnector.js'
-
 // Test environment settings
 process.env.SESSION_SECRET = 'TEST_SESSION_SECRET'
 process.env.CSRF_TOKEN = 'TEST_CSRF_TOKEN'
@@ -36,6 +33,11 @@ const cleanDatabase = async function (): Promise<void> {
 }
 
 before(async function () {
+    this.timeout(10000)
+    // Connect to the database
+    const database = await import('./mongoMemoryReplSetConnector.js')
+    await database.default()
+
     chaiAppServer = chaiHttpObject.request(app.server).keepOpen()
 })
 
