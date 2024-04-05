@@ -5,18 +5,10 @@ import { type Document, model, Schema, type Types } from 'mongoose'
 
 // Own modules
 import logger from '../utils/logger.js'
-import { trackTypes } from '../utils/trackTypes.js'
+const trackTypesModule = await import('../utils/trackTypes.js')
 
 // Destructuring and global variables
-
-if (process.env.NODE_ENV === 'test') {
-    // Adding test track types to trackTypes
-    const testTrackTypes = await import('../../test/testTrackTypes.js')
-    Object.assign(trackTypes, testTrackTypes.testTrackTypes)
-}
-
-// Freezing the trackType object
-Object.freeze(trackTypes)
+const trackTypes = trackTypesModule.trackTypes
 
 export interface ITrack extends Document {
     // Properties

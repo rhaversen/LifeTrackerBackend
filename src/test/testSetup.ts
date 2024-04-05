@@ -8,13 +8,15 @@ import mongoose from 'mongoose'
 
 // Own modules
 import logger from '../app/utils/logger.js'
+import { trackTypes } from '../app/utils/trackTypes.js'
+import { testTrackTypes } from './testTrackTypes.js'
 
 // Test environment settings
 process.env.SESSION_SECRET = 'TEST_SESSION_SECRET'
 process.env.CSRF_TOKEN = 'TEST_CSRF_TOKEN'
 
-// Importing the server
-const app = await import('../app/index.js')
+// Expanding test track types
+Object.assign(trackTypes, testTrackTypes)
 
 const chaiHttpObject = chai.use(chaiHttp)
 
