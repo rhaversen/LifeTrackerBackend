@@ -84,7 +84,7 @@ export function validateTrackNameAndData (trackName: string, data?: Record<strin
     if (data === undefined || data === null) return true
 
     // Get the allowed keys for the track type
-    const allowedKeys = trackTypes[trackName as keyof typeof trackTypes].allowedKeys as Record<string, unknown> // The type assertion is necessary because TypeScript does not know that the trackName is a valid key of trackType
+    const allowedKeys = trackTypes[trackName as keyof typeof trackTypes] as Record<string, unknown> // The "keyof typeof trackTypes" type assertion is necessary because TypeScript does not know that the trackName is a valid key of trackType
 
     // Check if the data has the allowed keys and the correct types
     for (const key in data) {
