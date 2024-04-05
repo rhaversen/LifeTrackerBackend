@@ -8,7 +8,6 @@ import mongoose from 'mongoose'
 
 // Own modules
 import logger from '../app/utils/logger.js'
-import databaseConnector from '../app/utils/databaseConnector.js'
 
 // Connect to the database
 import './mongoMemoryReplSetConnector.js'
@@ -22,32 +21,19 @@ const app = await import('../app/index.js')
 
 const chaiHttpObject = chai.use(chaiHttp)
 
-async function cleanDatabase (): Promise<void> {
+const cleanDatabase = async function (): Promise<void> {
     /// ////////////////////////////////////////////
     /// ///////////////////////////////////////////
-    if (!databaseConnector.isMemoryDatabase()) {
-        logger.warn('Database wipe attempted in production environment! Shutting down.')
+    if (process.env.NODE_ENV !== 'test') {
+        logger.error('Database wipe attempted in non-test environment! Shutting down.')
         await app.shutDown(1)
         return
     }
     /// ////////////////////////////////////////////
     /// ///////////////////////////////////////////
     logger.debug('Cleaning databases')
-    try {
-        await mongoose.connection.db.dropDatabase()
-        logger.silly('Database dropped successfully')
-    } catch (err) {
-        if (err instanceof Error) {
-            logger.error(`Error dropping database: ${err.message}`)
-        } else {
-            logger.error('Error dropping database: An unknown error occurred')
-        }
-        logger.error('Shutting down')
-        await app.shutDown(1)
-    }
+    await mongoose.connection.db.dropDatabase()
 }
-
-let chaiAppServer: ChaiHttp.Agent
 
 before(async function () {
     chaiAppServer = chaiHttpObject.request(app.server).keepOpen()
