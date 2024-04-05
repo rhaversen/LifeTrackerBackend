@@ -40,6 +40,7 @@ before(async function () {
     const database = await import('./mongoMemoryReplSetConnector.js')
     await database.default()
 
+    app = await import('../app/index.js')
 })
 
 beforeEach(async function () {
