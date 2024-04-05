@@ -19,6 +19,9 @@ export interface ITrack extends Document {
     userId: Types.ObjectId // The user who created the track
     createdAt: Date // The date the track was created in the system
     data?: Record<string, unknown> // The data of the track
+
+    // Methods
+    validateTrackNameAndData: (trackName: string, data?: Record<string, unknown>) => boolean
 }
 
 const trackSchema = new Schema<ITrack>({
@@ -69,26 +72,31 @@ trackSchema.pre('save', function (next) {
 })
 
 // Adding validation to data
-trackSchema.path('data').validate(function (value) {
+trackSchema.path('data').validate(function () {
+    validateTrackNameAndData(this.trackName, this.data)
+}, 'Data is not valid')
+
+export function validateTrackNameAndData (trackName: string, data?: Record<string, unknown>): boolean {
     // Check if the trackName is a valid track type
-    if (!Object.keys(trackTypes).includes(this.trackName)) return false
+    if (!Object.keys(trackTypes).includes(trackName)) return false
 
     // No data is always valid data
-    if (this.data === undefined || this.data === null) return true
+    if (data === undefined || data === null) return true
 
     // Get the allowed keys for the track type
-    const allowedKeys = trackTypes[this.trackName as keyof typeof trackTypes].allowedKeys as Record<string, unknown> // The type assertion is necessary because TypeScript does not know that the trackName is a valid key of trackType
+    const allowedKeys = trackTypes[trackName as keyof typeof trackTypes].allowedKeys as Record<string, unknown> // The type assertion is necessary because TypeScript does not know that the trackName is a valid key of trackType
 
     // Check if the data has the allowed keys and the correct types
-    for (const key in this.data) {
+    for (const key in data) {
         // Check if key is allowed
         if (!Object.keys(allowedKeys).includes(key)) return false
         // Check if the type is correct
-        if (typeof this.data[key] !== typeof allowedKeys[key]) return false
+        if (typeof data[key] !== typeof allowedKeys[key]) return false
     }
 
+    // Data is valid
     return true
-}, 'Data is not valid')
+}
 
 // Compile the schema into a model
 const TrackModel = model<ITrack>('Track', trackSchema)
