@@ -40,6 +40,9 @@ before(async function () {
     const database = await import('./mongoMemoryReplSetConnector.js')
     await database.default()
 
+})
+
+beforeEach(async function () {
     chaiAppServer = chaiHttpObject.request(app.server).keepOpen()
 })
 
