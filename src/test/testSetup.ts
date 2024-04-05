@@ -5,6 +5,7 @@ import sinon from 'sinon'
 import chaiHttp from 'chai-http'
 import * as chai from 'chai'
 import mongoose from 'mongoose'
+import { type Server } from 'http'
 
 // Own modules
 import logger from '../app/utils/logger.js'
@@ -18,7 +19,10 @@ process.env.CSRF_TOKEN = 'TEST_CSRF_TOKEN'
 // Expanding test track types
 Object.assign(trackTypes, testTrackTypes)
 
+// Global variables
 const chaiHttpObject = chai.use(chaiHttp)
+let app: { shutDown: (exitCode?: number) => Promise<void>, server: Server }
+let chaiAppServer: ChaiHttp.Agent
 
 const cleanDatabase = async function (): Promise<void> {
     /// ////////////////////////////////////////////
