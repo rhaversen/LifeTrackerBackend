@@ -5,6 +5,7 @@ import express from 'express'
 import mongoSanitize from 'express-mongo-sanitize'
 import RateLimit from 'express-rate-limit'
 import helmet from 'helmet'
+import 'source-map-support'
 
 // Own Modules
 import databaseConnector from './utils/databaseConnector.js'
