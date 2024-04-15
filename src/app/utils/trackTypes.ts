@@ -20,6 +20,12 @@ export const trackTypes = {
             caloriesTotal: Number
         }
     },
+    CONSUMED_CAFFEINE: {
+        allowedKeys: {
+            gramsProduct: Number,
+            gramsCaffeine: Number
+        }
+    },
     CONSUMED_CIGARETTE: {
         allowedKeys: {
             gramsProduct: Number,
@@ -47,12 +53,12 @@ export const trackTypes = {
             litres: Number
         }
     },
-    EXCRETED_SEMEN: {
+    HAIRCUT: {
         allowedKeys: {
-            litres: Number
+            metersCut: Number
+            professinal: Boolean
         }
     },
-
     BLOW_NOSE: {
         allowedKeys: {
         }
@@ -61,12 +67,16 @@ export const trackTypes = {
         allowedKeys: {
         }
     },
-    SHOWER: {
+    Shower: {
         allowedKeys: {
+            temperature: Number,
+            liters: Number,
+            tub: Boolean
         }
     },
     SHAVE: {
         allowedKeys: {
+            professional: Boolean
         }
     },
     HEARTACHE: {
@@ -79,14 +89,18 @@ export const trackTypes = {
     },
     MASTURBATE: {
         allowedKeys: {
+            orgasm: Number
         }
     },
     SEX: {
         allowedKeys: {
+            youOrgasm: Number
+            theyOrgasm: Number
         }
     },
     CLIP_NAILS: {
         allowedKeys: {
+            cutCentimeters: Number
         }
     },
     COOKING: {
@@ -95,6 +109,15 @@ export const trackTypes = {
     },
     CLEANING: {
         allowedKeys: {
+        }
+    },
+    FART: {
+        allowedKeys: {
+        }
+    },
+    POP_ZIT: {
+        allowedKeys: {
+            resqueeze: Boolean // Popped this zit before?
         }
     }
 }
