@@ -18,7 +18,7 @@ export interface ITrack extends Document {
     duration?: number // The duration of the track in minutes
     userId: Types.ObjectId // The user who created the track
     createdAt: Date // The date the track was created in the system
-    data?: Record<string, unknown> // The data of the track
+    data?: Record<string, unknown> // The data of the track (A single track)
 
     // Methods
     validateTrackNameAndData: (trackName: string, data?: Record<string, unknown>) => boolean
