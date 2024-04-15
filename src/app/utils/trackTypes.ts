@@ -28,10 +28,11 @@ export const trackTypes = {
         litres: Number
     },
     EXCRETED_FECES: {
-        litres: Number
+        grams: Number
     },
     EXCRETED_VOMIT: {
-        litres: Number
+        litres: Number,
+        forced: Boolean
     },
     HAIRCUT: {
         metersCut: Number,
