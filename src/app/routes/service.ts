@@ -15,8 +15,6 @@ const router = Router()
 
 // Functions
 async function checkHealth (req: Request, res: Response, next: NextFunction): Promise<void> {
-    logger.silly('Checking health')
-
     const uptimeSeconds = process.uptime()
     const uptimeHours = uptimeSeconds / 60 / 60
     const uptimeDays = uptimeHours / 24
