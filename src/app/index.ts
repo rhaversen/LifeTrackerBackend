@@ -37,8 +37,8 @@ if (process.env.NODE_ENV === 'production') {
     sentryInit(app)
 }
 
-// Connect to MongoDB if not test environment
-if (process.env.NODE_ENV !== 'test') {
+// Connect to MongoDB in production and staging environment
+if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
     await databaseConnector.connectToMongoDB()
 }
 
