@@ -27,7 +27,7 @@
 		"options": {
 			"retryWrites": "true",
 			"w": "majority",
-			"appName": "main"
+			"appName": "staging"
 		}
 	}
 }
