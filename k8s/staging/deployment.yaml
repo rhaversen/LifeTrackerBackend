@@ -33,15 +33,15 @@ spec:
             httpGet:
               path: service/livez
               port: 5000
-            periodSeconds: 30
-            initialDelaySeconds: 10
+            periodSeconds: 10
+            initialDelaySeconds: 15
             failureThreshold: 5
           readinessProbe:
             httpGet:
               path: service/readyz
               port: 5000
-            periodSeconds: 30
-            initialDelaySeconds: 10
+            periodSeconds: 10
+            initialDelaySeconds: 15
             failureThreshold: 5
           ports:
             - containerPort: 5000

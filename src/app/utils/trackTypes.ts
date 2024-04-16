@@ -64,5 +64,11 @@ export const trackTypes = {
     FART: {},
     POP_ZIT: {
         resqueeze: Boolean // Popped this zit before?
+    },
+    WAKEUP_EARWORM: {
+        title: String,
+        album: String,
+        artist: String,
+        spotifyURL: String
     }
-}
+} as const
