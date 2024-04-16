@@ -6,7 +6,6 @@ import mongoose from 'mongoose'
 
 // Own modules
 import asyncErrorHandler from '../utils/asyncErrorHandler.js'
-import logger from '../utils/logger.js'
 
 // Controller functions
 
