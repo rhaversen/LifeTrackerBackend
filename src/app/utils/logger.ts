@@ -28,7 +28,7 @@ const winstonLogger = createLogger({
             return `${logObject.timestamp} ${logObject.level}: ${logObject.message}`
         })
     ),
-    defaultMeta: { service: 'group-scheduler-backend' }, // Set a default metadata field
+    defaultMeta: { service: 'life-tracker-backend' }, // Set a default metadata field
     transports: [
         new _transports.File({
             filename: join(logDirectory, '../../logs/error.log'),
