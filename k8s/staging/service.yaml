@@ -3,6 +3,7 @@ kind: Service
 metadata:
   name: life-tracker-backend-staging-service
 spec:
+  type: ClusterIP
   selector:
     app: life-tracker-backend-staging
   ports:
