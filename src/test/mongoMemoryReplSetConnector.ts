@@ -11,19 +11,21 @@ import { shutDown } from '../app/index.js'
 
 const { mongooseOpts } = config
 
-logger.info('Attempting connection to in-memory MongoDB')
+export default async function connectToMongoDB (): Promise<void> {
+    logger.info('Attempting connection to in-memory MongoDB')
 
-try {
-    const replSet = new MongoMemoryReplSet({
-        replSet: { storageEngine: 'wiredTiger' }
-    })
+    try {
+        const replSet = new MongoMemoryReplSet({
+            replSet: { storageEngine: 'wiredTiger' }
+        })
 
-    await replSet.start()
-    await replSet.waitUntilRunning()
-    const mongoUri = replSet.getUri()
-    await mongoose.connect(mongoUri, mongooseOpts)
-    logger.info('Connected to in-memory MongoDB')
-} catch (error: any) {
-    logger.error(`Error connecting to in-memory MongoDB: ${error.message !== undefined ? error.message : error}`)
-    await shutDown(1)
+        await replSet.start()
+        await replSet.waitUntilRunning()
+        const mongoUri = replSet.getUri()
+        await mongoose.connect(mongoUri, mongooseOpts)
+        logger.info('Connected to in-memory MongoDB')
+    } catch (error: any) {
+        logger.error(`Error connecting to in-memory MongoDB: ${error.message !== undefined ? error.message : error}`)
+        await shutDown(1)
+    }
 }

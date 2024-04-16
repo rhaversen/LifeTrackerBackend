@@ -4,20 +4,32 @@ metadata:
   name: life-tracker-backend-prod-ingress
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - www.life-stats.net
+        - life-stats.net
+      secretName: life-tracker-backend-tls
   rules:
     - host: life-stats.net
       http:
         paths:
-          - pathType: Prefix
-            path: "/api"
-            backend:
+          - backend:
               service:
                 name: life-tracker-backend-prod-service
                 port:
                   number: 80
-  tls:
-    - hosts:
-        - life-stats.net
-        - www.life-stats.net
-      secretName: letsencrypt-prod
+            path: /api(/|$)(.*) # Strips the prefix
+            pathType: Prefix
+    - host: www.life-stats.net
+      http:
+        paths:
+          - backend:
+              service:
+                name: life-tracker-backend-prod-service
+                port:
+                  number: 80
+            path: /api(/|$)(.*) # Strips the prefix
+            pathType: Prefix
