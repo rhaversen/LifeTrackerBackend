@@ -9,7 +9,7 @@ import { createLogger, format as _format, transports as _transports } from 'wins
 // Global variables
 const _filename = fileURLToPath(import.meta.url)
 const _dirname = dirname(_filename)
-const logDirectory = join(_dirname, (process.env.NODE_ENV === 'production' ? './logs/' : '../../logs/'))
+const logDirectory = join(_dirname, (['production', 'staging'].includes(process.env.NODE_ENV ?? '') ? './logs/' : '../../logs/'))
 
 const winstonLogger = createLogger({
     levels: {
