@@ -65,4 +65,4 @@ export const trackTypes = {
     POP_ZIT: {
         resqueeze: Boolean // Popped this zit before?
     }
-}
+} as const
