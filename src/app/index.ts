@@ -1,15 +1,18 @@
 // Node.js built-in modules
 
 // Third-party libraries
+import * as Sentry from '@sentry/node'
 import express from 'express'
 import mongoSanitize from 'express-mongo-sanitize'
 import RateLimit from 'express-rate-limit'
 import helmet from 'helmet'
+import 'source-map-support'
 
 // Own Modules
 import databaseConnector from './utils/databaseConnector.js'
 import logger from './utils/logger.js'
 import config from './utils/setupConfig.js'
+import { sentryInit } from './utils/sentry.js'
 
 // Routes
 import userRoutes from './routes/users.js'
@@ -17,11 +20,6 @@ import trackRoutes from './routes/tracks.js'
 import serviceRoutes from './routes/service.js'
 import mongoose from 'mongoose'
 import globalErrorHandler from './middleware/globalErrorHandler.js'
-
-// Connect to MongoDB if not test environment
-if (process.env.NODE_ENV !== 'test') {
-    await databaseConnector.connectToMongoDB()
-}
 
 // Configs
 const {
@@ -33,6 +31,16 @@ const {
 
 // Global variables and setup
 const app = express()
+
+// Init sentry
+if (process.env.NODE_ENV === 'production') {
+    sentryInit(app)
+}
+
+// Connect to MongoDB in production and staging environment
+if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
+    await databaseConnector.connectToMongoDB()
+}
 
 // Middleware
 app.use(helmet())
@@ -58,6 +66,11 @@ app.use('/service', lowSensitivityApiLimiter)
 
 // Apply stricter rate limiters to routes
 app.use('/v1/users/', highSensitivityApiLimiter)
+
+// The sentry error handler must be registered before any other error middleware and after all controllers
+if (process.env.NODE_ENV === 'production') {
+    app.use(Sentry.Handlers.errorHandler())
+}
 
 // Global error handler middleware
 app.use(globalErrorHandler)

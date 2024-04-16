@@ -1,34 +1,26 @@
 export const testTrackTypes = {
     TEST_TRACK: {
-        allowedKeys: {
-        }
+        allowedKeys: {}
     },
     TEST_TRACK_A1: {
-        allowedKeys: {
-        }
+        allowedKeys: {}
     },
     TEST_TRACK_A2: {
-        allowedKeys: {
-        }
+        allowedKeys: {}
     },
     TEST_TRACK_B1: {
-        allowedKeys: {
-        }
+        allowedKeys: {}
     },
     TEST_TRACK_B2: {
-        allowedKeys: {
-        }
+        allowedKeys: {}
     },
     EARLIER_DATE_TRACK: {
-        allowedKeys: {
-        }
+        allowedKeys: {}
     },
     OTHER_TRACK: {
-        allowedKeys: {
-        }
+        allowedKeys: {}
     },
     NEW_TRACK: {
-        allowedKeys: {
-        }
+        allowedKeys: {}
     }
 }

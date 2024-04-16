@@ -1,100 +1,68 @@
 export const trackTypes = {
-    TEST_TRACK: {
-        allowedKeys: {
-        }
-    },
+    TEST_TRACK: {},
     CONSUMED_WATER: {
-        allowedKeys: {
-            litresProduct: Number
-        }
+        litresProduct: Number
     },
     CONSUMED_ALCOHOL: {
-        allowedKeys: {
-            litresProduct: Number,
-            alcoholPercentage: Number
-        }
+        litresProduct: Number,
+        alcoholPercentage: Number
     },
     CONSUMED_FOOD: {
-        allowedKeys: {
-            gramsProduct: Number,
-            caloriesTotal: Number
-        }
+        gramsProduct: Number,
+        caloriesTotal: Number
+    },
+    CONSUMED_CAFFEINE: {
+        gramsProduct: Number,
+        gramsCaffeine: Number
     },
     CONSUMED_CIGARETTE: {
-        allowedKeys: {
-            gramsProduct: Number,
-            gramsNicotine: Number
-        }
+        gramsProduct: Number,
+        gramsNicotine: Number
     },
     CONSUMED_SNUFF: {
-        allowedKeys: {
-            gramsProduct: Number,
-            gramsNicotine: Number
-        }
+        gramsProduct: Number,
+        gramsNicotine: Number
     },
     EXCRETED_URINE: {
-        allowedKeys: {
-            litres: Number
-        }
+        litres: Number
     },
     EXCRETED_FECES: {
-        allowedKeys: {
-            litres: Number
-        }
+        grams: Number
     },
     EXCRETED_VOMIT: {
-        allowedKeys: {
-            litres: Number
-        }
+        litres: Number,
+        forced: Boolean
     },
-    EXCRETED_SEMEN: {
-        allowedKeys: {
-            litres: Number
-        }
+    HAIRCUT: {
+        metersCut: Number,
+        professional: Boolean
     },
-
-    BLOW_NOSE: {
-        allowedKeys: {
-        }
-    },
-    BRUSH_TEETH: {
-        allowedKeys: {
-        }
-    },
-    SHOWER: {
-        allowedKeys: {
-        }
+    BLOW_NOSE: {},
+    BRUSH_TEETH: {},
+    Shower: {
+        temperature: Number,
+        liters: Number,
+        tub: Boolean
     },
     SHAVE: {
-        allowedKeys: {
-        }
+        professional: Boolean
     },
-    HEARTACHE: {
-        allowedKeys: {
-        }
-    },
-    HEADACHE: {
-        allowedKeys: {
-        }
-    },
+    HEARTACHE: {},
+    HEADACHE: {},
     MASTURBATE: {
-        allowedKeys: {
-        }
+        orgasm: Number
     },
     SEX: {
-        allowedKeys: {
-        }
+        youOrgasm: Number,
+        theyOrgasm: Number
     },
     CLIP_NAILS: {
-        allowedKeys: {
-        }
+        cutCentimeters: Number
     },
-    COOKING: {
-        allowedKeys: {
-        }
-    },
-    CLEANING: {
-        allowedKeys: {
-        }
+    COOKING: {},
+    CLEANING: {},
+    FART: {},
+    POP_ZIT: {
+        resqueeze: Boolean // Popped this zit before?
     }
 }
