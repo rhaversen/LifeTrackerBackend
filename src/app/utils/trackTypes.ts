@@ -1,6 +1,5 @@
 export const trackTypes = {
-    TEST_TRACK: {
-    },
+    TEST_TRACK: {},
     CONSUMED_WATER: {
         litresProduct: Number
     },
@@ -38,10 +37,8 @@ export const trackTypes = {
         metersCut: Number,
         professional: Boolean
     },
-    BLOW_NOSE: {
-    },
-    BRUSH_TEETH: {
-    },
+    BLOW_NOSE: {},
+    BRUSH_TEETH: {},
     Shower: {
         temperature: Number,
         liters: Number,
@@ -50,10 +47,8 @@ export const trackTypes = {
     SHAVE: {
         professional: Boolean
     },
-    HEARTACHE: {
-    },
-    HEADACHE: {
-    },
+    HEARTACHE: {},
+    HEADACHE: {},
     MASTURBATE: {
         orgasm: Number
     },
@@ -64,12 +59,9 @@ export const trackTypes = {
     CLIP_NAILS: {
         cutCentimeters: Number
     },
-    COOKING: {
-    },
-    CLEANING: {
-    },
-    FART: {
-    },
+    COOKING: {},
+    CLEANING: {},
+    FART: {},
     POP_ZIT: {
         resqueeze: Boolean // Popped this zit before?
     }

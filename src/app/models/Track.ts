@@ -5,6 +5,7 @@ import { type Document, model, Schema, type Types } from 'mongoose'
 
 // Own modules
 import logger from '../utils/logger.js'
+
 const trackTypesModule = await import('../utils/trackTypes.js')
 
 // Destructuring and global variables
