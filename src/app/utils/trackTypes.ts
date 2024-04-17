@@ -71,5 +71,8 @@ export const trackTypes = {
         artist: String,
         spotifyURL: String
     },
-    FEELING_SICK: {}
+    FEELING_SICK: {},
+    TINNITUS: {
+        highPitch: Boolean
+    }
 } as const
