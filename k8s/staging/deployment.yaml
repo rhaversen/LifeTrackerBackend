@@ -1,7 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: life-tracker-backend-staging
+  name: backend-deployment
+  namespace: life-tracker-staging
 spec:
   replicas: 3
   strategy:
@@ -11,15 +12,15 @@ spec:
       maxSurge: 1
   selector:
     matchLabels:
-      app: life-tracker-backend-staging
+      app: backend-deployment
   template:
     metadata:
       labels:
-        app: life-tracker-backend-staging
+        app: backend-deployment
     spec:
       automountServiceAccountToken: false
       containers:
-        - name: life-tracker-backend-staging
+        - name: backend-deployment
           resources:
             limits:
               cpu: "1"
@@ -47,4 +48,4 @@ spec:
             - containerPort: 5000
           envFrom:
             - secretRef:
-                name: life-tracker-backend-staging-secrets
+                name: backend-secrets

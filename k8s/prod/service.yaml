@@ -1,11 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: life-tracker-backend-prod-service
+  name: backend-service
+  namespace: life-tracker-prod
 spec:
   type: ClusterIP
   selector:
-    app: life-tracker-backend-prod
+    app: backend-deployment
   ports:
     - protocol: TCP
       port: 80

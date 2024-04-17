@@ -1,12 +1,13 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: life-tracker-backend-staging-hpa
+  name: backend-hpa
+  namespace: life-tracker-staging
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: life-tracker-backend-staging
+    name: backend-deployment
   minReplicas: 2
   maxReplicas: 10
   metrics:
