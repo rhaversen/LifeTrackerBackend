@@ -9,21 +9,10 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - www.staging.life-stats.net
         - staging.life-stats.net
       secretName: life-tracker-backend-tls
   rules:
     - host: staging.life-stats.net
-      http:
-        paths:
-          - backend:
-              service:
-                name: life-tracker-backend-staging-service
-                port:
-                  number: 80
-            path: /api(/|$)(.*) # Strips the prefix
-            pathType: Prefix
-    - host: www.staging.life-stats.net
       http:
         paths:
           - backend:
