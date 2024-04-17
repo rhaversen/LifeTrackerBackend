@@ -70,5 +70,6 @@ export const trackTypes = {
         album: String,
         artist: String,
         spotifyURL: String
-    }
+    },
+    FEELING_SICK: {}
 } as const
