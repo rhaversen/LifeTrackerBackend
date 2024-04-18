@@ -20,6 +20,9 @@ import serviceRoutes from './routes/service.js'
 import mongoose from 'mongoose'
 import globalErrorHandler from './middleware/globalErrorHandler.js'
 
+// Logging environment
+logger.info(`Node environment: ${process.env.NODE_ENV}`)
+
 // Configs
 const {
     lowSensitivityApiLimiterConfig,
