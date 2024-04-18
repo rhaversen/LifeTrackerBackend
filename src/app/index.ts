@@ -59,15 +59,15 @@ app.use('/v1/users', mediumSensitivityApiLimiter, userRoutes)
 app.use('/v1/tracks', mediumSensitivityApiLimiter, trackRoutes)
 app.use('/service', mediumSensitivityApiLimiter, serviceRoutes)
 
+// Apply stricter rate limiters to routes
+app.use('/v1/users/', highSensitivityApiLimiter)
+
 // Apply medium sensitivity for all database operation routes
 app.use('/v1/users', mediumSensitivityApiLimiter)
 app.use('/v1/tracks', mediumSensitivityApiLimiter)
 
 // Apply low sensitivity for service routes
 app.use('/service', veryLowSensitivityApiLimiter)
-
-// Apply stricter rate limiters to routes
-app.use('/v1/users/', highSensitivityApiLimiter)
 
 // The sentry error handler must be registered before any other error middleware and after all controllers
 if (process.env.NODE_ENV === 'production') {
