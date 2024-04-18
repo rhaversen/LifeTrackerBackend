@@ -1,6 +1,11 @@
 {
 	"apiLimiter": {
 		"sensitivity": {
+			"veryLow": {
+				"max": 1000,
+				"windowMs": 1,
+				"standardHeaders": true
+			},
 			"low": {
 				"max": 1000,
 				"windowMs": 1,
@@ -12,6 +17,11 @@
 				"standardHeaders": true
 			},
 			"high": {
+				"max": 1000,
+				"windowMs": 1,
+				"standardHeaders": true
+			},
+			"critical": {
 				"max": 1000,
 				"windowMs": 1,
 				"standardHeaders": true

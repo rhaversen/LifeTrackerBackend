@@ -10,7 +10,11 @@ import { type Router } from 'express'
 // Functions
 export function sentryInit (app: Router): void {
     Sentry.init({
+        // Setting sentry environment from environment variables
+        environment: process.env.NODE_ENV,
+        // Setting DSN (Data Source Name) for Sentry from environment variables
         dsn: process.env.SENTRY_DSN,
+
         integrations: [
             // enable HTTP calls tracing
             new Sentry.Integrations.Http({ tracing: true }),

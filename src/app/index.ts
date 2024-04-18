@@ -20,9 +20,12 @@ import serviceRoutes from './routes/service.js'
 import mongoose from 'mongoose'
 import globalErrorHandler from './middleware/globalErrorHandler.js'
 
+// Logging environment
+logger.info(`Node environment: ${process.env.NODE_ENV}`)
+
 // Configs
 const {
-    lowSensitivityApiLimiterConfig,
+    veryLowSensitivityApiLimiterConfig,
     mediumSensitivityApiLimiterConfig,
     highSensitivityApiLimiterConfig,
     expressPort
@@ -47,7 +50,7 @@ app.use(express.json())
 app.use(mongoSanitize())
 
 // Rate limiters
-const lowSensitivityApiLimiter = RateLimit(lowSensitivityApiLimiterConfig)
+const veryLowSensitivityApiLimiter = RateLimit(veryLowSensitivityApiLimiterConfig)
 const mediumSensitivityApiLimiter = RateLimit(mediumSensitivityApiLimiterConfig)
 const highSensitivityApiLimiter = RateLimit(highSensitivityApiLimiterConfig)
 
@@ -61,7 +64,7 @@ app.use('/v1/users', mediumSensitivityApiLimiter)
 app.use('/v1/tracks', mediumSensitivityApiLimiter)
 
 // Apply low sensitivity for service routes
-app.use('/service', lowSensitivityApiLimiter)
+app.use('/service', veryLowSensitivityApiLimiter)
 
 // Apply stricter rate limiters to routes
 app.use('/v1/users/', highSensitivityApiLimiter)

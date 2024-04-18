@@ -39,7 +39,7 @@ export const trackTypes = {
     },
     BLOW_NOSE: {},
     BRUSH_TEETH: {},
-    Shower: {
+    SHOWER: {
         temperature: Number,
         liters: Number,
         tub: Boolean
@@ -70,5 +70,9 @@ export const trackTypes = {
         album: String,
         artist: String,
         spotifyURL: String
+    },
+    FEELING_SICK: {},
+    TINNITUS: {
+        highPitch: Boolean
     }
 } as const

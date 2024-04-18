@@ -1,7 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: life-tracker-backend-prod-ingress
+  name: backend-ingress
+  namespace: life-tracker-prod
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/rewrite-target: /$2
@@ -11,14 +12,14 @@ spec:
     - hosts:
         - www.life-stats.net
         - life-stats.net
-      secretName: life-tracker-backend-tls
+      secretName: backend-tls
   rules:
     - host: life-stats.net
       http:
         paths:
           - backend:
               service:
-                name: life-tracker-backend-prod-service
+                name: backend-service
                 port:
                   number: 80
             path: /api(/|$)(.*) # Strips the prefix
@@ -28,7 +29,7 @@ spec:
         paths:
           - backend:
               service:
-                name: life-tracker-backend-prod-service
+                name: backend-service
                 port:
                   number: 80
             path: /api(/|$)(.*) # Strips the prefix
