@@ -1,7 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: life-tracker-backend-staging
+  name: backend-deployment
+  namespace: life-tracker-staging
 spec:
   replicas: 3
   strategy:
@@ -11,15 +12,15 @@ spec:
       maxSurge: 1
   selector:
     matchLabels:
-      app: life-tracker-backend-staging
+      app: backend-deployment
   template:
     metadata:
       labels:
-        app: life-tracker-backend-staging
+        app: backend-deployment
     spec:
       automountServiceAccountToken: false
       containers:
-        - name: life-tracker-backend-staging
+        - name: backend-deployment
           resources:
             limits:
               cpu: "1"
@@ -27,24 +28,24 @@ spec:
             requests:
               cpu: "0.5"
               memory: "256Mi"
-          image: "rhaversen/life-tracker-backend:staging"
+          image: "rhaversen/life-tracker-backend:${GITHUB_SHA}"
           imagePullPolicy: Always
           livenessProbe:
             httpGet:
               path: service/livez
               port: 5000
-            periodSeconds: 30
-            initialDelaySeconds: 10
+            periodSeconds: 10
+            initialDelaySeconds: 15
             failureThreshold: 5
           readinessProbe:
             httpGet:
               path: service/readyz
               port: 5000
-            periodSeconds: 30
-            initialDelaySeconds: 10
+            periodSeconds: 10
+            initialDelaySeconds: 15
             failureThreshold: 5
           ports:
             - containerPort: 5000
           envFrom:
             - secretRef:
-                name: life-tracker-backend-staging-secrets
+                name: backend-secrets

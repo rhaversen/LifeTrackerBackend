@@ -33,7 +33,7 @@ async function disconnectFromMongoDB (): Promise<void> {
 }
 
 async function connectToMongoDB (): Promise<void> {
-    if (process.env.NODE_ENV !== 'production') return
+    if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'staging') return
 
     for (let currentRetryAttempt = 0; currentRetryAttempt < maxRetryAttempts; currentRetryAttempt++) {
         logger.info('Attempting connection to MongoDB')
