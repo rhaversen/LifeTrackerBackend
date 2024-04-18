@@ -6,19 +6,19 @@ import express from 'express'
 import mongoSanitize from 'express-mongo-sanitize'
 import RateLimit from 'express-rate-limit'
 import helmet from 'helmet'
+import mongoose from 'mongoose'
 
 // Own Modules
 import databaseConnector from './utils/databaseConnector.js'
 import logger from './utils/logger.js'
 import config from './utils/setupConfig.js'
 import { sentryInit } from './utils/sentry.js'
+import globalErrorHandler from './middleware/globalErrorHandler.js'
 
 // Routes
 import userRoutes from './routes/users.js'
 import trackRoutes from './routes/tracks.js'
 import serviceRoutes from './routes/service.js'
-import mongoose from 'mongoose'
-import globalErrorHandler from './middleware/globalErrorHandler.js'
 
 // Logging environment
 logger.info(`Node environment: ${process.env.NODE_ENV}`)
