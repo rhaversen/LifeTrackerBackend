@@ -1,36 +1,36 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: backend-ingress
-  namespace: life-tracker-prod
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    name: backend-ingress
+    namespace: life-tracker-prod
+    annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
-  ingressClassName: nginx
-  tls:
-    - hosts:
-        - www.life-stats.net
-        - life-stats.net
-      secretName: backend-tls
-  rules:
-    - host: life-stats.net
-      http:
-        paths:
-          - backend:
-              service:
-                name: backend-service
-                port:
-                  number: 80
-            path: /api(/|$)(.*) # Strips the prefix
-            pathType: Prefix
-    - host: www.life-stats.net
-      http:
-        paths:
-          - backend:
-              service:
-                name: backend-service
-                port:
-                  number: 80
-            path: /api(/|$)(.*) # Strips the prefix
-            pathType: Prefix
+    ingressClassName: nginx
+    tls:
+        - hosts:
+              - www.life-stats.net
+              - life-stats.net
+          secretName: backend-tls
+    rules:
+        - host: life-stats.net
+          http:
+              paths:
+                  - backend:
+                        service:
+                            name: backend-service
+                            port:
+                                number: 80
+                    path: /api(/|$)(.*) # Strips the prefix
+                    pathType: Prefix
+        - host: www.life-stats.net
+          http:
+              paths:
+                  - backend:
+                        service:
+                            name: backend-service
+                            port:
+                                number: 80
+                    path: /api(/|$)(.*) # Strips the prefix
+                    pathType: Prefix
