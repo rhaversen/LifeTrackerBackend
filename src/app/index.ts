@@ -6,19 +6,19 @@ import express from 'express'
 import mongoSanitize from 'express-mongo-sanitize'
 import RateLimit from 'express-rate-limit'
 import helmet from 'helmet'
+import mongoose from 'mongoose'
 
 // Own Modules
 import databaseConnector from './utils/databaseConnector.js'
 import logger from './utils/logger.js'
 import config from './utils/setupConfig.js'
 import { sentryInit } from './utils/sentry.js'
+import globalErrorHandler from './middleware/globalErrorHandler.js'
 
 // Routes
 import userRoutes from './routes/users.js'
 import trackRoutes from './routes/tracks.js'
 import serviceRoutes from './routes/service.js'
-import mongoose from 'mongoose'
-import globalErrorHandler from './middleware/globalErrorHandler.js'
 
 // Logging environment
 logger.info(`Node environment: ${process.env.NODE_ENV}`)
@@ -59,15 +59,15 @@ app.use('/v1/users', mediumSensitivityApiLimiter, userRoutes)
 app.use('/v1/tracks', mediumSensitivityApiLimiter, trackRoutes)
 app.use('/service', mediumSensitivityApiLimiter, serviceRoutes)
 
+// Apply stricter rate limiters to routes
+app.use('/v1/users/', highSensitivityApiLimiter)
+
 // Apply medium sensitivity for all database operation routes
 app.use('/v1/users', mediumSensitivityApiLimiter)
 app.use('/v1/tracks', mediumSensitivityApiLimiter)
 
 // Apply low sensitivity for service routes
 app.use('/service', veryLowSensitivityApiLimiter)
-
-// Apply stricter rate limiters to routes
-app.use('/v1/users/', highSensitivityApiLimiter)
 
 // The sentry error handler must be registered before any other error middleware and after all controllers
 if (process.env.NODE_ENV === 'production') {
