@@ -6,7 +6,7 @@ This app is currently in a very early alpha stage. While it is not yet possible 
 
 Track events with **Life Stats** using a straightforward webhook. Below is the essential workflow.
 
->You can check the health of the service **[here](https://life-stats.net/api/service/readyz)** (View uptime and database connection). The response is in simple JSON format, which can be more easily read with this [chrome extension](https://chromewebstore.google.com/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa).
+> You can check the health of the service **[here](https://life-stats.net/api/service/readyz)** (View uptime and database connection). The response is in simple JSON format, which can be more easily read with this [chrome extension](https://chromewebstore.google.com/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa).
 
 ## User creation
 
@@ -145,9 +145,9 @@ print(response.text)
 **Data Collection**
 We collect only the data you provide:
 
-- **Username**: Your chosen pseudonym within the app.
-- **Track Name**: The label you assign to each event.
-- **Time of Track**: The creation time of each event, adjustable by specifying an offset.
+-   **Username**: Your chosen pseudonym within the app.
+-   **Track Name**: The label you assign to each event.
+-   **Time of Track**: The creation time of each event, adjustable by specifying an offset.
 
 **Data Use**
 

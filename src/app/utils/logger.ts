@@ -86,7 +86,7 @@ function logToWinston (level: string, ...messages: any[]): void {
 }
 
 async function logToBetterStack (level: string, ...messages: any[]): Promise<void> {
-    if (process.env.BETTERSTACK_LOG_TOKEN === null || process.env.BETTERSTACK_LOG_TOKEN === undefined || process.env.NODE_ENV !== 'production') {
+    if (process.env.BETTERSTACK_LOG_TOKEN === null || process.env.BETTERSTACK_LOG_TOKEN === undefined || (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'staging')) {
         return
     }
 
