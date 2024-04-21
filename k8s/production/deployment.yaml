@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
     name: backend-deployment
-    namespace: life-tracker-prod
+    namespace: life-tracker-production
 spec:
     replicas: 3
     strategy:
