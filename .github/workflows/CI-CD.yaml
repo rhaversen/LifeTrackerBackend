@@ -9,12 +9,11 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Set environment based on branch
-              id: vars
               run: |
                   if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-                      echo "::set-output name=environment::production"
+                    echo "environment=production" >> $GITHUB_ENV
                   else
-                      echo "::set-output name=environment::staging"
+                      echo "environment=staging" >> $GITHUB_ENV
                   fi
 
             - name: Check out code
@@ -43,10 +42,10 @@ jobs:
               with:
                   username: ${{ secrets.DOCKER_USERNAME }}
                   password: ${{ secrets.DOCKER_PASSWORD }}
-                  tag: ${{ steps.vars.outputs.environment }}
+                  tag: ${{ env.environment }}
 
             - name: Update deployment and push to DevOps repo
               uses: ./.github/actions/push-devops
               with:
                   devops_repo_token: ${{ secrets.DEVOPS_REPO_TOKEN }}
-                  environment: ${{ steps.vars.outputs.environment }}
+                  environment: ${{ env.environment }}
