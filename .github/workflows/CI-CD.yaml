@@ -7,18 +7,18 @@ on:
 jobs:
     build-and-push:
         runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                include:
-                    - environment: production
-                      branch: main
-                    - environment: staging
-                      branch: staging
         steps:
+            - name: Set environment based on branch
+              id: vars
+              run: |
+                  if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+                      echo "::set-output name=environment::production"
+                  else
+                      echo "::set-output name=environment::staging"
+                  fi
+
             - name: Check out code
               uses: actions/checkout@v2
-              with:
-                  ref: ${{ matrix.branch }}
 
             - name: Setup environment
               uses: ./.github/actions/setup
@@ -43,10 +43,10 @@ jobs:
               with:
                   username: ${{ secrets.DOCKER_USERNAME }}
                   password: ${{ secrets.DOCKER_PASSWORD }}
-                  tag: ${{ matrix.environment }}
+                  tag: ${{ steps.vars.outputs.environment }}
 
             - name: Update deployment and push to DevOps repo
               uses: ./.github/actions/push-devops
               with:
                   devops_repo_token: ${{ secrets.DEVOPS_REPO_TOKEN }}
-                  environment: ${{ matrix.environment }}
+                  environment: ${{ steps.vars.outputs.environment }}
