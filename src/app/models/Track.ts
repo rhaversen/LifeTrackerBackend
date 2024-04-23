@@ -56,7 +56,7 @@ const trackSchema = new Schema<ITrack>({
         default: Date.now
     },
     data: {
-        type: Schema.Types.Mixed,
+        type: Schema.Types.Map,
         required: false
     }
 })
