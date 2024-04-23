@@ -15,11 +15,13 @@ export async function createTrack (req: Request, res: Response, next: NextFuncti
     const {
         accessToken,
         trackName,
-        timeOffset
+        timeOffset,
+        data
     } = req.body as {
         accessToken?: unknown
         trackName?: unknown
         timeOffset?: unknown
+        data?: unknown
     }
 
     if (typeof trackName !== 'string' || trackName === '') {
@@ -57,7 +59,8 @@ export async function createTrack (req: Request, res: Response, next: NextFuncti
         const newTrack = await TrackModel.create({
             trackName,
             date,
-            userId: user._id
+            userId: user._id,
+            data
         })
 
         res.status(201).json(newTrack)
