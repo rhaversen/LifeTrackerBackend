@@ -74,5 +74,8 @@ export const trackTypes = {
     FEELING_SICK: {},
     TINNITUS: {
         highPitch: Boolean
+    },
+    WORKOUT: {
+        caloriesBurned: Number
     }
 } as const
