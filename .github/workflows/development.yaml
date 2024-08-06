@@ -1,7 +1,7 @@
 name: Development Testing CI
 
 on:
-    push:
+    pull_request:
         branches: ["development"]
 
 jobs:
