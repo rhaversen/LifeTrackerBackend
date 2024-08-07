@@ -3,7 +3,7 @@
 // Third-party libraries
 import mongoose, { type Document, model, Schema, type Types } from 'mongoose'
 import { nanoid } from 'nanoid'
-import { hash } from 'bcrypt'
+import { hash, compare } from 'bcrypt'
 import validator from 'validator'
 
 // Own modules
@@ -31,6 +31,7 @@ export interface IUser extends Document {
 
     // Methods
     deleteUserAndAllAssociatedData: () => Promise<void>
+    comparePassword: (password: string) => Promise<boolean>
 }
 
 // User schema definition
@@ -119,6 +120,11 @@ userSchema.methods.deleteUserAndAllAssociatedData = async function (this: IUser)
     } finally {
         await session.endSession()
     }
+}
+
+userSchema.methods.comparePassword = async function (this: IUser, password: string): Promise<boolean> {
+    logger.silly('Comparing password')
+    return await compare(password, this.password)
 }
 
 // Compile the schema into a model

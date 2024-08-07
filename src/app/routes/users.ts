@@ -28,8 +28,8 @@ router.post('/',
  * @route DELETE api/v1/users
  * @desc Delete the user
  * @access Public
- * @param {string} req.body.userName The users userName.
- * @param {string} req.body.accessToken The users accessToken.
+ * @param {string} req.body.email The users email.
+ * @param {string} req.body.password The users password.
  * @param {boolean} req.body.confirmDeletion Must be true to confirm deletion.
  * @return {number} res.status The status code of the HTTP response.
  */
