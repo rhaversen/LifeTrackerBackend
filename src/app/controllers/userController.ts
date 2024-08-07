@@ -39,6 +39,38 @@ export async function createUser (req: Request, res: Response, next: NextFunctio
     }
 }
 
+export async function createAccessToken (req: Request, res: Response, next: NextFunction): Promise<void> {
+    logger.silly('Creating access token')
+
+    const {
+        email,
+        password
+    } = req.body as Record<string, unknown>
+
+    if (typeof password !== 'string') {
+        res.status(400).json({ error: 'password must be a string.' })
+        return
+    }
+
+    const user = await UserModel.findOne({ email })
+
+    if (user === null) {
+        res.status(404).json({ error: 'email is not valid.' })
+        return
+    }
+
+    const isPasswordCorrect = await user.comparePassword(password)
+
+    if (!isPasswordCorrect) {
+        res.status(400).json({ error: 'Password is not correct.' })
+        return
+    }
+
+    const accessToken = await user.generateAccessToken()
+
+    res.status(200).json({ accessToken })
+}
+
 export async function deleteUser (req: Request, res: Response, next: NextFunction): Promise<void> {
     logger.silly('Deleting user')
 
