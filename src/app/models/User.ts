@@ -34,14 +34,14 @@ export interface IUser extends Document {
 // User schema definition
 const userSchema = new Schema<IUser>({
     userName: {
-        type: String,
+        type: Schema.Types.String,
         required: true,
         trim: true,
         minLength: [2, 'Username has to be at least 2 characters'],
         maxLength: [50, 'Username can be at most 50 characters']
     },
     password: {
-        type: String,
+        type: Schema.Types.String,
         required: true,
         lowercase: true,
         trim: true,
@@ -49,7 +49,7 @@ const userSchema = new Schema<IUser>({
         maxLength: [100, 'Password can be at most 100 characters']
     },
     accessToken: {
-        type: String,
+        type: Schema.Types.String,
         required: false,
         unique: true
     }
