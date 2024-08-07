@@ -17,6 +17,9 @@ const router = Router()
  * @desc Create a new user
  * @access Public
  * @param {string} req.body.userName The username given to this user.
+ * @param {string} req.body.email The email of the user.
+ * @param {string} req.body.password The password of the user.
+ * @param {string} req.body.confirmPassword The password of the user.
  * @return {number} res.status The status code of the HTTP response.
  * @return {string} res.body The accessToken of the newly created user.
  */

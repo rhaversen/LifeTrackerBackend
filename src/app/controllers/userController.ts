@@ -2,6 +2,7 @@
 
 // Third-party libraries
 import { type NextFunction, type Request, type Response } from 'express'
+import mongoose from 'mongoose'
 
 // Own modules
 import UserModel from '../models/User.js'
@@ -11,21 +12,31 @@ export async function createUser (req: Request, res: Response, next: NextFunctio
     logger.silly('Creating user')
 
     const {
-        userName
-    } = req.body as {
-        userName?: unknown
-    }
+        userName,
+        email,
+        password,
+        confirmPassword
+    } = req.body as Record<string, unknown>
 
-    if (typeof userName !== 'string' || userName === '') {
-        res.status(400).json({ error: 'userName must be a non-empty string.' })
+    if (password !== confirmPassword) {
+        res.status(400).json({ error: 'password and confirmPassword does not match.' })
         return
     }
 
-    const newUser = await UserModel.create({
-        userName
-    })
-
-    res.status(201).json(newUser.accessToken)
+    try {
+        // Creating a new admin with the password, userName and email
+        const newUser = await UserModel.create({ password, userName, email })
+        res.status(201).json({
+            name: newUser.userName,
+            email: newUser.email
+        })
+    } catch (error) {
+        if (error instanceof mongoose.Error.ValidationError || error instanceof mongoose.Error.CastError) {
+            res.status(400).json({ error: error.message })
+        } else {
+            next(error)
+        }
+    }
 }
 
 export async function deleteUser (req: Request, res: Response, next: NextFunction): Promise<void> {
