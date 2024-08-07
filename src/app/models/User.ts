@@ -30,6 +30,7 @@ export interface IUser extends Document {
     updatedAt: Date
 
     // Methods
+    generateAccessToken: () => Promise<string>
     deleteUserAndAllAssociatedData: () => Promise<void>
     comparePassword: (password: string) => Promise<boolean>
 }
@@ -97,6 +98,13 @@ userSchema.pre('save', async function (next) {
 })
 
 // User methods
+userSchema.methods.generateAccessToken = async function (this: IUser): Promise<string> {
+    logger.silly('Generating access token')
+    this.accessToken = nanoid()
+    await this.save()
+    return this.accessToken
+}
+
 userSchema.methods.deleteUserAndAllAssociatedData = async function (this: IUser): Promise<void> {
     logger.silly('Deleting user and all associated data')
 
