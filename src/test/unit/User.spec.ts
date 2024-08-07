@@ -19,7 +19,7 @@ describe('User Model', function () {
             })
             await user.save()
 
-            expect(user.signUpDate).to.be.a('date')
+            expect(user.createdAt).to.be.a('date')
         })
 
         it('should fill out accessToken', async function () {

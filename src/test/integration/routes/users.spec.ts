@@ -32,16 +32,16 @@ describe('POST api/v1/users', function () {
             expect(res.body).to.equal(allUsers[0].accessToken)
         })
 
-        it('should have a correct signUpDate', async function () {
+        it('should have a correct createdAt', async function () {
             const startTime = new Date().getTime()
             await agent.post('/v1/users').send(user)
             const endTime = new Date().getTime()
 
             const allUsers = await UserModel.find({}).exec()
-            const signUpDate = new Date(allUsers[0].signUpDate).getTime()
+            const createdAt = new Date(allUsers[0].createdAt).getTime()
 
-            expect(signUpDate).to.be.at.least(startTime)
-            expect(signUpDate).to.be.at.most(endTime)
+            expect(createdAt).to.be.at.least(startTime)
+            expect(createdAt).to.be.at.most(endTime)
         })
     })
 
