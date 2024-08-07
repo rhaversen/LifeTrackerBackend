@@ -3,15 +3,24 @@
 // Third-party libraries
 import mongoose, { type Document, model, Schema, type Types } from 'mongoose'
 import { nanoid } from 'nanoid'
+import { hash } from 'bcrypt'
 
 // Own modules
 import logger from '../utils/logger.js'
 import TrackModel from './Track.js'
+import config from '../utils/setupConfig.js'
 
+// Destructuring and global variables
+const {
+    bcryptSaltRounds
+} = config
+
+// User interface definition
 export interface IUser extends Document {
     // Properties
     _id: Types.ObjectId
     userName: string // Username of the user
+    password: string // Hashed password of the user
     accessToken: string // Unique access token for user authentication
     signUpDate: Date // The date the user signed up
 
@@ -22,6 +31,10 @@ export interface IUser extends Document {
 // User schema definition
 const userSchema = new Schema<IUser>({
     userName: {
+        type: String,
+        required: true
+    },
+    password: {
         type: String,
         required: true
     },
@@ -48,6 +61,9 @@ userSchema.index({ accessToken: 1 })
 // Pre-save middleware for User schema
 userSchema.pre('save', async function (next) {
     logger.silly('Saving user')
+    if (this.isModified('password')) {
+        this.password = await hash(this.password, bcryptSaltRounds) // Using a random salt for each user
+    }
     next()
 })
 
