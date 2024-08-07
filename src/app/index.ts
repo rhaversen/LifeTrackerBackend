@@ -6,6 +6,7 @@ import express from 'express'
 import mongoSanitize from 'express-mongo-sanitize'
 import RateLimit from 'express-rate-limit'
 import helmet from 'helmet'
+import cors from 'cors'
 import mongoose from 'mongoose'
 
 // Own Modules
@@ -28,11 +29,13 @@ const {
     veryLowSensitivityApiLimiterConfig,
     mediumSensitivityApiLimiterConfig,
     highSensitivityApiLimiterConfig,
-    expressPort
+    expressPort,
+    corsConfig
 } = config
 
 // Global variables and setup
 const app = express()
+app.use(cors(corsConfig))
 
 // Init sentry
 if (process.env.NODE_ENV === 'production') {
