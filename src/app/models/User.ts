@@ -35,11 +35,18 @@ export interface IUser extends Document {
 const userSchema = new Schema<IUser>({
     userName: {
         type: String,
-        required: true
+        required: true,
+        trim: true,
+        minLength: [2, 'Username has to be at least 2 characters'],
+        maxLength: [50, 'Username can be at most 50 characters']
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        lowercase: true,
+        trim: true,
+        minLength: [4, 'Password has to be at least 4 characters'],
+        maxLength: [100, 'Password can be at most 100 characters']
     },
     accessToken: {
         type: String,

@@ -43,10 +43,7 @@ const trackSchema = new Schema<ITrack>({
         type: Number,
         required: false,
         default: 0,
-        validate: {
-            validator: (value: number) => value >= 0,
-            message: 'Duration must be a positive number'
-        }
+        min: [0, 'Duration cannot be negative']
     },
     userId: {
         type: Schema.Types.ObjectId,

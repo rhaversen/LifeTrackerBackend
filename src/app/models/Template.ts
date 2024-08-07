@@ -25,7 +25,10 @@ export interface ITemplate extends Document {
 const templateSchema = new Schema<ITemplate>({
     templateName: {
         type: Schema.Types.String,
-        required: true
+        required: true,
+        trim: true,
+        minLength: [2, 'Template name has to be at least 2 characters'],
+        maxLength: [50, 'Template name can be at most 50 characters']
     },
     userId: {
         type: Schema.Types.ObjectId,
