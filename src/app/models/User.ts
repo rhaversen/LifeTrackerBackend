@@ -37,15 +37,17 @@ const userSchema = new Schema<IUser>({
     }
 })
 
+// Set default value to accessToken
+userSchema.path('accessToken').default(function () {
+    return nanoid()
+})
+
 // Adding indexes
 userSchema.index({ accessToken: 1 })
 
 // Pre-save middleware for User schema
 userSchema.pre('save', async function (next) {
     logger.silly('Saving user')
-    if (this.isNew) {
-        this.accessToken = nanoid()
-    }
     next()
 })
 
