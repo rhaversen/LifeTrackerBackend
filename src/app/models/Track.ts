@@ -18,8 +18,11 @@ export interface ITrack extends Document {
     date: Date // The date the track took place
     duration?: number // The duration of the track in minutes
     userId: Types.ObjectId // The user who created the track
-    createdAt: Date // The date the track was created in the system
     data?: Record<string, unknown> // The data of the track (A single track)
+
+    // Timestamps
+    createdAt: Date
+    updatedAt: Date
 
     // Methods
     validateTrackNameAndData: (trackName: string, data?: Record<string, unknown>) => boolean
@@ -50,15 +53,12 @@ const trackSchema = new Schema<ITrack>({
         ref: 'User',
         required: true
     },
-    createdAt: {
-        type: Date,
-        required: true,
-        default: Date.now
-    },
     data: {
         type: Schema.Types.Map,
         required: false
     }
+}, {
+    timestamps: true
 })
 
 // Adding indexes

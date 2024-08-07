@@ -22,7 +22,10 @@ export interface IUser extends Document {
     userName: string // Username of the user
     password: string // Hashed password of the user
     accessToken: string // Unique access token for user authentication
-    signUpDate: Date // The date the user signed up
+
+    // Timestamps
+    createdAt: Date
+    updatedAt: Date
 
     // Methods
     deleteUserAndAllAssociatedData: () => Promise<void>
@@ -42,12 +45,9 @@ const userSchema = new Schema<IUser>({
         type: String,
         required: false,
         unique: true
-    },
-    signUpDate: {
-        type: Date,
-        required: true,
-        default: Date.now
     }
+}, {
+    timestamps: true
 })
 
 // Set default value to accessToken

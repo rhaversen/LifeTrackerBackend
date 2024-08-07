@@ -12,8 +12,11 @@ export interface ITemplate extends Document {
     _id: Types.ObjectId
     templateName: string
     userId: Types.ObjectId // The user who created the template
-    createdAt: Date // The date the template was created in the system
     data: Record<string, Record<string, unknown>> // The data of the template (Collection of tracks)
+
+    // Timestamps
+    createdAt: Date
+    updatedAt: Date
 
     // Methods
     validateTemplateTracks: (template: ITemplate) => boolean
@@ -29,15 +32,12 @@ const templateSchema = new Schema<ITemplate>({
         ref: 'User',
         required: true
     },
-    createdAt: {
-        type: Date,
-        required: true,
-        default: Date.now
-    },
     data: {
         type: Schema.Types.Mixed,
         required: true
     }
+}, {
+    timestamps: true
 })
 
 // Adding indexes
