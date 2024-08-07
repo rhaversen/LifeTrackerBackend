@@ -4,6 +4,7 @@
 import mongoose, { type Document, model, Schema, type Types } from 'mongoose'
 import { nanoid } from 'nanoid'
 import { hash } from 'bcrypt'
+import validator from 'validator'
 
 // Own modules
 import logger from '../utils/logger.js'
@@ -20,6 +21,7 @@ export interface IUser extends Document {
     // Properties
     _id: Types.ObjectId
     userName: string // Username of the user
+    email: string // Email of the user
     password: string // Hashed password of the user
     accessToken: string // Unique access token for user authentication
 
@@ -40,6 +42,15 @@ const userSchema = new Schema<IUser>({
         minLength: [2, 'Username has to be at least 2 characters'],
         maxLength: [50, 'Username can be at most 50 characters']
     },
+    email: {
+        type: Schema.Types.String,
+        required: true,
+        unique: true,
+        lowercase: true,
+        trim: true,
+        minLength: [5, 'Email has to be at least 5 characters'],
+        maxLength: [100, 'Email can be at most 100 characters']
+    },
     password: {
         type: Schema.Types.String,
         required: true,
@@ -56,6 +67,16 @@ const userSchema = new Schema<IUser>({
 }, {
     timestamps: true
 })
+
+// Validations
+userSchema.path('email').validate(function (v: string) {
+    return validator.isEmail(v)
+}, 'Email is not valid')
+
+userSchema.path('email').validate(async function (v: string) {
+    const foundUserWithEmail = await UserModel.findOne({ email: v, _id: { $ne: this._id } })
+    return foundUserWithEmail === null || foundUserWithEmail === undefined
+}, 'Email is already in use')
 
 // Set default value to accessToken
 userSchema.path('accessToken').default(function () {
