@@ -131,7 +131,8 @@ userSchema.methods.deleteUserAndAllAssociatedData = async function (this: IUser)
 
 userSchema.methods.comparePassword = async function (this: IUser, password: string): Promise<boolean> {
     logger.silly('Comparing password')
-    return await compare(password, this.password)
+    const isPasswordCorrect = await compare(password, this.password)
+    return isPasswordCorrect
 }
 
 // Helper functions
