@@ -19,7 +19,9 @@ describe('POST api/v1/tracks', function () {
 
         beforeEach(async function () {
             testUser = new UserModel({
-                userName: 'TestUser'
+                userName: 'TestUser',
+                email: 'test@test.com',
+                password: 'password'
             })
             await testUser.save()
             track = {
@@ -77,7 +79,9 @@ describe('POST api/v1/tracks', function () {
 
         beforeEach(async function () {
             testUser = new UserModel({
-                userName: 'TestUser'
+                userName: 'TestUser',
+                email: 'test@test.com',
+                password: 'password'
             })
             await testUser.save()
             track = {
@@ -126,7 +130,9 @@ describe('POST api/v1/tracks', function () {
 
         beforeEach(async function () {
             testUser = new UserModel({
-                userName: 'TestUser'
+                userName: 'TestUser',
+                email: 'test@test.com',
+                password: 'password'
             })
             await testUser.save()
             track = {
@@ -175,7 +181,9 @@ describe('POST api/v1/tracks', function () {
 
         beforeEach(async function () {
             testUser = new UserModel({
-                userName: 'TestUser'
+                userName: 'TestUser',
+                email: 'test@test.com',
+                password: 'password'
             })
             await testUser.save()
             track = {
@@ -203,7 +211,9 @@ describe('POST api/v1/tracks', function () {
 
         beforeEach(async function () {
             testUser = new UserModel({
-                userName: 'TestUser'
+                userName: 'TestUser',
+                email: 'test@test.com',
+                password: 'password'
             })
             await testUser.save()
             track = {
@@ -232,7 +242,9 @@ describe('DELETE api/v1/tracks/last', function () {
 
     beforeEach(async function () {
         testUserA = new UserModel({
-            userName: 'testUserA'
+            userName: 'TestUser',
+            email: 'test@test.com',
+            password: 'password'
         })
         await testUserA.save()
         testTrackA1 = new TrackModel({
@@ -395,7 +407,9 @@ describe('DELETE api/v1/tracks/last', function () {
 
         beforeEach(async function () {
             testUserB = new UserModel({
-                userName: 'testUserB'
+                userName: 'TestUserB',
+                email: 'testB@test.com',
+                password: 'password'
             })
             await testUserB.save()
             testTrackB1 = new TrackModel({
@@ -506,8 +520,16 @@ describe('GET api/v1/tracks', function () {
     let userB: IUser
 
     beforeEach(async function () {
-        userA = await UserModel.create({ userName: 'testUserA' })
-        userB = await UserModel.create({ userName: 'testUserB' })
+        userA = await UserModel.create({
+            userName: 'TestUser1',
+            email: 'test1@test.com',
+            password: 'password'
+        })
+        userB = await UserModel.create({
+            userName: 'TestUser2',
+            email: 'test2@test.com',
+            password: 'password'
+        })
 
         await TrackModel.insertMany([
             { trackName: 'TEST_TRACK_A1', userId: userA._id },
