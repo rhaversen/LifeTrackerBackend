@@ -81,8 +81,8 @@ userSchema.path('email').validate(async function (v: string) {
 }, 'Email is already in use')
 
 // Set default value to accessToken
-userSchema.path('accessToken').default(function () {
-    return nanoid()
+userSchema.path('accessToken').default(async function () {
+    return await generateUniqueAccessToken()
 })
 
 // Adding indexes
@@ -98,9 +98,9 @@ userSchema.pre('save', async function (next) {
 })
 
 // User methods
-userSchema.methods.generateAccessToken = async function (this: IUser): Promise<string> {
+userSchema.methods.generateAccessToken = async function (this: IUser) {
     logger.silly('Generating access token')
-    this.accessToken = nanoid()
+    this.accessToken = await generateUniqueAccessToken()
     await this.save()
     return this.accessToken
 }
@@ -133,6 +133,17 @@ userSchema.methods.deleteUserAndAllAssociatedData = async function (this: IUser)
 userSchema.methods.comparePassword = async function (this: IUser, password: string): Promise<boolean> {
     logger.silly('Comparing password')
     return await compare(password, this.password)
+}
+
+// Helper functions
+async function generateUniqueAccessToken (): Promise<string> {
+    let newAccessToken
+    let foundUserWithAccessToken
+    do {
+        newAccessToken = nanoid()
+        foundUserWithAccessToken = await UserModel.findOne({ accessToken: newAccessToken })
+    } while (foundUserWithAccessToken !== null)
+    return newAccessToken
 }
 
 // Compile the schema into a model
