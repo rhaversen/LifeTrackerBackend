@@ -91,6 +91,7 @@ userSchema.index({ accessToken: 1 })
 userSchema.pre('save', async function (next) {
     logger.silly('Saving user')
     if (this.isModified('password')) {
+        // Hash the password
         this.password = await hash(this.password, bcryptSaltRounds) // Using a random salt for each user
     }
     next()
