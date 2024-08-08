@@ -56,7 +56,6 @@ const userSchema = new Schema<IUser>({
     password: {
         type: Schema.Types.String,
         required: true,
-        lowercase: true,
         trim: true,
         minLength: [4, 'Password has to be at least 4 characters'],
         maxLength: [100, 'Password can be at most 100 characters']
