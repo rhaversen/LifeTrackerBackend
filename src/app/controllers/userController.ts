@@ -27,7 +27,7 @@ export async function createUser (req: Request, res: Response, next: NextFunctio
         // Creating a new admin with the password, userName and email
         const newUser = await UserModel.create({ password, userName, email })
         res.status(201).json({
-            name: newUser.userName,
+            userName: newUser.userName,
             email: newUser.email
         })
     } catch (error) {
