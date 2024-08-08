@@ -39,5 +39,11 @@
 			"w": "majority",
 			"appName": "main"
 		}
+	},
+	"bcrypt": {
+		"saltRounds": 1
+	},
+	"cors": {
+		"origin": "*"
 	}
 }

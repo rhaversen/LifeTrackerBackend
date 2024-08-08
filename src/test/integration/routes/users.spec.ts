@@ -12,91 +12,199 @@ import TrackModel from '../../../app/models/Track.js'
 
 describe('POST api/v1/users', function () {
     describe('Post a new user', function () {
-        const user = { userName: 'TestUser' }
+        const userFields = {
+            userName: 'TestUser',
+            email: 'test@test.com',
+            password: 'testPassword',
+            confirmPassword: 'testPassword'
+        }
 
         it('should create a user', async function () {
-            await agent.post('/v1/users').send(user)
-            const allUsers = await UserModel.find({}).exec()
-            expect(allUsers.length).to.equal(1)
-            expect(allUsers[0].userName).to.equal(user.userName)
+            await agent.post('/v1/users').send(userFields)
+
+            const user = await UserModel.findOne({}).exec()
+
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            expect(user).to.exist
+            expect(user).to.have.property('userName', userFields.userName)
+            expect(user).to.have.property('email', userFields.email)
+            expect(user).to.have.property('password')
+        })
+
+        it('should return the newly created object', async function () {
+            const response = await agent.post('/v1/users').send(userFields)
+
+            expect(response).to.have.status(201)
+            expect(response.body).to.have.property('userName', userFields.userName)
+            expect(response.body).to.have.property('email', userFields.email)
         })
 
         it('should respond with status code 201', async function () {
-            const res = await agent.post('/v1/users').send(user)
+            const res = await agent.post('/v1/users').send(userFields)
             expect(res).to.have.status(201)
         })
 
-        it('should respond with the correct accessToken', async function () {
-            const res = await agent.post('/v1/users').send(user)
-            const allUsers = await UserModel.find({}).exec()
-            expect(res.body).to.equal(allUsers[0].accessToken)
+        it('should not return the password', async function () {
+            const response = await agent.post('/v1/users').send(userFields)
+
+            expect(response.body).to.not.have.property('password')
         })
 
-        it('should have a correct signUpDate', async function () {
-            const startTime = new Date().getTime()
-            await agent.post('/v1/users').send(user)
-            const endTime = new Date().getTime()
+        it('should return an error if the passwords do not match', async function () {
+            const response = await agent.post('/v1/users').send({
+                ...userFields,
+                confirmPassword: 'password2'
+            })
 
-            const allUsers = await UserModel.find({}).exec()
-            const signUpDate = new Date(allUsers[0].signUpDate).getTime()
+            expect(response).to.have.status(400)
+        })
 
-            expect(signUpDate).to.be.at.least(startTime)
-            expect(signUpDate).to.be.at.most(endTime)
+        it('should return an error if the userName is missing', async function () {
+            const response = await agent.post('/v1/users').send({
+                ...userFields,
+                userName: undefined
+            })
+
+            expect(response).to.have.status(400)
+        })
+
+        it('should return an error if the email is missing', async function () {
+            const response = await agent.post('/v1/users').send({
+                ...userFields,
+                email: undefined
+            })
+
+            expect(response).to.have.status(400)
+        })
+
+        it('should return an error if the password is missing', async function () {
+            const response = await agent.post('/v1/users').send({
+                ...userFields,
+                password: undefined
+            })
+
+            expect(response).to.have.status(400)
+        })
+
+        it('should return an error if the confirm password is missing', async function () {
+            const response = await agent.post('/v1/users').send({
+                ...userFields,
+                confirmPassword: undefined
+            })
+
+            expect(response).to.have.status(400)
+        })
+
+        it('should not allow setting the _id', async function () {
+            const newId = 'newId'
+            const updatedFields = {
+                _id: newId,
+                ...userFields
+            }
+
+            await agent.post('/v1/users').send(updatedFields)
+            const user = await UserModel.findOne({})
+
+            expect(user?._id.toString()).to.not.equal(newId)
         })
     })
+})
 
-    describe('Post a new user with an empty userName', function () {
-        it('should respond with status code 400', async function () {
-            const res = await agent.post('/v1/users').send({ userName: '' })
-            expect(res).to.have.status(400)
-        })
+describe('GET api/v1/users/:id/accessToken', function () {
+    let testUser: IUser
 
-        it('should respond with an error message', async function () {
-            const res = await agent.post('/v1/users').send({ userName: '' })
-            expect(res.body.error).to.equal('userName must be a non-empty string.')
-        })
+    const userFields = {
+        email: 'test@test.com',
+        password: 'testPassword'
+    }
 
-        it('should not create a user', async function () {
-            await agent.post('/v1/users').send({ userName: '' })
-            const allUsers = await UserModel.find({}).exec()
-            expect(allUsers.length).to.equal(0)
+    beforeEach(async function () {
+        testUser = new UserModel({
+            userName: 'TestUser',
+            email: 'test@test.com',
+            password: 'testPassword'
         })
+        await testUser.save()
     })
 
-    describe('Post a new user with an invalid userName', function () {
-        it('should respond with status code 400', async function () {
-            const res = await agent.post('/v1/users').send({ userName: 123 })
-            expect(res).to.have.status(400)
-        })
+    it('should return an access token', async function () {
+        const response = await agent.get(`/v1/users/${testUser._id.toString()}/accessToken`).send(userFields)
 
-        it('should respond with an error message', async function () {
-            const res = await agent.post('/v1/users').send({ userName: 123 })
-            expect(res.body.error).to.equal('userName must be a non-empty string.')
-        })
-
-        it('should not create a user', async function () {
-            await agent.post('/v1/users').send({ userName: 123 })
-            const allUsers = await UserModel.find({}).exec()
-            expect(allUsers.length).to.equal(0)
-        })
+        expect(response.body).to.have.property('accessToken')
     })
 
-    describe('Post a new user with no body', function () {
-        it('should respond with status code 400', async function () {
-            const res = await agent.post('/v1/users').send({ userName: undefined })
-            expect(res).to.have.status(400)
+    it('should respond with status code 201', async function () {
+        const res = await agent.get(`/v1/users/${testUser._id.toString()}/accessToken`).send(userFields)
+        expect(res).to.have.status(201)
+    })
+
+    it('should return an error if the email is missing', async function () {
+        const response = await agent.get(`/v1/users/${testUser._id.toString()}/accessToken`).send({
+            ...userFields,
+            email: undefined
         })
 
-        it('should respond with an error message', async function () {
-            const res = await agent.post('/v1/users').send({ userName: undefined })
-            expect(res.body.error).to.equal('userName must be a non-empty string.')
+        expect(response).to.have.status(400)
+    })
+
+    it('should return an error if the password is missing', async function () {
+        const response = await agent.get(`/v1/users/${testUser._id.toString()}/accessToken`).send({
+            ...userFields,
+            password: undefined
         })
 
-        it('should not create a user', async function () {
-            await agent.post('/v1/users').send({ userName: undefined })
-            const allUsers = await UserModel.find({}).exec()
-            expect(allUsers.length).to.equal(0)
+        expect(response).to.have.status(400)
+    })
+
+    it('should return an error if the email is not valid', async function () {
+        const response = await agent.get(`/v1/users/${testUser._id.toString()}/accessToken`).send({
+            ...userFields,
+            email: 'invalidEmail'
         })
+
+        expect(response).to.have.status(400)
+    })
+
+    it('should return an error if the password is not correct', async function () {
+        const response = await agent.get(`/v1/users/${testUser._id.toString()}/accessToken`).send({
+            ...userFields,
+            password: 'incorrectPassword'
+        })
+
+        expect(response).to.have.status(400)
+    })
+
+    it('should return an error if the user does not exist', async function () {
+        const response = await agent.get('/v1/users/invalidId/accessToken').send(userFields)
+
+        expect(response).to.have.status(400)
+    })
+
+    it('should update the accessToken to the returned accessToken', async function () {
+        const response = await agent.get(`/v1/users/${testUser._id.toString()}/accessToken`).send(userFields)
+
+        const updatedUser = await UserModel.findById(testUser._id).exec()
+        expect(updatedUser?.accessToken).to.equal(response.body.accessToken)
+    })
+
+    it('should not update the accessToken if the email is not valid', async function () {
+        await agent.get(`/v1/users/${testUser._id.toString()}/accessToken`).send({
+            ...userFields,
+            email: 'invalidEmail'
+        })
+
+        const updatedUser = await UserModel.findById(testUser._id).exec()
+        expect(updatedUser?.accessToken).to.equal(testUser.accessToken)
+    })
+
+    it('should not update the accessToken if the password is not correct', async function () {
+        await agent.get(`/v1/users/${testUser._id.toString()}/accessToken`).send({
+            ...userFields,
+            password: 'incorrectPassword'
+        })
+
+        const updatedUser = await UserModel.findById(testUser._id).exec()
+        expect(updatedUser?.accessToken).to.equal(testUser.accessToken)
     })
 })
 
@@ -106,39 +214,34 @@ describe('DELETE api/v1/users', function () {
     beforeEach(async function () {
         testUser = new UserModel({
             userName: 'TestUser',
-            signUpDate: new Date()
+            email: 'test@test.com',
+            password: 'testPassword'
         })
         await testUser.save()
     })
 
     describe('Delete a user', function () {
-        const user = {
-            userName: 'TestUser',
+        const userFields = {
+            email: 'test@test.com',
+            password: 'testPassword',
             confirmDeletion: true
         }
 
         it('should delete the user', async function () {
-            await agent.delete('/v1/users').send({
-                ...user,
-                accessToken: testUser.accessToken
-            })
+            await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
             const allUsers = await UserModel.find({}).exec()
             expect(allUsers.length).to.equal(0)
         })
 
         it('should respond with status code 204', async function () {
-            const res = await agent.delete('/v1/users').send({
-                ...user,
-                accessToken: testUser.accessToken
-            })
+            const res = await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+
             expect(res).to.have.status(204)
         })
 
         it('should respond with an empty body', async function () {
-            const res = await agent.delete('/v1/users').send({
-                ...user,
-                accessToken: testUser.accessToken
-            })
+            const res = await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(res.body).to.be.empty
         })
@@ -148,7 +251,9 @@ describe('DELETE api/v1/users', function () {
 
             beforeEach(async function () {
                 otherUser = new UserModel({
-                    userName: 'OtherUser'
+                    userName: 'OtherUser',
+                    email: 'OtherUser@test.com',
+                    password: 'password'
                 })
                 await otherUser.save()
 
@@ -165,10 +270,7 @@ describe('DELETE api/v1/users', function () {
             })
 
             it('should delete all tracks associated with the user', async function () {
-                await agent.delete('/v1/users').send({
-                    ...user,
-                    accessToken: testUser.accessToken
-                })
+                await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
 
                 const allTracks = await TrackModel.find({}).exec()
                 expect(allTracks.length).to.equal(3)
@@ -177,10 +279,7 @@ describe('DELETE api/v1/users', function () {
             })
 
             it('should not delete any tracks not associated with the user', async function () {
-                await agent.delete('/v1/users').send({
-                    ...user,
-                    accessToken: testUser.accessToken
-                })
+                await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
 
                 const allTracks = await TrackModel.find({}).exec()
                 expect(allTracks.length).to.equal(3)
@@ -191,128 +290,117 @@ describe('DELETE api/v1/users', function () {
         })
     })
 
-    describe('Delete a user with an invalid accessToken', function () {
-        const user = {
-            userName: 'TestUser',
-            confirmDeletion: true,
-            accessToken: 'invalidCode'
+    describe('Delete a user with an invalid email', function () {
+        const userFields = {
+            email: 'invalidEmail',
+            password: 'testPassword',
+            confirmDeletion: true
         }
 
-        it('should respond with status code 404', async function () {
-            const res = await agent.delete('/v1/users').send(user)
-            expect(res).to.have.status(404)
+        it('should respond with status code 400', async function () {
+            const res = await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+            expect(res).to.have.status(400)
         })
 
         it('should not delete a user', async function () {
-            await agent.delete('/v1/users').send(user)
+            await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
             const allUsers = await UserModel.find({}).exec()
             expect(allUsers.length).to.equal(1)
         })
     })
 
-    describe('Delete a user with an invalid username', function () {
-        const user = {
-            userName: 'incorrectUsername',
+    describe('Delete a user with an invalid password', function () {
+        const userFields = {
+            email: 'test@test.com',
+            password: 'invalidPassword',
             confirmDeletion: true
         }
 
         it('should respond with status code 403', async function () {
-            const res = await agent.delete('/v1/users').send({
-                ...user,
-                accessToken: testUser.accessToken
-            })
+            const res = await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
             expect(res).to.have.status(403)
         })
 
         it('should not delete a user', async function () {
-            await agent.delete('/v1/users').send({
-                ...user,
-                accessToken: testUser.accessToken
-            })
+            await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+            const allUsers = await UserModel.find({}).exec()
+            expect(allUsers.length).to.equal(1)
+        })
+    })
+
+    describe('Delete a user with an invalid confirmDeletion', function () {
+        const userFields = {
+            email: 'test@test.com',
+            password: 'testPassword',
+            confirmDeletion: false
+        }
+
+        it('should respond with status code 400', async function () {
+            const res = await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+
+            expect(res).to.have.status(400)
+        })
+
+        it('should not delete a user', async function () {
+            await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
             const allUsers = await UserModel.find({}).exec()
             expect(allUsers.length).to.equal(1)
         })
     })
 
     describe('Delete a user with missing fields', function () {
-        describe('Delete a user with no username', function () {
-            const user = { confirmDeletion: true }
-
-            it('should respond with status code 400', async function () {
-                const res = await agent.delete('/v1/users').send({
-                    ...user,
-                    accessToken: testUser.accessToken
-                })
-                expect(res).to.have.status(400)
-            })
-
-            it('should not delete a user', async function () {
-                await agent.delete('/v1/users').send({
-                    ...user,
-                    accessToken: testUser.accessToken
-                })
-                const allUsers = await UserModel.find({}).exec()
-                expect(allUsers.length).to.equal(1)
-            })
-
-            it('should respond with an error message', async function () {
-                const res = await agent.delete('/v1/users').send({
-                    ...user,
-                    accessToken: testUser.accessToken
-                })
-                expect(res.body.error).to.equal('userName must be a non-empty string.')
-            })
-        })
-
-        describe('Delete a user with no confirmDeletion', function () {
-            const user = { userName: 'TestUser' }
-
-            it('should respond with status code 400', async function () {
-                const res = await agent.delete('/v1/users').send({
-                    ...user,
-                    accessToken: testUser.accessToken
-                })
-                expect(res).to.have.status(400)
-            })
-
-            it('should not delete a user', async function () {
-                await agent.delete('/v1/users').send({
-                    ...user,
-                    accessToken: testUser.accessToken
-                })
-                const allUsers = await UserModel.find({}).exec()
-                expect(allUsers.length).to.equal(1)
-            })
-
-            it('should respond with an error message', async function () {
-                const res = await agent.delete('/v1/users').send({
-                    ...user,
-                    accessToken: testUser.accessToken
-                })
-                expect(res.body.error).to.equal('confirmDeletion must be true.')
-            })
-        })
-
-        describe('Delete a user with no accessToken', function () {
-            const user = {
-                userName: 'TestUser',
+        describe('Delete a user with no email', function () {
+            const userFields = {
+                password: 'testPassword',
                 confirmDeletion: true
             }
 
             it('should respond with status code 400', async function () {
-                const res = await agent.delete('/v1/users').send(user)
+                const res = await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+
                 expect(res).to.have.status(400)
             })
 
             it('should not delete a user', async function () {
-                await agent.delete('/v1/users').send(user)
+                await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
                 const allUsers = await UserModel.find({}).exec()
                 expect(allUsers.length).to.equal(1)
             })
+        })
 
-            it('should respond with an error message', async function () {
-                const res = await agent.delete('/v1/users').send(user)
-                expect(res.body.error).to.equal('accessToken must be a non-empty string.')
+        describe('Delete a user with no confirmDeletion', function () {
+            const userFields = {
+                email: 'test@test.com',
+                password: 'testPassword'
+            }
+
+            it('should respond with status code 400', async function () {
+                const res = await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+                expect(res).to.have.status(400)
+            })
+
+            it('should not delete a user', async function () {
+                await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+                const allUsers = await UserModel.find({}).exec()
+                expect(allUsers.length).to.equal(1)
+            })
+        })
+
+        describe('Delete a user with no password', function () {
+            const userFields = {
+                email: 'test@test.com',
+                confirmDeletion: true
+            }
+
+            it('should respond with status code 400', async function () {
+                const res = await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+                expect(res).to.have.status(400)
+            })
+
+            it('should not delete a user', async function () {
+                await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+                const allUsers = await UserModel.find({}).exec()
+                expect(allUsers.length).to.equal(1)
             })
         })
     })
