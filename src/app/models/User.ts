@@ -79,11 +79,6 @@ userSchema.path('email').validate(async function (v: string) {
     return foundUserWithEmail === null || foundUserWithEmail === undefined
 }, 'Email is already in use')
 
-// Set default value to accessToken
-userSchema.path('accessToken').default(async function () {
-    return await generateUniqueAccessToken()
-})
-
 // Adding indexes
 userSchema.index({ accessToken: 1 })
 
@@ -93,6 +88,10 @@ userSchema.pre('save', async function (next) {
     if (this.isModified('password')) {
         // Hash the password
         this.password = await hash(this.password, bcryptSaltRounds) // Using a random salt for each user
+    }
+    if (this.isNew) {
+        // Set default value to accessToken
+        this.accessToken = await generateUniqueAccessToken()
     }
     next()
 })
