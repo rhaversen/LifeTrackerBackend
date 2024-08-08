@@ -16,7 +16,9 @@ describe('Track Model', function () {
 
     beforeEach(async function () {
         user = new UserModel({
-            userName: 'JohnDoe'
+            userName: 'TestUser',
+            email: 'test@test.com',
+            password: 'password'
         })
         await user.save()
     })
@@ -65,10 +67,6 @@ describe('Track Model', function () {
             it('should set correct date', async function () {
                 await track.save()
                 expect(track.createdAt.getTime()).to.be.closeTo(new Date().getTime(), 1000)
-            })
-
-            it('should set createdAt before saving', async function () {
-                expect(track.createdAt).to.be.a('date')
             })
         })
     })

@@ -39,5 +39,11 @@
 			"w": "majority",
 			"appName": "staging"
 		}
+	},
+	"bcrypt": {
+		"saltRounds": 1
+	},
+	"cors": {
+		"origin": "https://staging.life-stats.net"
 	}
 }

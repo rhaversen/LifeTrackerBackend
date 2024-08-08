@@ -12,8 +12,11 @@ export interface ITemplate extends Document {
     _id: Types.ObjectId
     templateName: string
     userId: Types.ObjectId // The user who created the template
-    createdAt: Date // The date the template was created in the system
     data: Record<string, Record<string, unknown>> // The data of the template (Collection of tracks)
+
+    // Timestamps
+    createdAt: Date
+    updatedAt: Date
 
     // Methods
     validateTemplateTracks: (template: ITemplate) => boolean
@@ -22,22 +25,22 @@ export interface ITemplate extends Document {
 const templateSchema = new Schema<ITemplate>({
     templateName: {
         type: Schema.Types.String,
-        required: true
+        required: true,
+        trim: true,
+        minLength: [2, 'Template name has to be at least 2 characters'],
+        maxLength: [50, 'Template name can be at most 50 characters']
     },
     userId: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    createdAt: {
-        type: Date,
-        required: true,
-        default: Date.now
-    },
     data: {
         type: Schema.Types.Mixed,
         required: true
     }
+}, {
+    timestamps: true
 })
 
 // Adding indexes
