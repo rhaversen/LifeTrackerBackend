@@ -47,15 +47,27 @@ export async function createAccessToken (req: Request, res: Response, next: Next
         password
     } = req.body as Record<string, unknown>
 
+    const userId = req.params.id
+
     if (typeof password !== 'string') {
         res.status(400).json({ error: 'password must be a string.' })
         return
     }
 
-    const user = await UserModel.findOne({ email })
+    if (!mongoose.isValidObjectId(userId)) {
+        res.status(400).json({ error: 'userId is not valid.' })
+        return
+    }
+
+    const user = await UserModel.findById(userId)
 
     if (user === null) {
-        res.status(404).json({ error: 'email is not valid.' })
+        res.status(404).json({ error: 'User not found.' })
+        return
+    }
+
+    if (email !== user.email) {
+        res.status(400).json({ error: 'Email is not correct.' })
         return
     }
 
@@ -80,6 +92,8 @@ export async function deleteUser (req: Request, res: Response, next: NextFunctio
         confirmDeletion
     } = req.body as Record<string, unknown>
 
+    const userId = req.params.id
+
     if (typeof confirmDeletion !== 'boolean' || !confirmDeletion) {
         res.status(400).json({ error: 'confirmDeletion must be true.' })
         return
@@ -90,17 +104,22 @@ export async function deleteUser (req: Request, res: Response, next: NextFunctio
         return
     }
 
-    const user = await UserModel.findOne({ email })
+    const user = await UserModel.findById(userId)
 
     if (user === null) {
-        res.status(404).json({ error: 'email is not valid.' })
+        res.status(404).json({ error: 'UserId is not valid.' })
         return
     }
 
     const isPasswordCorrect = await user.comparePassword(password)
 
     if (!isPasswordCorrect) {
-        res.status(400).json({ error: 'Password is not correct.' })
+        res.status(403).json({ error: 'Password is not correct.' })
+        return
+    }
+
+    if (email !== user.email) {
+        res.status(400).json({ error: 'Email is not correct.' })
         return
     }
 

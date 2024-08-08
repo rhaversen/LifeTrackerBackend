@@ -41,15 +41,16 @@ router.get('/:id/accessToken',
 )
 
 /**
- * @route DELETE api/v1/users
+ * @route DELETE api/v1/users/:id
  * @desc Delete the user
  * @access Public
  * @param {string} req.body.email The users email.
  * @param {string} req.body.password The users password.
+ * @param {string} req.params.id The id of the user to delete.
  * @param {boolean} req.body.confirmDeletion Must be true to confirm deletion.
  * @return {number} res.status The status code of the HTTP response.
  */
-router.delete('/',
+router.delete('/:id',
     asyncErrorHandler(deleteUser)
 )
 
