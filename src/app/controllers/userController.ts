@@ -68,7 +68,7 @@ export async function createAccessToken (req: Request, res: Response, next: Next
 
     const accessToken = await user.generateAccessToken()
 
-    res.status(200).json({ accessToken })
+    res.status(201).json({ accessToken })
 }
 
 export async function deleteUser (req: Request, res: Response, next: NextFunction): Promise<void> {
