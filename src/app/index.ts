@@ -25,6 +25,7 @@ import configurePassport from './utils/passportConfig.js'
 import userRoutes from './routes/users.js'
 import trackRoutes from './routes/tracks.js'
 import serviceRoutes from './routes/service.js'
+import authRoutes from './routes/auth.js'
 
 // Logging environment
 logger.info(`Node environment: ${process.env.NODE_ENV}`)
@@ -90,9 +91,11 @@ const highSensitivityApiLimiter = RateLimit(highSensitivityApiLimiterConfig)
 app.use('/v1/users', mediumSensitivityApiLimiter, userRoutes)
 app.use('/v1/tracks', mediumSensitivityApiLimiter, trackRoutes)
 app.use('/service', mediumSensitivityApiLimiter, serviceRoutes)
+app.use('/v1/auth', mediumSensitivityApiLimiter, authRoutes)
 
 // Apply stricter rate limiters to routes
 app.use('/v1/users/', highSensitivityApiLimiter)
+app.use('/v1/auth/', highSensitivityApiLimiter)
 
 // Apply medium sensitivity for all database operation routes
 app.use('/v1/users', mediumSensitivityApiLimiter)
