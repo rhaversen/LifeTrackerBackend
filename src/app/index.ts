@@ -8,6 +8,7 @@ import RateLimit from 'express-rate-limit'
 import helmet from 'helmet'
 import cors from 'cors'
 import mongoose from 'mongoose'
+import passport from 'passport'
 import session from 'express-session'
 import MongoStore from 'connect-mongo'
 import cookieParser from 'cookie-parser'
@@ -18,6 +19,7 @@ import logger from './utils/logger.js'
 import config from './utils/setupConfig.js'
 import { sentryInit } from './utils/sentry.js'
 import globalErrorHandler from './middleware/globalErrorHandler.js'
+import configurePassport from './utils/passportConfig.js'
 
 // Routes
 import userRoutes from './routes/users.js'
@@ -73,6 +75,11 @@ app.use(session({ // Session management
     }),
     cookie: cookieOptions
 }))
+app.use(passport.initialize()) // Initialize Passport
+app.use(passport.session()) // Passport session handling
+
+// Function invocations
+configurePassport(passport) // Use passportConfig
 
 // Rate limiters
 const veryLowSensitivityApiLimiter = RateLimit(veryLowSensitivityApiLimiterConfig)
