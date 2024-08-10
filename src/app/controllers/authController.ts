@@ -46,14 +46,12 @@ export async function loginUserLocal (req: Request, res: Response, next: NextFun
 export async function logoutUser (req: Request, res: Response, next: NextFunction): Promise<void> {
     req.logout(function (err) {
         if (err !== null && err !== undefined) {
-            console.error('Error during logout:', err)
             next(err)
             return
         }
 
         req.session.destroy(function (sessionErr) {
             if (sessionErr !== null && sessionErr !== undefined) {
-                console.error('Error destroying session:', sessionErr)
                 next(sessionErr)
                 return
             }

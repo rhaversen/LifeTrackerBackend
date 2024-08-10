@@ -32,7 +32,6 @@ const configurePassport = (passport: PassportStatic): void => {
 
                 const isMatch = await compare(password, user.password)
                 if (!isMatch) {
-                    console.error('Invalid credentials')
                     done(null, false, { message: 'Invalid credentials' })
                     return
                 }
