@@ -48,9 +48,9 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging')
 }
 
 // Middleware
-app.use(helmet())
-app.use(express.json())
-app.use(mongoSanitize())
+app.use(helmet()) // Security headers
+app.use(express.json()) // for parsing application/json
+app.use(mongoSanitize()) // Data sanitization against NoSQL query injection
 
 // Rate limiters
 const veryLowSensitivityApiLimiter = RateLimit(veryLowSensitivityApiLimiterConfig)
