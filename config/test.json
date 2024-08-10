@@ -45,5 +45,13 @@
 	},
 	"cors": {
 		"origin": "*"
+	},
+	"cookieOptions": {
+        "httpOnly": true,
+        "secure": false,
+        "SameSite": "strict"
+    },
+	"session": {
+        "expiry": 86400
 	}
 }

@@ -45,5 +45,11 @@
 	},
 	"cors": {
 		"origin": "*"
+	},
+	"cookieOptions": {
+        "secure": false
+    },
+	"session": {
+        "expiry": 86400
 	}
 }

@@ -8,6 +8,9 @@ import RateLimit from 'express-rate-limit'
 import helmet from 'helmet'
 import cors from 'cors'
 import mongoose from 'mongoose'
+import session from 'express-session'
+import MongoStore from 'connect-mongo'
+import cookieParser from 'cookie-parser'
 
 // Own Modules
 import databaseConnector from './utils/databaseConnector.js'
@@ -30,7 +33,8 @@ const {
     mediumSensitivityApiLimiterConfig,
     highSensitivityApiLimiterConfig,
     expressPort,
-    corsConfig
+    corsConfig,
+    cookieOptions
 } = config
 
 // Global variables and setup
@@ -47,10 +51,28 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging')
     await databaseConnector.connectToMongoDB()
 }
 
+if (process.env.SESSION_SECRET === undefined) {
+    logger.error('Session secret is not set!')
+    process.exit(1)
+}
+
 // Middleware
 app.use(helmet()) // Security headers
 app.use(express.json()) // for parsing application/json
+app.use(cookieParser()) // For parsing cookies
 app.use(mongoSanitize()) // Data sanitization against NoSQL query injection
+app.use(session({ // Session management
+    resave: true, // Save the updated session back to the store
+    rolling: true, // Reset the cookie max-age on every request
+    secret: process.env.SESSION_SECRET,
+    saveUninitialized: true,
+    store: MongoStore.create({
+        client: mongoose.connection.getClient() as any,
+        autoRemove: 'interval',
+        autoRemoveInterval: 1
+    }),
+    cookie: cookieOptions
+}))
 
 // Rate limiters
 const veryLowSensitivityApiLimiter = RateLimit(veryLowSensitivityApiLimiterConfig)
