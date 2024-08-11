@@ -6,6 +6,8 @@ import { type NextFunction, type Request, type Response } from 'express'
 
 // Own modules
 import config from '../utils/setupConfig.js'
+import logger from '../utils/logger.js'
+import { type IUser } from '../models/User.js'
 
 // Config
 const {
@@ -13,6 +15,7 @@ const {
 } = config
 
 export async function loginUserLocal (req: Request, res: Response, next: NextFunction): Promise<void> {
+    logger.silly('Logging in user')
     // Check if email and password are provided
     if (req.body.email === undefined || req.body.password === undefined) {
         res.status(400).json({ auth: false, error: 'Email or password is missing.' })
@@ -38,12 +41,14 @@ export async function loginUserLocal (req: Request, res: Response, next: NextFun
                 req.session.cookie.maxAge = sessionExpiry
             }
 
+            logger.silly(`User ${(user as IUser).email} logged in`)
             return res.status(200).json({ auth: true, user })
         })
     })(req, res, next)
 }
 
 export async function logoutUser (req: Request, res: Response, next: NextFunction): Promise<void> {
+    logger.silly('Logging out user')
     req.logout(function (err) {
         if (err !== null && err !== undefined) {
             next(err)
