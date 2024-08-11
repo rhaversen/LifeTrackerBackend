@@ -37,7 +37,7 @@ export async function loginUserLocal (req: Request, res: Response, next: NextFun
             }
 
             // Set maxAge for persistent sessions if requested
-            if (req.body.stayLoggedIn === 'true') {
+            if (req.body.stayLoggedIn === true || req.body.stayLoggedIn === 'true') {
                 req.session.cookie.maxAge = sessionExpiry
             }
 
