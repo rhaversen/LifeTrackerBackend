@@ -48,7 +48,9 @@
 		"credentials": true
 	},
 	"cookieOptions": {
-        "secure": false
+        "httpOnly": true,
+        "secure": false,
+        "SameSite": "strict"
     },
 	"session": {
         "expiry": 86400
