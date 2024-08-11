@@ -44,7 +44,8 @@
 		"saltRounds": 10
 	},
 	"cors": {
-		"origin": "https://life-stats.net"
+		"origin": "https://life-stats.net",
+		"credentials": true
 	},
 	"cookieOptions": {
         "httpOnly": true,
