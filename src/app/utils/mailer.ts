@@ -16,7 +16,10 @@ const {
 
 // Generic function to send email
 export const sendEmail = async (to: string, subject: string, text: string, html = ''): Promise<void> => {
-    if (process.env.NODE_ENV === 'test') return
+    if (process.env.NODE_ENV === 'development') {
+        logger.info(text)
+        return
+    }
 
     // Configure transporter
     logger.debug('Creating email transporter')
@@ -49,7 +52,12 @@ export const sendEmail = async (to: string, subject: string, text: string, html 
 }
 // Function to send password reset email
 export const sendPasswordResetEmail = async (email: string, passwordResetCode: string): Promise<void> => {
-    const passwordResetLink = `https://${frontendDomain}/reset-password?passwordResetCode=${passwordResetCode}`
+    let passwordResetLink
+    if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development') {
+        passwordResetLink = `http://${frontendDomain}/reset-password?passwordResetCode=${passwordResetCode}`
+    } else {
+        passwordResetLink = `https://${frontendDomain}/reset-password?passwordResetCode=${passwordResetCode}`
+    }
 
     const subject = 'Password reset requested'
     const text = `Please reset your password by pasting this link into your browser: ${passwordResetLink} \n If you didn't request a password reset, it's safe to ignore this mail. Someone probably entered your email by mistake \n`
