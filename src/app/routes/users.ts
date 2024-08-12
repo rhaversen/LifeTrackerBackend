@@ -73,7 +73,7 @@ router.post('/request-password-reset-email',
  * @param {string} req.body.password The new password for the user.
  * @param {string} req.body.confirmPassword The new password for the user.
 */
-router.patch('/reset-password/',
+router.patch('/reset-password',
     asyncErrorHandler(resetPassword)
 )
 
