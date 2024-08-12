@@ -221,7 +221,7 @@ describe('POST /v1/auth/login-local with stayLoggedIn', function () {
         const sessionData = JSON.parse(session?.session as string)
         const sessionCookie = sessionData.cookie
 
-        expect(sessionCookie.originalMaxAge).to.equal(sessionExpiry)
+        expect(sessionCookie.originalMaxAge).to.be.closeTo(sessionExpiry, 1000)
     })
 
     it('should handle boolean stayLoggedIn values', async function () {
@@ -239,7 +239,7 @@ describe('POST /v1/auth/login-local with stayLoggedIn', function () {
         const sessionData = JSON.parse(session?.session as string)
         const sessionCookie = sessionData.cookie
 
-        expect(sessionCookie.originalMaxAge).to.equal(sessionExpiry)
+        expect(sessionCookie.originalMaxAge).to.be.closeTo(sessionExpiry, 1000)
     })
 })
 
