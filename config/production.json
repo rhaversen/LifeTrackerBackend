@@ -44,6 +44,22 @@
 		"saltRounds": 10
 	},
 	"cors": {
-		"origin": "https://life-stats.net"
-	}
+		"origin": "https://life-stats.net",
+		"credentials": true
+	},
+	"email": {
+        "from": "Life Stats <noreply@life-stats.net>",
+        "port": 587
+    },
+	"cookieOptions": {
+        "httpOnly": true,
+        "secure": false,
+        "SameSite": "strict"
+    },
+	"session": {
+        "expiry": 86400
+    },
+	"frontend": {
+        "domain": "life-stats.net"
+    }
 }

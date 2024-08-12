@@ -283,6 +283,29 @@ describe('User Model', function () {
         expect(newReturnedAccessToken).to.equal(newAccessToken)
     })
 
+    it('should allow generating a new password reset code', async function () {
+        const user = new UserModel(testUserFields)
+        await user.save()
+        const oldPasswordResetCode = user.passwordResetCode
+
+        await user.generateNewPasswordResetCode()
+
+        const updatedUser = await UserModel.findById(user._id)
+        const newPasswordResetCode = updatedUser?.passwordResetCode
+
+        expect(oldPasswordResetCode).to.not.equal(newPasswordResetCode)
+    })
+
+    it('should return the password reset code when calling generateNewPasswordResetCode', async function () {
+        const user = new UserModel(testUserFields)
+        await user.save()
+
+        const newReturnedPasswordResetCode = await user.generateNewPasswordResetCode()
+        const newPasswordResetCode = user.passwordResetCode
+
+        expect(newReturnedPasswordResetCode).to.equal(newPasswordResetCode)
+    })
+
     it('should compare the password correctly', async function () {
         const user = new UserModel(testUserFields)
         await user.save()
@@ -312,6 +335,39 @@ describe('User Model', function () {
         })
 
         it('should not allow two equal access tokens', async function () {
+            const user1 = new UserModel(testUserFields)
+            await user1.save()
+
+            // Use new email
+            const user2 = new UserModel({ ...testUserFields, email: 'test2@gmail.com' })
+            await user2.save().catch((err) => {
+                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                expect(err).to.not.be.null
+            })
+        })
+    })
+
+    describe('Unique password reset code', function () {
+        it('should generate a random, unique password reset code', async function () {
+            // Requires longer timeout
+            this.timeout(5000)
+
+            const passwordResetCodes = []
+
+            // One hundred different are sufficient to prove that the password reset code is random
+            for (let i = 0; i < 100; i++) {
+                const user = new UserModel(testUserFields)
+                await user.save()
+                await user.generateNewPasswordResetCode()
+                passwordResetCodes.push(user.passwordResetCode)
+                await user.deleteUserAndAllAssociatedData()
+            }
+
+            const uniquePasswordResetCodes = new Set(passwordResetCodes)
+            expect(uniquePasswordResetCodes.size).to.equal(passwordResetCodes.length)
+        })
+
+        it('should not allow two equal password reset codes', async function () {
             const user1 = new UserModel(testUserFields)
             await user1.save()
 
