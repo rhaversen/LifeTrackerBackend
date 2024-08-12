@@ -30,6 +30,9 @@ const AppConfig = {
     appName: config.get('mongoose.options.appName') as string,
     bcryptSaltRounds: config.get('bcrypt.saltRounds') as number,
     corsConfig: config.get('cors') as CorsOptions,
+    emailFrom: config.get('email.from') as string,
+    emailPort: config.get('email.port') as number,
+    frontendDomain: config.get('frontend.domain') as string,
     cookieOptions: config.get('cookieOptions') as CookieOptions,
     sessionExpiry: config.get('session.expiry') as number
 }

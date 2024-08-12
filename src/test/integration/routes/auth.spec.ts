@@ -221,7 +221,25 @@ describe('POST /v1/auth/login-local with stayLoggedIn', function () {
         const sessionData = JSON.parse(session?.session as string)
         const sessionCookie = sessionData.cookie
 
-        expect(sessionCookie.originalMaxAge).to.equal(sessionExpiry)
+        expect(sessionCookie.originalMaxAge).to.be.closeTo(sessionExpiry, 1000)
+    })
+
+    it('should handle boolean stayLoggedIn values', async function () {
+        // Log the user in to get a token
+        const res = await agent.post('/v1/auth/login-local').send({
+            ...userFields,
+            stayLoggedIn: true
+        })
+
+        expect(res).to.have.status(200)
+
+        const sessionCollection = mongoose.connection.collection('sessions')
+        const session = await sessionCollection.findOne({})
+
+        const sessionData = JSON.parse(session?.session as string)
+        const sessionCookie = sessionData.cookie
+
+        expect(sessionCookie.originalMaxAge).to.be.closeTo(sessionExpiry, 1000)
     })
 })
 

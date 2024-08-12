@@ -37,7 +37,7 @@ export async function loginUserLocal (req: Request, res: Response, next: NextFun
             }
 
             // Set maxAge for persistent sessions if requested
-            if (req.body.stayLoggedIn === 'true') {
+            if (req.body.stayLoggedIn === true || req.body.stayLoggedIn === 'true') {
                 req.session.cookie.maxAge = sessionExpiry
             }
 
@@ -63,4 +63,13 @@ export async function logoutUser (req: Request, res: Response, next: NextFunctio
             res.status(200).json({ message: 'Logged out successfully' })
         })
     })
+}
+
+export function ensureAuthenticated (req: Request, res: Response, next: NextFunction): void {
+    if (req.isAuthenticated()) {
+        next()
+        return
+    }
+    // If not authenticated, you can redirect or send an error response
+    res.status(401).json({ message: 'Unauthorized' })
 }

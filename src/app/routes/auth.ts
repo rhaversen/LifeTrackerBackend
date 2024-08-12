@@ -7,7 +7,7 @@ import Router from 'express'
 import asyncErrorHandler from '../utils/asyncErrorHandler.js'
 
 // Controller functions
-import { loginUserLocal, logoutUser } from '../controllers/authController.js'
+import { ensureAuthenticated, loginUserLocal, logoutUser } from '../controllers/authController.js'
 
 // Destructuring and global variables
 const router = Router()
@@ -35,6 +35,19 @@ router.post('/login-local',
  */
 router.post('/logout',
     asyncErrorHandler(logoutUser)
+)
+
+/**
+ * @route GET api/v1/auth/is-authenticated
+ * @desc Check if user is authenticated
+ * @access Private
+ * @return {number} res.status The status code of the HTTP response.
+ */
+router.get('/is-authenticated',
+    ensureAuthenticated,
+    (req, res) => {
+        res.status(200).send()
+    }
 )
 
 export default router

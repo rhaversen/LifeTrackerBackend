@@ -13,6 +13,7 @@ import { trackTypes } from '../app/utils/trackTypes.js'
 import { testTrackTypes } from './testTrackTypes.js'
 
 // Test environment settings
+process.env.NODE_ENV = 'test'
 process.env.SESSION_SECRET = 'TEST_SESSION_SECRET'
 process.env.CSRF_TOKEN = 'TEST_CSRF_TOKEN'
 

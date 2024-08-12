@@ -25,12 +25,16 @@ export interface IUser extends Document {
     password: string // Hashed password of the user
     accessToken: string // Unique access token for user authentication
 
+    // Optional properties
+    passwordResetCode?: string // Unique password reset code for user password reset
+
     // Timestamps
     createdAt: Date
     updatedAt: Date
 
     // Methods
     generateAccessToken: () => Promise<string>
+    generateNewPasswordResetCode: () => Promise<string>
     deleteUserAndAllAssociatedData: () => Promise<void>
     comparePassword: (password: string) => Promise<boolean>
 }
@@ -64,6 +68,11 @@ const userSchema = new Schema<IUser>({
         type: Schema.Types.String,
         required: false,
         unique: true
+    },
+    passwordResetCode: {
+        type: Schema.Types.String,
+        required: false,
+        unique: true
     }
 }, {
     timestamps: true
@@ -89,7 +98,7 @@ userSchema.pre('save', async function (next) {
         // Hash the password
         this.password = await hash(this.password, bcryptSaltRounds) // Using a random salt for each user
     }
-    if (this.isNew) {
+    if (this.accessToken === undefined) {
         // Set default value to accessToken
         this.accessToken = await generateUniqueAccessToken()
     }
@@ -102,6 +111,13 @@ userSchema.methods.generateAccessToken = async function (this: IUser) {
     this.accessToken = await generateUniqueAccessToken()
     await this.save()
     return this.accessToken
+}
+
+userSchema.methods.generateNewPasswordResetCode = async function (this: IUser): Promise<string> {
+    logger.silly('Generating new password reset code')
+    this.passwordResetCode = await generateUniquePasswordResetCode()
+    await this.save()
+    return this.passwordResetCode
 }
 
 userSchema.methods.deleteUserAndAllAssociatedData = async function (this: IUser): Promise<void> {
@@ -144,6 +160,16 @@ async function generateUniqueAccessToken (): Promise<string> {
         foundUserWithAccessToken = await UserModel.findOne({ accessToken: newAccessToken })
     } while (foundUserWithAccessToken !== null)
     return newAccessToken
+}
+
+async function generateUniquePasswordResetCode (): Promise<string> {
+    let newPasswordResetCode
+    let foundUserWithPasswordResetCode
+    do {
+        newPasswordResetCode = nanoid()
+        foundUserWithPasswordResetCode = await UserModel.findOne({ passwordResetCode: newPasswordResetCode })
+    } while (foundUserWithPasswordResetCode !== null)
+    return newPasswordResetCode
 }
 
 // Compile the schema into a model

@@ -7,7 +7,7 @@ import Router from 'express'
 import asyncErrorHandler from '../utils/asyncErrorHandler.js'
 
 // Controller functions
-import { createUser, deleteUser, createAccessToken } from '../controllers/userController.js'
+import { createUser, deleteUser, createAccessToken, requestPasswordResetEmail, resetPassword } from '../controllers/userController.js'
 
 // Destructuring and global variables
 const router = Router()
@@ -52,6 +52,29 @@ router.get('/:id/accessToken',
  */
 router.delete('/:id',
     asyncErrorHandler(deleteUser)
+)
+
+/**
+ * @route POST api/v1/users/request-password-reset-email
+ * @desc Request a password reset email
+ * @access Public
+ * @param {string} req.body.email The email of the user.
+ * @return {number} res.status The status code of the HTTP response.
+ */
+router.post('/request-password-reset-email',
+    asyncErrorHandler(requestPasswordResetEmail)
+)
+
+/**
+ * @route PATCH api/v1/users/reset-password
+ * @desc Updates a users password using a password reset code
+ * @access Public
+ * @param {string} req.body.passwordResetCode The password reset code.
+ * @param {string} req.body.password The new password for the user.
+ * @param {string} req.body.confirmPassword The new password for the user.
+*/
+router.patch('/reset-password/',
+    asyncErrorHandler(resetPassword)
 )
 
 export default router
