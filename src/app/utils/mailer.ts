@@ -16,7 +16,7 @@ const {
 
 // Generic function to send email
 export const sendEmail = async (to: string, subject: string, text: string, html = ''): Promise<void> => {
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development') {
         logger.info(text)
         return
     }
