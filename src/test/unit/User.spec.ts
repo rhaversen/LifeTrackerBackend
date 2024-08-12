@@ -358,6 +358,7 @@ describe('User Model', function () {
             for (let i = 0; i < 100; i++) {
                 const user = new UserModel(testUserFields)
                 await user.save()
+                await user.generateNewPasswordResetCode()
                 passwordResetCodes.push(user.passwordResetCode)
                 await user.deleteUserAndAllAssociatedData()
             }
