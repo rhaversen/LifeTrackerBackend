@@ -7,6 +7,7 @@ import mongoose from 'mongoose'
 // Own modules
 import UserModel from '../models/User.js'
 import logger from '../utils/logger.js'
+import { sendEmailNotRegisteredEmail, sendPasswordResetEmail } from '../utils/mailer.js'
 
 export async function createUser (req: Request, res: Response, next: NextFunction): Promise<void> {
     logger.silly('Creating user')
@@ -126,4 +127,79 @@ export async function deleteUser (req: Request, res: Response, next: NextFunctio
     await user.deleteUserAndAllAssociatedData()
 
     res.status(204).send()
+}
+
+export async function requestPasswordResetEmail (req: Request, res: Response, next: NextFunction): Promise<void> {
+    const {
+        email
+    } = req.body as Record<string, unknown>
+
+    if (typeof email !== 'string') {
+        res.status(400).json({ error: 'email must be a string.' })
+        return
+    }
+
+    const user = await UserModel.findOne({ email }).exec()
+
+    if (user !== null && user !== undefined) {
+        const passwordResetCode = await user.generateNewPasswordResetCode()
+        await sendPasswordResetEmail(email, passwordResetCode)
+    } else {
+        await sendEmailNotRegisteredEmail(email)
+    }
+
+    res.status(200).json({
+        message: 'If the email address exists, a password reset email has been sent.'
+    })
+}
+
+export async function resetPassword (req: Request, res: Response, next: NextFunction): Promise<void> {
+    const {
+        passwordResetCode,
+        password,
+        confirmPassword
+    } = req.body as Record<string, unknown>
+
+    if (password !== confirmPassword) {
+        res.status(400).json({ error: 'password and confirmPassword does not match.' })
+        return
+    }
+
+    if (typeof password !== 'string') {
+        res.status(400).json({ error: 'password must be a string.' })
+        return
+    }
+
+    const user = await UserModel.findOne({ passwordResetCode }).exec()
+
+    if (user === null || user === undefined) {
+        res.status(404).json({ error: 'Password reset code is not valid.' })
+        return
+    }
+
+    const session = await mongoose.startSession()
+    session.startTransaction()
+
+    try {
+        // Update the password and remove the password reset code
+        user.password = password
+        user.passwordResetCode = undefined
+
+        // Validate and save the user document
+        await user.validate()
+        await user.save({ session })
+
+        await session.commitTransaction()
+
+        res.status(204).send()
+    } catch (error) {
+        await session.abortTransaction()
+        if (error instanceof mongoose.Error.ValidationError || error instanceof mongoose.Error.CastError) {
+            res.status(400).json({ error: error.message })
+        } else {
+            next(error)
+        }
+    } finally {
+        await session.endSession()
+    }
 }

@@ -13,6 +13,7 @@ import { trackTypes } from '../app/utils/trackTypes.js'
 import { testTrackTypes } from './testTrackTypes.js'
 
 // Test environment settings
+process.env.NODE_ENV = 'test'
 process.env.SESSION_SECRET = 'TEST_SESSION_SECRET'
 process.env.CSRF_TOKEN = 'TEST_CSRF_TOKEN'
 
@@ -40,10 +41,14 @@ const cleanDatabase = async function (): Promise<void> {
 
 before(async function () {
     this.timeout(10000)
+    // Setting environment
+    process.env.NODE_ENV = 'test'
+
     // Connect to the database
     const database = await import('./mongoMemoryReplSetConnector.js')
     await database.default()
 
+    // Importing and starting the app
     app = await import('../app/index.js')
 })
 
