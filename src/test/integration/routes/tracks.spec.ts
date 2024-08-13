@@ -519,17 +519,21 @@ describe('GET api/v1/tracks', function () {
     let userA: IUser
     let userB: IUser
 
+    const userAFields = {
+        userName: 'TestUser1',
+        email: 'test1@test.com',
+        password: 'password'
+    }
+
+    const userBFields = {
+        userName: 'TestUser2',
+        email: 'test2@test.com',
+        password: 'password'
+    }
+
     beforeEach(async function () {
-        userA = await UserModel.create({
-            userName: 'TestUser1',
-            email: 'test1@test.com',
-            password: 'password'
-        })
-        userB = await UserModel.create({
-            userName: 'TestUser2',
-            email: 'test2@test.com',
-            password: 'password'
-        })
+        userA = await UserModel.create(userAFields)
+        userB = await UserModel.create(userBFields)
 
         await TrackModel.insertMany([
             { trackName: 'TEST_TRACK_A1', userId: userA._id, date: new Date(2020, 4, 14) },
@@ -541,7 +545,7 @@ describe('GET api/v1/tracks', function () {
         ])
 
         // Login userA
-        await agent.post('/v1/auth/login').send({ email: userA.email, password: userA.password })
+        await agent.post('/v1/auth/login-local').send(userAFields)
     })
 
     describe('Fetch all tracks', function () {
