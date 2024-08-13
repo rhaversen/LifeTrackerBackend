@@ -756,7 +756,7 @@ describe('GET api/v1/tracks', function () {
             let res: Response
 
             beforeEach(async function () {
-                res = await agent.get('/v1/tracks?trackName=nonExistingTrack').send({ accessToken: userA.accessToken })
+                res = await agent.get('/v1/tracks?trackName=nonExistingTrack')
             })
 
             it('should respond with status code 404', async function () {
@@ -776,7 +776,7 @@ describe('GET api/v1/tracks', function () {
             let res: Response
 
             beforeEach(async function () {
-                res = await agent.get('/v1/tracks?fromDate=2020-05-18').send({ accessToken: userA.accessToken })
+                res = await agent.get('/v1/tracks?fromDate=2020-05-18')
             })
 
             it('should respond with status code 404', async function () {
@@ -796,7 +796,7 @@ describe('GET api/v1/tracks', function () {
             let res: Response
 
             beforeEach(async function () {
-                res = await agent.get('/v1/tracks?toDate=2020-05-13').send({ accessToken: userA.accessToken })
+                res = await agent.get('/v1/tracks?toDate=2020-05-13')
             })
 
             it('should respond with status code 404', async function () {
