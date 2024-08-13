@@ -41,8 +41,11 @@ router.delete('/last',
 
 /**
  * @route GET api/v1/tracks
+ * @desc Get tracks with a query
  * @access Private
  * @param {string} req.query.trackName The tracks to be fetched.
+ * @param {string} req.query.fromDate The starting date of the tracks to be fetched.
+ * @param {string} req.query.toDate The ending date of the tracks to be fetched.
  * @return {number} res.status The status code of the HTTP response.
  * @return {object} res.body The fetched tracks.
  */

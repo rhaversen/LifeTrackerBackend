@@ -118,11 +118,13 @@ export async function getTracksWithQuery (req: Request, res: Response, next: Nex
 
     const tracks = await TrackModel.find({
         userId: user._id,
-        ...(trackName !== undefined && { trackName })
+        ...(trackName !== undefined && { trackName }),
+        ...(fromDate !== undefined && { date: { $gte: new Date(fromDate as string) } }),
+        ...(toDate !== undefined && { date: { $lte: new Date(toDate as string) } })
     })
 
     if (tracks.length === 0) {
-        res.status(404).json({ error: 'No tracks found with the provided query.' })
+        res.status(204).json({ message: 'No tracks found with the provided query.' })
         return
     }
 
