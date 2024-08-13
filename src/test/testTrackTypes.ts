@@ -8,6 +8,9 @@ export const testTrackTypes = {
     TEST_TRACK_A2: {
         allowedKeys: {}
     },
+    TEST_TRACK_A3: {
+        allowedKeys: {}
+    },
     TEST_TRACK_B1: {
         allowedKeys: {}
     },
