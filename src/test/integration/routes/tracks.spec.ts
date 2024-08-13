@@ -532,19 +532,23 @@ describe('GET api/v1/tracks', function () {
         })
 
         await TrackModel.insertMany([
-            { trackName: 'TEST_TRACK_A1', userId: userA._id },
-            { trackName: 'TEST_TRACK_A1', userId: userA._id },
-            { trackName: 'TEST_TRACK_A2', userId: userA._id },
+            { trackName: 'TEST_TRACK_A1', userId: userA._id, date: new Date(2020, 4, 14) },
+            { trackName: 'TEST_TRACK_A1', userId: userA._id, date: new Date(2020, 4, 15) },
+            { trackName: 'TEST_TRACK_A2', userId: userA._id, date: new Date(2020, 4, 16) },
+            { trackName: 'TEST_TRACK_A3', userId: userA._id, date: new Date(2020, 4, 17) },
             { trackName: 'TEST_TRACK_B1', userId: userB._id },
             { trackName: 'TEST_TRACK_B2', userId: userB._id }
         ])
+
+        // Login userA
+        await agent.post('/v1/auth/login').send({ email: userA.email, password: userA.password })
     })
 
     describe('Fetch all tracks', function () {
         let res: Response
 
         beforeEach(async function () {
-            res = await agent.get('/v1/tracks').send({ accessToken: userA.accessToken })
+            res = await agent.get('/v1/tracks')
         })
 
         it('should respond with status code 200', async function () {
@@ -556,13 +560,14 @@ describe('GET api/v1/tracks', function () {
         })
 
         it('should respond with the correct number of tracks', async function () {
-            expect(res.body).to.have.length(3)
+            expect(res.body).to.have.length(4)
         })
 
         it('should respond with all tracks of the user', async function () {
             expect(res.body[0].trackName).to.equal('TEST_TRACK_A1')
             expect(res.body[1].trackName).to.equal('TEST_TRACK_A1')
             expect(res.body[2].trackName).to.equal('TEST_TRACK_A2')
+            expect(res.body[3].trackName).to.equal('TEST_TRACK_A3')
         })
 
         it('should not respond with any track of other users', async function () {
@@ -573,10 +578,138 @@ describe('GET api/v1/tracks', function () {
     })
 
     describe('Fetch tracks with query', function () {
+        describe('Track name query', function () {
+            let res: Response
+
+            beforeEach(async function () {
+                res = await agent.get('/v1/tracks?trackName=TEST_TRACK_A1')
+            })
+
+            it('should respond with status code 200', async function () {
+                expect(res).to.have.status(200)
+            })
+
+            it('should respond with an array of tracks', async function () {
+                expect(res.body).to.be.an('array')
+            })
+
+            it('should respond with the correct number of tracks', async function () {
+                expect(res.body).to.have.length(2)
+            })
+
+            it('should respond with all tracks of the user', async function () {
+                expect(res.body[0].trackName).to.equal('TEST_TRACK_A1')
+                expect(res.body[1].trackName).to.equal('TEST_TRACK_A1')
+            })
+
+            it('should not respond with any track of other users', async function () {
+                for (const track of res.body) {
+                    expect(track.trackName).to.not.include('B')
+                }
+            })
+
+            it('should not respond with any track that does not match the query', async function () {
+                for (const track of res.body) {
+                    expect(track.trackName).to.not.include('2')
+                }
+            })
+        })
+
+        describe('Date query', function () {
+            describe('From date query', function () {
+                let res: Response
+
+                beforeEach(async function () {
+                    res = await agent.get('/v1/tracks?fromDate=2020-05-16')
+                })
+
+                it('should respond with status code 200', async function () {
+                    expect(res).to.have.status(200)
+                })
+
+                it('should respond with an array of tracks', async function () {
+                    expect(res.body).to.be.an('array')
+                })
+
+                it('should respond with the correct number of tracks', async function () {
+                    expect(res.body).to.have.length(2)
+                })
+
+                it('should respond with all tracks of the user', async function () {
+                    expect(res.body[0].trackName).to.equal('TEST_TRACK_A2')
+                    expect(res.body[1].trackName).to.equal('TEST_TRACK_A3')
+                })
+
+                it('should not respond with any track of other users', async function () {
+                    for (const track of res.body) {
+                        expect(track.trackName).to.not.include('B')
+                    }
+                })
+
+                it('should not respond with any track that does not match the query', async function () {
+                    for (const track of res.body) {
+                        expect(track.trackName).to.not.include('1')
+                    }
+                })
+
+                it('should not respond with any track that is older than the query', async function () {
+                    for (const track of res.body) {
+                        expect(new Date(track.date as Date).getTime()).to.be.at.least(new Date('2020-05-16').getTime())
+                    }
+                })
+            })
+
+            describe('To date query', function () {
+                let res: Response
+
+                beforeEach(async function () {
+                    res = await agent.get('/v1/tracks?toDate=2020-05-16')
+                })
+
+                it('should respond with status code 200', async function () {
+                    expect(res).to.have.status(200)
+                })
+
+                it('should respond with an array of tracks', async function () {
+                    expect(res.body).to.be.an('array')
+                })
+
+                it('should respond with the correct number of tracks', async function () {
+                    expect(res.body).to.have.length(3)
+                })
+
+                it('should respond with all tracks of the user that match the query', async function () {
+                    expect(res.body[0].trackName).to.equal('TEST_TRACK_A1')
+                    expect(res.body[1].trackName).to.equal('TEST_TRACK_A1')
+                    expect(res.body[2].trackName).to.equal('TEST_TRACK_A2')
+                })
+
+                it('should not respond with any track of other users', async function () {
+                    for (const track of res.body) {
+                        expect(track.trackName).to.not.include('B')
+                    }
+                })
+
+                it('should not respond with any track that does not match the query', async function () {
+                    for (const track of res.body) {
+                        expect(track.trackName).to.not.include('3')
+                    }
+                })
+
+                it('should not respond with any track that is newer than the query', async function () {
+                    for (const track of res.body) {
+                        expect(new Date(track.date as Date).getTime()).to.be.at.most(new Date('2020-05-16').getTime())
+                    }
+                })
+            })
+        })
+    })
+
+    describe('Combined query', function () {
         let res: Response
 
         beforeEach(async function () {
-            res = await agent.get('/v1/tracks?trackName=TEST_TRACK_A1').send({ accessToken: userA.accessToken })
+            res = await agent.get('/v1/tracks?trackName=TEST_TRACK_A1&fromDate=2020-05-15')
         })
 
         it('should respond with status code 200', async function () {
@@ -588,12 +721,11 @@ describe('GET api/v1/tracks', function () {
         })
 
         it('should respond with the correct number of tracks', async function () {
-            expect(res.body).to.have.length(2)
+            expect(res.body).to.have.length(1)
         })
 
-        it('should respond with all tracks of the user', async function () {
+        it('should respond with all tracks of the user that match the query', async function () {
             expect(res.body[0].trackName).to.equal('TEST_TRACK_A1')
-            expect(res.body[1].trackName).to.equal('TEST_TRACK_A1')
         })
 
         it('should not respond with any track of other users', async function () {
@@ -607,25 +739,73 @@ describe('GET api/v1/tracks', function () {
                 expect(track.trackName).to.not.include('2')
             }
         })
+
+        it('should not respond with any track that is older than the query', async function () {
+            for (const track of res.body) {
+                expect(new Date(track.date as Date).getTime()).to.be.at.least(new Date('2020-05-15').getTime())
+            }
+        })
     })
 
     describe('Query with no match', function () {
-        let res: Response
+        describe('trackName query', function () {
+            let res: Response
 
-        beforeEach(async function () {
-            res = await agent.get('/v1/tracks?trackName=nonExistingTrack').send({ accessToken: userA.accessToken })
+            beforeEach(async function () {
+                res = await agent.get('/v1/tracks?trackName=nonExistingTrack').send({ accessToken: userA.accessToken })
+            })
+
+            it('should respond with status code 404', async function () {
+                expect(res).to.have.status(404)
+            })
+
+            it('should respond with an error message', async function () {
+                expect(res.body.error).to.equal('No tracks found with the provided query.')
+            })
+
+            it('should not respond with any tracks', async function () {
+                expect(JSON.stringify(res.body)).to.not.include('trackName')
+            })
         })
 
-        it('should respond with status code 404', async function () {
-            expect(res).to.have.status(404)
+        describe('fromDate query', function () {
+            let res: Response
+
+            beforeEach(async function () {
+                res = await agent.get('/v1/tracks?fromDate=2020-05-18').send({ accessToken: userA.accessToken })
+            })
+
+            it('should respond with status code 404', async function () {
+                expect(res).to.have.status(404)
+            })
+
+            it('should respond with an error message', async function () {
+                expect(res.body.error).to.equal('No tracks found with the provided query.')
+            })
+
+            it('should not respond with any tracks', async function () {
+                expect(JSON.stringify(res.body)).to.not.include('trackName')
+            })
         })
 
-        it('should respond with an error message', async function () {
-            expect(res.body.error).to.equal('No tracks found with the provided query.')
-        })
+        describe('toDate query', function () {
+            let res: Response
 
-        it('should not respond with any tracks', async function () {
-            expect(JSON.stringify(res.body)).to.not.include('trackName')
+            beforeEach(async function () {
+                res = await agent.get('/v1/tracks?toDate=2020-05-13').send({ accessToken: userA.accessToken })
+            })
+
+            it('should respond with status code 404', async function () {
+                expect(res).to.have.status(404)
+            })
+
+            it('should respond with an error message', async function () {
+                expect(res.body.error).to.equal('No tracks found with the provided query.')
+            })
+
+            it('should not respond with any tracks', async function () {
+                expect(JSON.stringify(res.body)).to.not.include('trackName')
+            })
         })
     })
 })
