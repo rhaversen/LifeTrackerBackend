@@ -1,14 +1,12 @@
-// Import necessary modules
-import connectToMongoDB from '../test/mongoMemoryReplSetConnector.js'
-
 // Process environment variables
 process.env.NODE_ENV = 'development'
 process.env.SESSION_SECRET = 'TEST_SESSION_SECRET'
 
 async function startServer (): Promise<void> {
     try {
+        const connectToMongoDB = await import('../test/mongoMemoryReplSetConnector.js')
         // Connect to the MongoDB
-        await connectToMongoDB()
+        await connectToMongoDB.default()
 
         // Seed the database (if necessary)
         await import('./seedDatabase.js')
@@ -24,3 +22,5 @@ async function startServer (): Promise<void> {
 
 // Execute the server startup sequence
 await startServer()
+
+export {}

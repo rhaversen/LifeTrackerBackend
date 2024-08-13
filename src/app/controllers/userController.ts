@@ -130,6 +130,8 @@ export async function deleteUser (req: Request, res: Response, next: NextFunctio
 }
 
 export async function requestPasswordResetEmail (req: Request, res: Response, next: NextFunction): Promise<void> {
+    logger.silly('Requesting password reset email')
+
     const {
         email
     } = req.body as Record<string, unknown>
@@ -154,6 +156,8 @@ export async function requestPasswordResetEmail (req: Request, res: Response, ne
 }
 
 export async function resetPassword (req: Request, res: Response, next: NextFunction): Promise<void> {
+    logger.silly('Resetting password')
+
     const {
         passwordResetCode,
         password,
