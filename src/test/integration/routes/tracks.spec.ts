@@ -536,10 +536,10 @@ describe('GET api/v1/tracks', function () {
         userB = await UserModel.create(userBFields)
 
         await TrackModel.insertMany([
-            { trackName: 'TEST_TRACK_A1', userId: userA._id, date: new Date(2020, 4, 14) },
-            { trackName: 'TEST_TRACK_A1', userId: userA._id, date: new Date(2020, 4, 15) },
-            { trackName: 'TEST_TRACK_A2', userId: userA._id, date: new Date(2020, 4, 16) },
-            { trackName: 'TEST_TRACK_A3', userId: userA._id, date: new Date(2020, 4, 17) },
+            { trackName: 'TEST_TRACK_A1', userId: userA._id, date: new Date(Date.UTC(2020, 4, 14)) },
+            { trackName: 'TEST_TRACK_A1', userId: userA._id, date: new Date(Date.UTC(2020, 4, 15)) },
+            { trackName: 'TEST_TRACK_A2', userId: userA._id, date: new Date(Date.UTC(2020, 4, 16)) },
+            { trackName: 'TEST_TRACK_A3', userId: userA._id, date: new Date(Date.UTC(2020, 4, 17)) },
             { trackName: 'TEST_TRACK_B1', userId: userB._id },
             { trackName: 'TEST_TRACK_B2', userId: userB._id }
         ])
