@@ -545,14 +545,17 @@ describe('GET api/v1/tracks', function () {
         ])
 
         // Login userA
-        await agent.post('/v1/auth/login-local').send(userAFields)
+        const logInRes = await agent.post('/v1/auth/login-local').send(userAFields)
+
+        // Save session cookie
+        sessionCookie = logInRes.headers['set-cookie']
     })
 
     describe('Fetch all tracks', function () {
         let res: Response
 
         beforeEach(async function () {
-            res = await agent.get('/v1/tracks')
+            res = await agent.get('/v1/tracks').set('Cookie', sessionCookie)
         })
 
         it('should respond with status code 200', async function () {
@@ -586,7 +589,7 @@ describe('GET api/v1/tracks', function () {
             let res: Response
 
             beforeEach(async function () {
-                res = await agent.get('/v1/tracks?trackName=TEST_TRACK_A1')
+                res = await agent.get('/v1/tracks?trackName=TEST_TRACK_A1').set('Cookie', sessionCookie)
             })
 
             it('should respond with status code 200', async function () {
@@ -624,7 +627,7 @@ describe('GET api/v1/tracks', function () {
                 let res: Response
 
                 beforeEach(async function () {
-                    res = await agent.get('/v1/tracks?fromDate=2020-05-16')
+                    res = await agent.get('/v1/tracks?fromDate=2020-05-16').set('Cookie', sessionCookie)
                 })
 
                 it('should respond with status code 200', async function () {
@@ -667,7 +670,7 @@ describe('GET api/v1/tracks', function () {
                 let res: Response
 
                 beforeEach(async function () {
-                    res = await agent.get('/v1/tracks?toDate=2020-05-16')
+                    res = await agent.get('/v1/tracks?toDate=2020-05-16').set('Cookie', sessionCookie)
                 })
 
                 it('should respond with status code 200', async function () {
@@ -713,7 +716,7 @@ describe('GET api/v1/tracks', function () {
         let res: Response
 
         beforeEach(async function () {
-            res = await agent.get('/v1/tracks?trackName=TEST_TRACK_A1&fromDate=2020-05-15')
+            res = await agent.get('/v1/tracks?trackName=TEST_TRACK_A1&fromDate=2020-05-15').set('Cookie', sessionCookie)
         })
 
         it('should respond with status code 200', async function () {
@@ -756,7 +759,7 @@ describe('GET api/v1/tracks', function () {
             let res: Response
 
             beforeEach(async function () {
-                res = await agent.get('/v1/tracks?trackName=nonExistingTrack')
+                res = await agent.get('/v1/tracks?trackName=nonExistingTrack').set('Cookie', sessionCookie)
             })
 
             it('should respond with status code 404', async function () {
@@ -776,7 +779,7 @@ describe('GET api/v1/tracks', function () {
             let res: Response
 
             beforeEach(async function () {
-                res = await agent.get('/v1/tracks?fromDate=2020-05-18')
+                res = await agent.get('/v1/tracks?fromDate=2020-05-18').set('Cookie', sessionCookie)
             })
 
             it('should respond with status code 404', async function () {
@@ -796,7 +799,7 @@ describe('GET api/v1/tracks', function () {
             let res: Response
 
             beforeEach(async function () {
-                res = await agent.get('/v1/tracks?toDate=2020-05-13')
+                res = await agent.get('/v1/tracks?toDate=2020-05-13').set('Cookie', sessionCookie)
             })
 
             it('should respond with status code 404', async function () {
