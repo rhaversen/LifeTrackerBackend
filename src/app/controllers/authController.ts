@@ -66,10 +66,9 @@ export async function logoutUser (req: Request, res: Response, next: NextFunctio
 }
 
 export function ensureAuthenticated (req: Request, res: Response, next: NextFunction): void {
-    if (req.isAuthenticated()) {
-        next()
+    if (!req.isAuthenticated()) {
+        res.status(401).json({ message: 'Unauthorized' })
         return
     }
-    // If not authenticated, you can redirect or send an error response
-    res.status(401).json({ message: 'Unauthorized' })
+    next()
 }
