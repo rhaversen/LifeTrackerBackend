@@ -753,6 +753,25 @@ describe('GET api/v1/tracks', function () {
                 expect(new Date(track.date as Date).getTime()).to.be.at.least(new Date('2020-05-15').getTime())
             }
         })
+        describe('No match', function () {
+            let res: Response
+
+            beforeEach(async function () {
+                res = await agent.get('/v1/tracks?trackName=TEST_TRACK_A1&fromDate=2020-05-16').set('Cookie', sessionCookie)
+            })
+
+            it('should respond with status code 204', async function () {
+                expect(res).to.have.status(204)
+            })
+
+            it('should not respond with an array of tracks', async function () {
+                expect(res.body).to.be.empty
+            })
+
+            it('should not respond with any tracks', async function () {
+                expect(JSON.stringify(res.body)).to.not.include('trackName')
+            })
+        })
     })
 
     describe('Query with no match', function () {
