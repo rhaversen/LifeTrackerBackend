@@ -518,6 +518,7 @@ describe('DELETE api/v1/tracks/last', function () {
 describe('GET api/v1/tracks', function () {
     let userA: IUser
     let userB: IUser
+    let sessionCookie: string
 
     const userAFields = {
         userName: 'TestUser1',
