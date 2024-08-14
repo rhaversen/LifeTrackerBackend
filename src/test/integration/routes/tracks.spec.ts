@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 // file deepcode ignore NoHardcodedPasswords/test: Hardcoded credentials are only used for testing purposes
 // file deepcode ignore NoHardcodedCredentials/test: Hardcoded credentials are only used for testing purposes
 // file deepcode ignore HardcodedNonCryptoSecret/test: Hardcoded credentials are only used for testing purposes
@@ -753,6 +754,7 @@ describe('GET api/v1/tracks', function () {
                 expect(new Date(track.date as Date).getTime()).to.be.at.least(new Date('2020-05-15').getTime())
             }
         })
+
         describe('No match', function () {
             let res: Response
 
@@ -782,12 +784,12 @@ describe('GET api/v1/tracks', function () {
                 res = await agent.get('/v1/tracks?trackName=nonExistingTrack').set('Cookie', sessionCookie)
             })
 
-            it('should respond with status code 404', async function () {
-                expect(res).to.have.status(404)
+            it('should respond with status code 204', async function () {
+                expect(res).to.have.status(204)
             })
 
-            it('should respond with an error message', async function () {
-                expect(res.body.error).to.equal('No tracks found with the provided query.')
+            it('should not respond with an array of tracks', async function () {
+                expect(res.body).to.be.empty
             })
 
             it('should not respond with any tracks', async function () {
@@ -802,12 +804,12 @@ describe('GET api/v1/tracks', function () {
                 res = await agent.get('/v1/tracks?fromDate=2020-05-18').set('Cookie', sessionCookie)
             })
 
-            it('should respond with status code 404', async function () {
-                expect(res).to.have.status(404)
+            it('should respond with status code 204', async function () {
+                expect(res).to.have.status(204)
             })
 
-            it('should respond with an error message', async function () {
-                expect(res.body.error).to.equal('No tracks found with the provided query.')
+            it('should not respond with an array of tracks', async function () {
+                expect(res.body).to.be.empty
             })
 
             it('should not respond with any tracks', async function () {
@@ -822,12 +824,12 @@ describe('GET api/v1/tracks', function () {
                 res = await agent.get('/v1/tracks?toDate=2020-05-13').set('Cookie', sessionCookie)
             })
 
-            it('should respond with status code 404', async function () {
-                expect(res).to.have.status(404)
+            it('should respond with status code 204', async function () {
+                expect(res).to.have.status(204)
             })
 
-            it('should respond with an error message', async function () {
-                expect(res.body.error).to.equal('No tracks found with the provided query.')
+            it('should not respond with an array of tracks', async function () {
+                expect(res.body).to.be.empty
             })
 
             it('should not respond with any tracks', async function () {
