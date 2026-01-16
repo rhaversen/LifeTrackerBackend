@@ -299,3 +299,148 @@ describe('POST /v1/auth/logout', function () {
         expect(sidCookie).to.be.undefined
     })
 })
+
+describe('GET /v1/auth/is-authenticated', function () {
+    let testUser: IUser
+
+    const userFields = {
+        userName: 'TestUser',
+        email: 'test@test.com',
+        password: 'testPassword'
+    }
+
+    beforeEach(async function () {
+        testUser = new UserModel(userFields)
+        await testUser.save()
+    })
+
+    it('should return 200 with a valid session', async function () {
+        // Log the user in to get a session cookie
+        const loginRes = await agent.post('/v1/auth/login-local').send(userFields)
+
+        // Extract the session cookie directly
+        const sessionCookie: string = loginRes.headers['set-cookie'][0]
+
+        // Use the session cookie in the authenticated request
+        const res = await agent.get('/v1/auth/is-authenticated').set('Cookie', sessionCookie)
+
+        // Validate the authenticated response
+        expect(res).to.have.status(200)
+    })
+
+    it('should return 401 without a valid session', async function () {
+        // Send the request without a session cookie
+        const res = await agent.get('/v1/auth/is-authenticated')
+
+        // Validate the response
+        expect(res).to.have.status(401)
+    })
+
+    it('should return 401 with an invalid session', async function () {
+        // Send the request with an invalid session cookie
+        const res = await agent.get('/v1/auth/is-authenticated').set('Cookie', 'connect.sid=invalidSession')
+
+        // Validate the response
+        expect(res).to.have.status(401)
+    })
+
+    it('should return 401 with a session that has been tampered with', async function () {
+        // Log the user in to get a session cookie
+        const loginRes = await agent.post('/v1/auth/login-local').send(userFields)
+
+        // Extract the session cookie directly
+        const sessionCookie: string = loginRes.headers['set-cookie'][0]
+
+        // Tamper with the session cookie
+        const tamperedSessionCookie = sessionCookie.replace('connect.sid', 'tamperedSession')
+
+        // Use the tampered session cookie in the authenticated request
+        const res = await agent.get('/v1/auth/is-authenticated').set('Cookie', tamperedSessionCookie)
+
+        // Validate the authenticated response
+        expect(res).to.have.status(401)
+    })
+})
+
+describe('GET /v1/auth/is-authenticated with stayLoggedIn', function () {
+    let testUser: IUser
+
+    const userFields = {
+        userName: 'TestUser',
+        email: 'test@test.com',
+        password: 'testPassword',
+        stayLoggedIn: true
+    }
+
+    beforeEach(async function () {
+        testUser = new UserModel(userFields)
+        await testUser.save()
+    })
+
+    it('should return 200 with a valid session', async function () {
+        // Log the user in to get a session cookie
+        const loginRes = await agent.post('/v1/auth/login-local').send(userFields)
+
+        // Extract the session cookie directly
+        const sessionCookie: string = loginRes.headers['set-cookie'][0]
+
+        // Use the session cookie in the authenticated request
+        const res = await agent.get('/v1/auth/is-authenticated').set('Cookie', sessionCookie)
+
+        // Validate the authenticated response
+        expect(res).to.have.status(200)
+    })
+
+    it('should return 401 without a valid session', async function () {
+        // Send the request without a session cookie
+        const res = await agent.get('/v1/auth/is-authenticated')
+
+        // Validate the response
+        expect(res).to.have.status(401)
+    })
+
+    it('should return 401 with an invalid session', async function () {
+        // Send the request with an invalid session cookie
+        const res = await agent.get('/v1/auth/is-authenticated').set('Cookie', 'connect.sid=invalidSession')
+
+        // Validate the response
+        expect(res).to.have.status(401)
+    })
+
+    it('should return 401 with a session that has been tampered with', async function () {
+        // Log the user in to get a session cookie
+        const loginRes = await agent.post('/v1/auth/login-local').send(userFields)
+
+        // Extract the session cookie directly
+        const sessionCookie: string = loginRes.headers['set-cookie'][0]
+
+        // Tamper with the session cookie
+        const tamperedSessionCookie = sessionCookie.replace('connect.sid', 'tamperedSession')
+
+        // Use the tampered session cookie in the authenticated request
+        const res = await agent.get('/v1/auth/is-authenticated').set('Cookie', tamperedSessionCookie)
+
+        // Validate the authenticated response
+        expect(res).to.have.status(401)
+    })
+
+    it('should return 401 with an expired session', async function () {
+        // Fake time with sinon
+        const clock = sinon.useFakeTimers(new Date('2024-01-01'))
+
+        // Log the user in to get a session cookie
+        const loginRes = await agent.post('/v1/auth/login-local').send(userFields)
+
+        // Move the clock past the session expiry
+        clock.tick(sessionExpiry + 1000)
+
+        // Extract the session cookie directly
+        const sessionCookie: string = loginRes.headers['set-cookie'][0]
+
+        // Use the session cookie in the authenticated request
+        const res = await agent.get('/v1/auth/is-authenticated').set('Cookie', sessionCookie)
+
+        // Validate the authenticated response
+        expect(res).to.have.status(401)
+    })
+})
