@@ -1,16 +1,8 @@
-// Node.js built-in modules
+import { Router } from 'express'
 
-// Third-party libraries
-import Router from 'express'
-
-// Own modules
-import asyncErrorHandler from '../utils/asyncErrorHandler.js'
-
-// Controller functions
-import { createTrack, deleteLastTrack, getTracksWithQuery } from '../controllers/tracksController.js'
 import { ensureAuthenticated } from '../controllers/authController.js'
+import { createTrack, deleteLastTrack, getTracksWithQuery } from '../controllers/tracksController.js'
 
-// Destructuring and global variables
 const router = Router()
 
 /**
@@ -25,7 +17,7 @@ const router = Router()
  * @return {object} res.body The newly created track.
  */
 router.post('/',
-    asyncErrorHandler(createTrack)
+	createTrack
 )
 
 /**
@@ -36,7 +28,7 @@ router.post('/',
  * @return {number} res.status The status code of the HTTP response.
  */
 router.delete('/last',
-    asyncErrorHandler(deleteLastTrack)
+	deleteLastTrack
 )
 
 /**
@@ -50,8 +42,8 @@ router.delete('/last',
  * @return {object} res.body The fetched tracks.
  */
 router.get('/',
-    ensureAuthenticated,
-    asyncErrorHandler(getTracksWithQuery)
+	ensureAuthenticated,
+	getTracksWithQuery
 )
 
 export default router

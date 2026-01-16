@@ -1,15 +1,7 @@
-// Node.js built-in modules
+import { Router } from 'express'
 
-// Third-party libraries
-import Router from 'express'
-
-// Own modules
-import asyncErrorHandler from '../utils/asyncErrorHandler.js'
-
-// Controller functions
 import { createUser, deleteUser, createAccessToken, requestPasswordResetEmail, resetPassword } from '../controllers/userController.js'
 
-// Destructuring and global variables
 const router = Router()
 
 /**
@@ -24,7 +16,7 @@ const router = Router()
  * @return {string} res.body The newly created user.
  */
 router.post('/',
-    asyncErrorHandler(createUser)
+	createUser
 )
 
 /**
@@ -37,7 +29,7 @@ router.post('/',
  * @return {string} res.body The new accessToken.
  */
 router.get('/:id/accessToken',
-    asyncErrorHandler(createAccessToken)
+	createAccessToken
 )
 
 /**
@@ -51,7 +43,7 @@ router.get('/:id/accessToken',
  * @return {number} res.status The status code of the HTTP response.
  */
 router.delete('/:id',
-    asyncErrorHandler(deleteUser)
+	deleteUser
 )
 
 /**
@@ -62,7 +54,7 @@ router.delete('/:id',
  * @return {number} res.status The status code of the HTTP response.
  */
 router.post('/request-password-reset-email',
-    asyncErrorHandler(requestPasswordResetEmail)
+	requestPasswordResetEmail
 )
 
 /**
@@ -74,7 +66,7 @@ router.post('/request-password-reset-email',
  * @param {string} req.body.confirmPassword The new password for the user.
 */
 router.patch('/reset-password',
-    asyncErrorHandler(resetPassword)
+	resetPassword
 )
 
 export default router

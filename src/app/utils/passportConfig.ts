@@ -1,65 +1,71 @@
-// Node.js built-in modules
-
-// Third-party libraries
-import validator from 'validator'
-import { compare } from 'bcrypt'
+import { type PassportStatic } from 'passport'
 import { Strategy as LocalStrategy } from 'passport-local'
 
-// Own modules
 import UserModel, { type IUser } from '../models/User.js'
-import { type PassportStatic } from 'passport'
 
-// Destructuring and global variables
+import logger from './logger.js'
+
+declare global {
+	namespace Express {
+		interface User extends IUser { }
+	}
+}
 
 const configurePassport = (passport: PassportStatic): void => {
-    // Local Strategy
-    passport.use('user-local', new LocalStrategy({
-        usernameField: 'email',
-        passwordField: 'password'
-    }, (email, password, done) => {
-        (async () => {
-            try {
-                if (!validator.isEmail(email)) {
-                    done(null, false, { message: 'Invalid email' })
-                    return
-                }
+	// Local User Strategy
+	passport.use('user-local', new LocalStrategy({
+		usernameField: 'email',
+		passwordField: 'password'
+	}, async (email, password, done) => {
+		try {
+			const user = await UserModel.findOne({ email }).exec()
+			if (user === null || user === undefined) {
+				logger.warn(`User login failed: User with email ${email} not found`)
+				return done(null, false, { message: 'A user with the email ' + email + ' was not found. Please check spelling or sign up' })
+			}
 
-                const user = await UserModel.findOne({ email }).exec()
-                if (user === null || user === undefined) {
-                    done(null, false, { message: 'A user with the email ' + email + ' was not found. Please check spelling or sign up' })
-                    return
-                }
+			const isMatch = await user.comparePassword(password)
+			if (!isMatch) {
+				logger.warn(`User login failed: Invalid password for user ${email}`)
+				return done(null, false, { message: 'Invalid credentials' })
+			}
 
-                const isMatch = await compare(password, user.password)
-                if (!isMatch) {
-                    done(null, false, { message: 'Invalid credentials' })
-                    return
-                }
+			logger.info(`User ${email} logged in successfully`)
+			return done(null, user)
+		} catch (error) {
+			if (error instanceof Error) {
+				logger.error(`User login error: ${error.message}`, { error })
+			} else {
+				logger.error('User login error: An unknown error occurred', { error })
+			}
+			return done(error)
+		}
+	}))
 
-                done(null, user)
-            } catch (err) {
-                done(err)
-            }
-        })().catch(err => { done(err) })
-    }))
+	passport.serializeUser((user, done) => {
+		const userId = (user as IUser).id
+		logger.debug(`Serializing user: ID ${userId}`)
+		done(null, userId)
+	})
 
-    passport.serializeUser(function (user: any, done) {
-        const userId = (user as IUser).id
-        done(null, userId)
-    })
+	passport.deserializeUser(async (id: string, done) => {
+		try {
+			const user = await UserModel.findById(id).exec()
+			if (user !== null && user !== undefined) {
+				return done(null, user) // User found
+			}
 
-    passport.deserializeUser(function (id, done) {
-        UserModel.findById(id).exec()
-            .then(user => {
-                if (user === null || user === undefined) {
-                    done(new Error('User not found'), false)
-                }
-                done(null, user)
-            })
-            .catch(err => {
-                done(err, false)
-            })
-    })
+			logger.warn(`User not found during deserialization: ID ${id}`)
+			return done(new Error('User not found'), false)
+		} catch (err) {
+			if (err instanceof Error) {
+				logger.error(`Error during deserialization: ${err.message}`, { error: err })
+			} else {
+				logger.error('Error during deserialization: An unknown error occurred', { error: err })
+			}
+			return done(err, false)
+		}
+	})
 }
 
 export default configurePassport
