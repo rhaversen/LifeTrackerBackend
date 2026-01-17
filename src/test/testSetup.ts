@@ -31,7 +31,9 @@ const cleanDatabase = async function (): Promise<void> {
 	// / ////////////////////////////////////////////
 	// / ///////////////////////////////////////////
 	logger.debug('Cleaning databases')
-	await mongoose.connection.db.dropDatabase()
+	if (mongoose.connection.db) {
+		await mongoose.connection.db.dropDatabase()
+	}
 }
 
 before(async function () {
