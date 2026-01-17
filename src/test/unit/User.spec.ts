@@ -315,7 +315,7 @@ describe('User Model', function () {
 			// Requires longer timeout
 			this.timeout(5000)
 
-			const accessTokens = []
+			const accessTokens: string[] = []
 
 			// One hundred different are sufficient to prove that the access token is random
 			for (let i = 0; i < 100; i++) {
@@ -347,7 +347,7 @@ describe('User Model', function () {
 			// Requires longer timeout
 			this.timeout(5000)
 
-			const passwordResetCodes = []
+			const passwordResetCodes: (string | undefined)[] = []
 
 			// One hundred different are sufficient to prove that the password reset code is random
 			for (let i = 0; i < 100; i++) {
