@@ -5,7 +5,6 @@
 
 import { expect } from 'chai'
 import sinon from 'sinon'
-import { type Response } from 'superagent'
 
 import TrackModel, { type ITrack } from '../../../app/models/Track.js'
 import UserModel, { type IUser } from '../../../app/models/User.js'
@@ -254,7 +253,7 @@ describe('DELETE api/v1/tracks/last', function () {
 	})
 
 	describe('Delete a track', function () {
-		let res: Response
+		let res: any
 
 		beforeEach(async function () {
 			res = await agent.delete('/v1/tracks/last').send({ accessToken: testUserA.accessToken })
@@ -294,7 +293,7 @@ describe('DELETE api/v1/tracks/last', function () {
 	})
 
 	describe('Invalid accessToken', function () {
-		let res: Response
+		let res: any
 
 		beforeEach(async function () {
 			res = await agent.delete('/v1/tracks/last').send({ accessToken: 'invalidAccessToken' })
@@ -311,7 +310,7 @@ describe('DELETE api/v1/tracks/last', function () {
 	})
 
 	describe('No accessToken', function () {
-		let res: Response
+		let res: any
 
 		beforeEach(async function () {
 			res = await agent.delete('/v1/tracks/last').send({})
@@ -328,7 +327,7 @@ describe('DELETE api/v1/tracks/last', function () {
 	})
 
 	describe('Empty accessToken', function () {
-		let res: Response
+		let res: any
 
 		beforeEach(async function () {
 			res = await agent.delete('/v1/tracks/last').send({ accessToken: '' })
@@ -377,7 +376,7 @@ describe('DELETE api/v1/tracks/last', function () {
 	})
 
 	describe('No tracks', function () {
-		let res: Response
+		let res: any
 
 		beforeEach(async function () {
 			await TrackModel.deleteMany({}).exec()
@@ -417,7 +416,7 @@ describe('DELETE api/v1/tracks/last', function () {
 		})
 
 		describe('No tracks', function () {
-			let res: Response
+			let res: any
 
 			beforeEach(async function () {
 				await TrackModel.deleteMany({}).exec()
@@ -439,7 +438,7 @@ describe('DELETE api/v1/tracks/last', function () {
 		})
 
 		describe('Single track', function () {
-			let res: Response
+			let res: any
 
 			beforeEach(async function () {
 				res = await agent.delete('/v1/tracks/last').send({ accessToken: testUserA.accessToken })
@@ -467,7 +466,7 @@ describe('DELETE api/v1/tracks/last', function () {
 		describe('Multiple tracks', function () {
 			let testTrackA2: ITrack
 			let testTrackB2: ITrack
-			let res: Response
+			let res: any
 
 			beforeEach(async function () {
 				testTrackA2 = new TrackModel({
@@ -547,7 +546,7 @@ describe('GET api/v1/tracks', function () {
 	})
 
 	describe('Fetch all tracks', function () {
-		let res: Response
+		let res: any
 
 		beforeEach(async function () {
 			res = await agent.get('/v1/tracks').set('Cookie', sessionCookie)
@@ -581,7 +580,7 @@ describe('GET api/v1/tracks', function () {
 
 	describe('Fetch tracks with query', function () {
 		describe('Track name query', function () {
-			let res: Response
+			let res: any
 
 			beforeEach(async function () {
 				res = await agent.get('/v1/tracks?trackName=TEST_TRACK_A1').set('Cookie', sessionCookie)
@@ -619,7 +618,7 @@ describe('GET api/v1/tracks', function () {
 
 		describe('Date query', function () {
 			describe('From date query', function () {
-				let res: Response
+				let res: any
 
 				beforeEach(async function () {
 					res = await agent.get('/v1/tracks?fromDate=2020-05-16').set('Cookie', sessionCookie)
@@ -662,7 +661,7 @@ describe('GET api/v1/tracks', function () {
 			})
 
 			describe('To date query', function () {
-				let res: Response
+				let res: any
 
 				beforeEach(async function () {
 					res = await agent.get('/v1/tracks?toDate=2020-05-16').set('Cookie', sessionCookie)
@@ -708,7 +707,7 @@ describe('GET api/v1/tracks', function () {
 	})
 
 	describe('Combined query', function () {
-		let res: Response
+		let res: any
 
 		beforeEach(async function () {
 			res = await agent.get('/v1/tracks?trackName=TEST_TRACK_A1&fromDate=2020-05-15').set('Cookie', sessionCookie)
@@ -749,7 +748,7 @@ describe('GET api/v1/tracks', function () {
 		})
 
 		describe('No match', function () {
-			let res: Response
+			let res: any
 
 			beforeEach(async function () {
 				res = await agent.get('/v1/tracks?trackName=TEST_TRACK_A1&fromDate=2020-05-16').set('Cookie', sessionCookie)
@@ -771,7 +770,7 @@ describe('GET api/v1/tracks', function () {
 
 	describe('Query with no match', function () {
 		describe('trackName query', function () {
-			let res: Response
+			let res: any
 
 			beforeEach(async function () {
 				res = await agent.get('/v1/tracks?trackName=nonExistingTrack').set('Cookie', sessionCookie)
@@ -791,7 +790,7 @@ describe('GET api/v1/tracks', function () {
 		})
 
 		describe('fromDate query', function () {
-			let res: Response
+			let res: any
 
 			beforeEach(async function () {
 				res = await agent.get('/v1/tracks?fromDate=2020-05-18').set('Cookie', sessionCookie)
@@ -811,7 +810,7 @@ describe('GET api/v1/tracks', function () {
 		})
 
 		describe('toDate query', function () {
-			let res: Response
+			let res: any
 
 			beforeEach(async function () {
 				res = await agent.get('/v1/tracks?toDate=2020-05-13').set('Cookie', sessionCookie)
