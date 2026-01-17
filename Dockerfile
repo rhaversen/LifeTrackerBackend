@@ -3,7 +3,7 @@
 # for production
 
 # Use an official Node.js runtime as the base image
-FROM node:iron-bookworm-slim
+FROM node:lts-bookworm-slim
 
 # Use a non-interactive frontend for debconf
 ENV DEBIAN_FRONTEND=noninteractive
@@ -25,8 +25,8 @@ RUN chown -R life_tracker_backend_user:life_tracker_backend_user /app
 # Switch to user for subsequent commands
 USER life_tracker_backend_user
 
-# Install production dependencies
-RUN npm install --omit=dev
+# Clean install production dependencies
+RUN npm ci --omit=dev
 
 # Expose the port Express.js runs on
 EXPOSE 5000

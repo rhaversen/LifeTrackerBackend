@@ -1,0 +1,33 @@
+{
+    "version": "0.2",
+    "language": "en-US",
+    "ignorePaths": [
+        "node_modules/**",
+        ".next/**",
+        "k8s/**",
+        ".idea/**",
+        ".vscode/**",
+        ".git/**",
+        ".github/**",
+        "**/*.svg",
+        "**/*.xml",
+        "Dockerfile",
+        "package.json",
+        "package-lock.json",
+        "tsconfig.json",
+        "dist/**"
+    ],
+    "ignoreWords": [
+        "BETTERSTACK",
+        "Logtail",
+        "logtail",
+        "readyz",
+        "livez",
+        "deepcode",
+        "KHTML",
+        "Codacy",
+        "resqueeze",
+        "WAKEUP",
+        "Rhaversen"
+    ]
+}
