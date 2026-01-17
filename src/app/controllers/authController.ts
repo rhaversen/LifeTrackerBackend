@@ -17,12 +17,12 @@ export async function loginUserLocal (req: Request, res: Response, next: NextFun
 		return
 	}
 
-	passport.authenticate('user-local', (err: Error, user: Express.User, info: { message: string }) => {
+	passport.authenticate('user-local', (err: Error, user: Express.User | false, info: { message: string }) => {
 		if (err !== null && err !== undefined) {
 			return res.status(500).json({ auth: false, error: err.message })
 		}
 
-		if (user === null || user === undefined || user === false) {
+		if (user === false) {
 			return res.status(401).json({ auth: false, error: info.message })
 		}
 
