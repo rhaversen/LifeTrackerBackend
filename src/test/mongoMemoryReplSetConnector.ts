@@ -1,3 +1,4 @@
+import type MongoStore from 'connect-mongo'
 import { MongoMemoryReplSet } from 'mongodb-memory-server'
 import mongoose from 'mongoose'
 
@@ -18,8 +19,37 @@ export default async function connectToInMemoryMongoDB (): Promise<void> {
 		const mongoUri = replSet.getUri()
 		await mongoose.connect(mongoUri, mongooseOpts)
 		logger.info('Connected to in-memory MongoDB')
-	} catch (error: any) {
-		logger.error(`Error connecting to in-memory MongoDB: ${error.message !== undefined ? error.message : error}`)
-		process.exit(1)
+	} catch (error) {
+		if (error instanceof Error) {
+			logger.error(`Error connecting to in-memory MongoDB: ${error.message}`)
+		} else {
+			logger.error(`Error connecting to in-memory MongoDB: ${String(error)}`)
+		}
+		throw error
+	}
+}
+
+export async function disconnectFromInMemoryMongoDB (sessionStore: MongoStore): Promise<void> {
+	try {
+		logger.info('Closing session store...')
+		await sessionStore.close()
+		logger.info('Session store closed')
+
+		logger.info('Closing connection to in-memory MongoDB...')
+		await mongoose.disconnect()
+		logger.info('Mongoose disconnected')
+
+		logger.info('Stopping memory database replica set...')
+		await replSet.stop({ doCleanup: true, force: true })
+		logger.info('Memory database replica set stopped')
+
+		await new Promise(resolve => setTimeout(resolve, 100))
+	} catch (error) {
+		if (error instanceof Error) {
+			logger.error(`Error disconnecting from in-memory MongoDB: ${error.message}`)
+		} else {
+			logger.error(`Error disconnecting from in-memory MongoDB: ${String(error)}`)
+		}
+		throw error
 	}
 }
