@@ -1,5 +1,6 @@
 import { type Server } from 'http'
 
+import * as Sentry from '@sentry/node'
 import * as chai from 'chai'
 import chaiHttp from 'chai-http'
 import type MongoStore from 'connect-mongo'
@@ -68,6 +69,7 @@ after(async function () {
 	this.timeout(40000)
 	app.server.close()
 	await disconnectFromInMemoryMongoDB(app.sessionStore)
+	await Sentry.close()
 })
 
 export { chaiAppServer }
