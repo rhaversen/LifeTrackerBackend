@@ -80,7 +80,9 @@ const userSchema = new Schema<IUser>({
 	},
 	passwordResetCode: {
 		type: Schema.Types.String,
-		required: false
+		required: false,
+		unique: true,
+		sparse: true
 	}
 }, {
 	timestamps: true
