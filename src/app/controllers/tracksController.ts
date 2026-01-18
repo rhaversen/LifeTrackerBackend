@@ -321,6 +321,12 @@ export async function deleteTrack (req: Request, res: Response, next: NextFuncti
 		return
 	}
 
+	if (req.body == null || typeof req.body !== 'object') {
+		logger.warn(`Delete track failed: Request body is missing or invalid. ID: ${trackId}`)
+		res.status(400).json({ error: 'Request body is required.' })
+		return
+	}
+
 	const { confirm } = req.body as { confirm?: unknown }
 
 	if (confirm !== true) {
