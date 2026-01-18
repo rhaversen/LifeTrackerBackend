@@ -19,7 +19,7 @@ describe('POST api/v1/users', function () {
 		}
 
 		it('should create a user', async function () {
-			await agent.post('/v1/users').send(userFields)
+			await agent.post('/api/v1/users').send(userFields)
 
 			const user = await UserModel.findOne({}).exec()
 
@@ -30,7 +30,7 @@ describe('POST api/v1/users', function () {
 		})
 
 		it('should return the newly created object', async function () {
-			const response = await agent.post('/v1/users').send(userFields)
+			const response = await agent.post('/api/v1/users').send(userFields)
 
 			expect(response).to.have.status(201)
 			expect(response.body).to.have.property('userName', userFields.userName)
@@ -38,18 +38,18 @@ describe('POST api/v1/users', function () {
 		})
 
 		it('should respond with status code 201', async function () {
-			const res = await agent.post('/v1/users').send(userFields)
+			const res = await agent.post('/api/v1/users').send(userFields)
 			expect(res).to.have.status(201)
 		})
 
 		it('should not return the password', async function () {
-			const response = await agent.post('/v1/users').send(userFields)
+			const response = await agent.post('/api/v1/users').send(userFields)
 
 			expect(response.body).to.not.have.property('password')
 		})
 
 		it('should return an error if the passwords do not match', async function () {
-			const response = await agent.post('/v1/users').send({
+			const response = await agent.post('/api/v1/users').send({
 				...userFields,
 				confirmPassword: 'password2'
 			})
@@ -58,7 +58,7 @@ describe('POST api/v1/users', function () {
 		})
 
 		it('should return an error if the userName is missing', async function () {
-			const response = await agent.post('/v1/users').send({
+			const response = await agent.post('/api/v1/users').send({
 				...userFields,
 				userName: undefined
 			})
@@ -67,7 +67,7 @@ describe('POST api/v1/users', function () {
 		})
 
 		it('should return an error if the email is missing', async function () {
-			const response = await agent.post('/v1/users').send({
+			const response = await agent.post('/api/v1/users').send({
 				...userFields,
 				email: undefined
 			})
@@ -76,7 +76,7 @@ describe('POST api/v1/users', function () {
 		})
 
 		it('should return an error if the password is missing', async function () {
-			const response = await agent.post('/v1/users').send({
+			const response = await agent.post('/api/v1/users').send({
 				...userFields,
 				password: undefined
 			})
@@ -85,7 +85,7 @@ describe('POST api/v1/users', function () {
 		})
 
 		it('should return an error if the confirm password is missing', async function () {
-			const response = await agent.post('/v1/users').send({
+			const response = await agent.post('/api/v1/users').send({
 				...userFields,
 				confirmPassword: undefined
 			})
@@ -100,7 +100,7 @@ describe('POST api/v1/users', function () {
 				...userFields
 			}
 
-			await agent.post('/v1/users').send(updatedFields)
+			await agent.post('/api/v1/users').send(updatedFields)
 			const user = await UserModel.findOne({})
 
 			expect(user?._id.toString()).to.not.equal(newId)
@@ -173,7 +173,7 @@ describe('GET api/v1/users/:id/accessToken', function () {
 	})
 
 	it('should return an error if the user does not exist', async function () {
-		const response = await agent.get('/v1/users/invalidId/accessToken').send(userFields)
+		const response = await agent.get('/api/v1/users/invalidId/accessToken').send(userFields)
 
 		expect(response).to.have.status(400)
 	})
@@ -416,29 +416,29 @@ describe('POST api/v1/users/request-password-reset-email', function () {
 	})
 
 	it('should return status code 200', async function () {
-		const res = await agent.post('/v1/users/request-password-reset-email').send({ email: testUser.email })
+		const res = await agent.post('/api/v1/users/request-password-reset-email').send({ email: testUser.email })
 		expect(res).to.have.status(200)
 	})
 
 	it('should return status code 200 if the email does not exist', async function () {
-		const response = await agent.post('/v1/users/request-password-reset-email').send({ email: 'invalidEmail' })
+		const response = await agent.post('/api/v1/users/request-password-reset-email').send({ email: 'invalidEmail' })
 		expect(response).to.have.status(200)
 	})
 
 	it('should return an error if the email is missing', async function () {
-		const response = await agent.post('/v1/users/request-password-reset-email').send({ email: undefined })
+		const response = await agent.post('/api/v1/users/request-password-reset-email').send({ email: undefined })
 		expect(response).to.have.status(400)
 	})
 
 	it('should set the passwordResetCode on the user', async function () {
-		await agent.post('/v1/users/request-password-reset-email').send({ email: testUser.email })
+		await agent.post('/api/v1/users/request-password-reset-email').send({ email: testUser.email })
 
 		const updatedUser = await UserModel.findById(testUser._id).exec()
 		expect(updatedUser?.passwordResetCode).to.exist
 	})
 
 	it('should not set the passwordResetCode if the email does not exist', async function () {
-		await agent.post('/v1/users/request-password-reset-email').send({ email: 'invalidEmail' })
+		await agent.post('/api/v1/users/request-password-reset-email').send({ email: 'invalidEmail' })
 
 		const updatedUser = await UserModel.findById(testUser._id).exec()
 		expect(updatedUser?.passwordResetCode).to.not.exist
@@ -459,7 +459,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should return status code 200', async function () {
-		const res = await agent.patch('/v1/users/reset-password').send({
+		const res = await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			password: 'newPassword',
 			confirmPassword: 'newPassword'
@@ -468,7 +468,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should return an error if the passwordResetCode is missing', async function () {
-		const response = await agent.patch('/v1/users/reset-password').send({
+		const response = await agent.patch('/api/v1/users/reset-password').send({
 			password: 'newPassword',
 			confirmPassword: 'newPassword'
 		})
@@ -476,7 +476,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should return an error if the password is missing', async function () {
-		const response = await agent.patch('/v1/users/reset-password').send({
+		const response = await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			confirmPassword: 'newPassword'
 		})
@@ -484,7 +484,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should return an error if the confirmPassword is missing', async function () {
-		const response = await agent.patch('/v1/users/reset-password').send({
+		const response = await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			password: 'newPassword'
 		})
@@ -492,7 +492,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should return an error if the password and confirmPassword do not match', async function () {
-		const response = await agent.patch('/v1/users/reset-password').send({
+		const response = await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			password: 'newPassword',
 			confirmPassword: 'newPassword2'
@@ -501,7 +501,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should return an error if the passwordResetCode is invalid', async function () {
-		const response = await agent.patch('/v1/users/reset-password').send({
+		const response = await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: 'invalidCode',
 			password: 'newPassword',
 			confirmPassword: 'newPassword'
@@ -510,7 +510,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should update the password', async function () {
-		await agent.patch('/v1/users/reset-password').send({
+		await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			password: 'newPassword',
 			confirmPassword: 'newPassword'
@@ -522,7 +522,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should delete the passwordResetCode', async function () {
-		await agent.patch('/v1/users/reset-password').send({
+		await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			password: 'newPassword',
 			confirmPassword: 'newPassword'
@@ -533,7 +533,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should not update the password if the passwordResetCode is invalid', async function () {
-		await agent.patch('/v1/users/reset-password').send({
+		await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: 'invalidCode',
 			password: 'newPassword',
 			confirmPassword: 'newPassword'
@@ -545,7 +545,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should not delete the passwordResetCode if the password and confirmPassword do not match', async function () {
-		await agent.patch('/v1/users/reset-password').send({
+		await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			password: 'newPassword',
 			confirmPassword: 'newPassword2'
@@ -556,7 +556,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should not update the password if the password and confirmPassword do not match', async function () {
-		await agent.patch('/v1/users/reset-password').send({
+		await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			password: 'newPassword',
 			confirmPassword: 'newPassword2'
@@ -568,7 +568,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should not delete the passwordResetCode if the password is missing', async function () {
-		await agent.patch('/v1/users/reset-password').send({
+		await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			confirmPassword: 'newPassword'
 		})
@@ -578,7 +578,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should not update the password if the password is missing', async function () {
-		await agent.patch('/v1/users/reset-password').send({
+		await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			confirmPassword: 'newPassword'
 		})
@@ -589,7 +589,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should not delete the passwordResetCode if the confirmPassword is missing', async function () {
-		await agent.patch('/v1/users/reset-password').send({
+		await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			password: 'newPassword'
 		})
@@ -599,7 +599,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should not update the password if the confirmPassword is missing', async function () {
-		await agent.patch('/v1/users/reset-password').send({
+		await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			password: 'newPassword'
 		})
@@ -610,7 +610,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should not delete the passwordResetCode if the password is invalid', async function () {
-		await agent.patch('/v1/users/reset-password').send({
+		await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			password: 'a',
 			confirmPassword: 'a'

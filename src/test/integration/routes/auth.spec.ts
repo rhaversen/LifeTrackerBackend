@@ -30,14 +30,14 @@ describe('POST /v1/auth/login-local', function () {
 
 	it('should have status 200 with valid credentials', async function () {
 		// Log the user in to get a token
-		const res = await agent.post('/v1/auth/login-local').send(userFields)
+		const res = await agent.post('/api/v1/auth/login-local').send(userFields)
 
 		expect(res).to.have.status(200)
 	})
 
 	it('should return a session cookie', async function () {
 		// Log the user in to get a token
-		const res = await agent.post('/v1/auth/login-local').send(userFields)
+		const res = await agent.post('/api/v1/auth/login-local').send(userFields)
 
 		const cookie = res.headers['set-cookie'].find((cookie: string) => cookie.includes('connect.sid'))
 		expect(cookie).to.be.a('string')
@@ -45,7 +45,7 @@ describe('POST /v1/auth/login-local', function () {
 
 	it('should create a session in the database', async function () {
 		// Create a session in the database
-		await agent.post('/v1/auth/login-local').send(userFields)
+		await agent.post('/api/v1/auth/login-local').send(userFields)
 
 		const sessionCollection = mongoose.connection.collection('sessions')
 		const session = await sessionCollection.findOne({})
@@ -55,7 +55,7 @@ describe('POST /v1/auth/login-local', function () {
 
 	it('should set the session id to the same as the cookie', async function () {
 		// Log the user in to get a token
-		const res = await agent.post('/v1/auth/login-local').send(userFields)
+		const res = await agent.post('/api/v1/auth/login-local').send(userFields)
 
 		const cookie = res.headers['set-cookie'].find((cookie: string) => cookie.includes('connect.sid'))
 		const encodedCookieValue = cookie.split(';')[0].split('=')[1]
@@ -70,7 +70,7 @@ describe('POST /v1/auth/login-local', function () {
 
 	it('should set the session user to the user id', async function () {
 		// Log the user in to get a token
-		await agent.post('/v1/auth/login-local').send(userFields)
+		await agent.post('/api/v1/auth/login-local').send(userFields)
 
 		const sessionCollection = mongoose.connection.collection('sessions')
 		const session = await sessionCollection.findOne({})
@@ -83,7 +83,7 @@ describe('POST /v1/auth/login-local', function () {
 
 	it('should set originalMaxAge to null in the session', async function () {
 		// Log the user in to get a token
-		await agent.post('/v1/auth/login-local').send(userFields)
+		await agent.post('/api/v1/auth/login-local').send(userFields)
 
 		const sessionCollection = mongoose.connection.collection('sessions')
 		const session = await sessionCollection.findOne({})
@@ -96,7 +96,7 @@ describe('POST /v1/auth/login-local', function () {
 
 	it('should set the session cookie to HttpOnly', async function () {
 		// Log the user in to get a token
-		const res = await agent.post('/v1/auth/login-local').send(userFields)
+		const res = await agent.post('/api/v1/auth/login-local').send(userFields)
 
 		const cookie = res.headers['set-cookie'].find((cookie: string) => cookie.includes('connect.sid'))
 		expect(cookie).to.include('HttpOnly')
@@ -104,7 +104,7 @@ describe('POST /v1/auth/login-local', function () {
 
 	it('should set the Path on the session cookie', async function () {
 		// Log the user in to get a token
-		const res = await agent.post('/v1/auth/login-local').send(userFields)
+		const res = await agent.post('/api/v1/auth/login-local').send(userFields)
 
 		const cookie = res.headers['set-cookie'].find((cookie: string) => cookie.includes('connect.sid'))
 		expect(cookie).to.include('Path=/')
@@ -112,14 +112,14 @@ describe('POST /v1/auth/login-local', function () {
 
 	it('should not set the maxAge on the session cookie', async function () {
 		// Log the user in to get a token
-		const res = await agent.post('/v1/auth/login-local').send(userFields)
+		const res = await agent.post('/api/v1/auth/login-local').send(userFields)
 
 		const cookie = res.headers['set-cookie'].find((cookie: string) => cookie.includes('connect.sid'))
 		expect(cookie).to.not.include('Max-Age')
 	})
 
 	it('should return 401 with invalid password', async function () {
-		const res = await agent.post('/v1/auth/login-local').send({
+		const res = await agent.post('/api/v1/auth/login-local').send({
 			email: userFields.email,
 			password: 'invalidPassword'
 		})
@@ -128,7 +128,7 @@ describe('POST /v1/auth/login-local', function () {
 	})
 
 	it('should return 401 with invalid email', async function () {
-		const res = await agent.post('/v1/auth/login-local').send({
+		const res = await agent.post('/api/v1/auth/login-local').send({
 			email: 'invalidEmail',
 			password: userFields.password
 		})
@@ -137,7 +137,7 @@ describe('POST /v1/auth/login-local', function () {
 	})
 
 	it('should return 400 with missing email', async function () {
-		const res = await agent.post('/v1/auth/login-local').send({
+		const res = await agent.post('/api/v1/auth/login-local').send({
 			password: userFields.password
 		})
 
@@ -145,7 +145,7 @@ describe('POST /v1/auth/login-local', function () {
 	})
 
 	it('should return 400 with missing password', async function () {
-		const res = await agent.post('/v1/auth/login-local').send({
+		const res = await agent.post('/api/v1/auth/login-local').send({
 			email: userFields.email
 		})
 
@@ -153,7 +153,7 @@ describe('POST /v1/auth/login-local', function () {
 	})
 
 	it('should return 400 with missing email and password', async function () {
-		const res = await agent.post('/v1/auth/login-local').send({})
+		const res = await agent.post('/api/v1/auth/login-local').send({})
 
 		expect(res).to.have.status(400)
 	})
@@ -173,7 +173,7 @@ describe('POST /v1/auth/login-local with stayLoggedIn', function () {
 	})
 
 	it('should set a Expires on the session cookie when stayLoggedIn is true', async function () {
-		const res = await agent.post('/v1/auth/login-local').send(userFields)
+		const res = await agent.post('/api/v1/auth/login-local').send(userFields)
 
 		expect(res).to.have.status(200)
 
@@ -185,7 +185,7 @@ describe('POST /v1/auth/login-local with stayLoggedIn', function () {
 		// Fake time with sinon
 		sinon.useFakeTimers(new Date('2024-01-01'))
 
-		const res = await agent.post('/v1/auth/login-local').send(userFields)
+		const res = await agent.post('/api/v1/auth/login-local').send(userFields)
 
 		expect(res).to.have.status(200)
 
@@ -195,7 +195,7 @@ describe('POST /v1/auth/login-local with stayLoggedIn', function () {
 	})
 
 	it('should not set a longer Expires on the session cookie when stayLoggedIn is not true', async function () {
-		const res = await agent.post('/v1/auth/login-local').send({
+		const res = await agent.post('/api/v1/auth/login-local').send({
 			...userFields,
 			stayLoggedIn: 'false'
 		})
@@ -208,7 +208,7 @@ describe('POST /v1/auth/login-local with stayLoggedIn', function () {
 
 	it('should set the expiry in the session data', async function () {
 		// Log the user in to get a token
-		const res = await agent.post('/v1/auth/login-local').send(userFields)
+		const res = await agent.post('/api/v1/auth/login-local').send(userFields)
 
 		expect(res).to.have.status(200)
 
@@ -223,7 +223,7 @@ describe('POST /v1/auth/login-local with stayLoggedIn', function () {
 
 	it('should handle boolean stayLoggedIn values', async function () {
 		// Log the user in to get a token
-		const res = await agent.post('/v1/auth/login-local').send({
+		const res = await agent.post('/api/v1/auth/login-local').send({
 			...userFields,
 			stayLoggedIn: true
 		})
@@ -256,10 +256,10 @@ describe('POST /v1/auth/logout', function () {
 
 	it('should have status 200', async function () {
 		// Log the user in to get a token
-		await agent.post('/v1/auth/login-local').send(userFields)
+		await agent.post('/api/v1/auth/login-local').send(userFields)
 
 		// Log the user out to remove the session
-		const res = await agent.post('/v1/auth/logout')
+		const res = await agent.post('/api/v1/auth/logout')
 
 		expect(res).to.have.status(200)
 	})
@@ -269,10 +269,10 @@ describe('POST /v1/auth/logout', function () {
         const sessionCollection = mongoose.connection.collection('sessions')
 
         // Log the user in to get a token
-        await agent.post('/v1/auth/login-local').send(userFields)
+        await agent.post('/api/v1/auth/login-local').send(userFields)
 
         // Log the user out to remove the session
-        await agent.post('/v1/auth/logout')
+        await agent.post('/api/v1/auth/logout')
 
         const session = await sessionCollection.findOne({})
 
@@ -282,10 +282,10 @@ describe('POST /v1/auth/logout', function () {
 
 	it('should remove the session cookie', async function () {
 		// Log the user in to get a token
-		await agent.post('/v1/auth/login-local').send(userFields)
+		await agent.post('/api/v1/auth/login-local').send(userFields)
 
 		// Log the user out to remove the session
-		const res = await agent.post('/v1/auth/logout')
+		const res = await agent.post('/api/v1/auth/logout')
 
 		// Check if the cookie header is defined and look for the 'connect.sid' cookie
 		// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
@@ -313,13 +313,13 @@ describe('GET /v1/auth/is-authenticated', function () {
 
 	it('should return 200 with a valid session', async function () {
 		// Log the user in to get a session cookie
-		const loginRes = await agent.post('/v1/auth/login-local').send(userFields)
+		const loginRes = await agent.post('/api/v1/auth/login-local').send(userFields)
 
 		// Extract the session cookie directly
 		const sessionCookie: string = loginRes.headers['set-cookie'][0]
 
 		// Use the session cookie in the authenticated request
-		const res = await agent.get('/v1/auth/is-authenticated').set('Cookie', sessionCookie)
+		const res = await agent.get('/api/v1/auth/is-authenticated').set('Cookie', sessionCookie)
 
 		// Validate the authenticated response
 		expect(res).to.have.status(200)
@@ -327,7 +327,7 @@ describe('GET /v1/auth/is-authenticated', function () {
 
 	it('should return 401 without a valid session', async function () {
 		// Send the request without a session cookie
-		const res = await agent.get('/v1/auth/is-authenticated')
+		const res = await agent.get('/api/v1/auth/is-authenticated')
 
 		// Validate the response
 		expect(res).to.have.status(401)
@@ -335,7 +335,7 @@ describe('GET /v1/auth/is-authenticated', function () {
 
 	it('should return 401 with an invalid session', async function () {
 		// Send the request with an invalid session cookie
-		const res = await agent.get('/v1/auth/is-authenticated').set('Cookie', 'connect.sid=invalidSession')
+		const res = await agent.get('/api/v1/auth/is-authenticated').set('Cookie', 'connect.sid=invalidSession')
 
 		// Validate the response
 		expect(res).to.have.status(401)
@@ -343,7 +343,7 @@ describe('GET /v1/auth/is-authenticated', function () {
 
 	it('should return 401 with a session that has been tampered with', async function () {
 		// Log the user in to get a session cookie
-		const loginRes = await agent.post('/v1/auth/login-local').send(userFields)
+		const loginRes = await agent.post('/api/v1/auth/login-local').send(userFields)
 
 		// Extract the session cookie directly
 		const sessionCookie: string = loginRes.headers['set-cookie'][0]
@@ -352,7 +352,7 @@ describe('GET /v1/auth/is-authenticated', function () {
 		const tamperedSessionCookie = sessionCookie.replace('connect.sid', 'tamperedSession')
 
 		// Use the tampered session cookie in the authenticated request
-		const res = await agent.get('/v1/auth/is-authenticated').set('Cookie', tamperedSessionCookie)
+		const res = await agent.get('/api/v1/auth/is-authenticated').set('Cookie', tamperedSessionCookie)
 
 		// Validate the authenticated response
 		expect(res).to.have.status(401)
@@ -376,13 +376,13 @@ describe('GET /v1/auth/is-authenticated with stayLoggedIn', function () {
 
 	it('should return 200 with a valid session', async function () {
 		// Log the user in to get a session cookie
-		const loginRes = await agent.post('/v1/auth/login-local').send(userFields)
+		const loginRes = await agent.post('/api/v1/auth/login-local').send(userFields)
 
 		// Extract the session cookie directly
 		const sessionCookie: string = loginRes.headers['set-cookie'][0]
 
 		// Use the session cookie in the authenticated request
-		const res = await agent.get('/v1/auth/is-authenticated').set('Cookie', sessionCookie)
+		const res = await agent.get('/api/v1/auth/is-authenticated').set('Cookie', sessionCookie)
 
 		// Validate the authenticated response
 		expect(res).to.have.status(200)
@@ -390,7 +390,7 @@ describe('GET /v1/auth/is-authenticated with stayLoggedIn', function () {
 
 	it('should return 401 without a valid session', async function () {
 		// Send the request without a session cookie
-		const res = await agent.get('/v1/auth/is-authenticated')
+		const res = await agent.get('/api/v1/auth/is-authenticated')
 
 		// Validate the response
 		expect(res).to.have.status(401)
@@ -398,7 +398,7 @@ describe('GET /v1/auth/is-authenticated with stayLoggedIn', function () {
 
 	it('should return 401 with an invalid session', async function () {
 		// Send the request with an invalid session cookie
-		const res = await agent.get('/v1/auth/is-authenticated').set('Cookie', 'connect.sid=invalidSession')
+		const res = await agent.get('/api/v1/auth/is-authenticated').set('Cookie', 'connect.sid=invalidSession')
 
 		// Validate the response
 		expect(res).to.have.status(401)
@@ -406,7 +406,7 @@ describe('GET /v1/auth/is-authenticated with stayLoggedIn', function () {
 
 	it('should return 401 with a session that has been tampered with', async function () {
 		// Log the user in to get a session cookie
-		const loginRes = await agent.post('/v1/auth/login-local').send(userFields)
+		const loginRes = await agent.post('/api/v1/auth/login-local').send(userFields)
 
 		// Extract the session cookie directly
 		const sessionCookie: string = loginRes.headers['set-cookie'][0]
@@ -415,7 +415,7 @@ describe('GET /v1/auth/is-authenticated with stayLoggedIn', function () {
 		const tamperedSessionCookie = sessionCookie.replace('connect.sid', 'tamperedSession')
 
 		// Use the tampered session cookie in the authenticated request
-		const res = await agent.get('/v1/auth/is-authenticated').set('Cookie', tamperedSessionCookie)
+		const res = await agent.get('/api/v1/auth/is-authenticated').set('Cookie', tamperedSessionCookie)
 
 		// Validate the authenticated response
 		expect(res).to.have.status(401)
@@ -426,7 +426,7 @@ describe('GET /v1/auth/is-authenticated with stayLoggedIn', function () {
 		const clock = sinon.useFakeTimers(new Date('2024-01-01'))
 
 		// Log the user in to get a session cookie
-		const loginRes = await agent.post('/v1/auth/login-local').send(userFields)
+		const loginRes = await agent.post('/api/v1/auth/login-local').send(userFields)
 
 		// Move the clock past the session expiry
 		clock.tick(sessionExpiry + 1000)
@@ -435,7 +435,7 @@ describe('GET /v1/auth/is-authenticated with stayLoggedIn', function () {
 		const sessionCookie: string = loginRes.headers['set-cookie'][0]
 
 		// Use the session cookie in the authenticated request
-		const res = await agent.get('/v1/auth/is-authenticated').set('Cookie', sessionCookie)
+		const res = await agent.get('/api/v1/auth/is-authenticated').set('Cookie', sessionCookie)
 
 		// Validate the authenticated response
 		expect(res).to.have.status(401)

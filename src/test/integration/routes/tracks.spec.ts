@@ -29,24 +29,24 @@ describe('POST api/v1/tracks', function () {
 		})
 
 		it('should create a track', async function () {
-			await agent.post('/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks').send(track)
 			const allTracks = await TrackModel.find({}).exec()
 			expect(allTracks.length).to.equal(1)
 			expect(allTracks[0].trackName).to.equal(track.trackName)
 		})
 
 		it('should respond with status code 201', async function () {
-			const res = await agent.post('/v1/tracks').send(track)
+			const res = await agent.post('/api/v1/tracks').send(track)
 			expect(res).to.have.status(201)
 		})
 
 		it('should respond with the track', async function () {
-			const res = await agent.post('/v1/tracks').send(track)
+			const res = await agent.post('/api/v1/tracks').send(track)
 			expect(res.body.trackName).to.equal(track.trackName)
 		})
 
 		it('should add the user to the track', async function () {
-			await agent.post('/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks').send(track)
 			const foundUser = await UserModel.findOne({}).exec() as IUser
 			const foundTrack = await TrackModel.findOne({}).exec() as ITrack
 			expect(foundTrack.userId.toString()).to.equal(foundUser._id.toString())
@@ -55,7 +55,7 @@ describe('POST api/v1/tracks', function () {
 		it('should have the current date and time', async function () {
 			const fakeTime = new Date(2020, 4, 15).getTime()
 			sinon.useFakeTimers(fakeTime) // Fake the JavaScript environment's time
-			await agent.post('/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks').send(track)
 			const foundTrack = await TrackModel.findOne({}).exec() as ITrack
 			expect(new Date(foundTrack.date).getTime()).to.equal(fakeTime)
 		})
@@ -65,7 +65,7 @@ describe('POST api/v1/tracks', function () {
 				...track,
 				accessToken: 'invalidCode'
 			}
-			await agent.post('/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks').send(track)
 			const allTracks = await TrackModel.find({}).exec()
 			expect(allTracks.length).to.equal(0)
 		})
@@ -90,24 +90,24 @@ describe('POST api/v1/tracks', function () {
 		})
 
 		it('should create a track', async function () {
-			await agent.post('/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks').send(track)
 			const allTracks = await TrackModel.find({}).exec()
 			expect(allTracks.length).to.equal(1)
 			expect(allTracks[0].trackName).to.equal(track.trackName)
 		})
 
 		it('should respond with status code 201', async function () {
-			const res = await agent.post('/v1/tracks').send(track)
+			const res = await agent.post('/api/v1/tracks').send(track)
 			expect(res).to.have.status(201)
 		})
 
 		it('should respond with the track', async function () {
-			const res = await agent.post('/v1/tracks').send(track)
+			const res = await agent.post('/api/v1/tracks').send(track)
 			expect(res.body.trackName).to.equal(track.trackName)
 		})
 
 		it('should add the user to the track', async function () {
-			await agent.post('/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks').send(track)
 			const foundUser = await UserModel.findOne({}).exec() as IUser
 			const foundTrack = await TrackModel.findOne({}).exec() as ITrack
 			expect(foundTrack.userId.toString()).to.equal(foundUser._id.toString())
@@ -116,7 +116,7 @@ describe('POST api/v1/tracks', function () {
 		it('should have the offset date and time', async function () {
 			const fakeTime = new Date(2020, 4, 15).getTime()
 			sinon.useFakeTimers(fakeTime) // Fake the JavaScript environment's time
-			await agent.post('/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks').send(track)
 			const foundTrack = await TrackModel.findOne({}).exec() as ITrack
 			expect(new Date(foundTrack.date).getTime()).to.equal(fakeTime + track.timeOffset)
 		})
@@ -141,24 +141,24 @@ describe('POST api/v1/tracks', function () {
 		})
 
 		it('should create a track', async function () {
-			await agent.post('/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks').send(track)
 			const allTracks = await TrackModel.find({}).exec()
 			expect(allTracks.length).to.equal(1)
 			expect(allTracks[0].trackName).to.equal(track.trackName)
 		})
 
 		it('should respond with status code 201', async function () {
-			const res = await agent.post('/v1/tracks').send(track)
+			const res = await agent.post('/api/v1/tracks').send(track)
 			expect(res).to.have.status(201)
 		})
 
 		it('should respond with the track', async function () {
-			const res = await agent.post('/v1/tracks').send(track)
+			const res = await agent.post('/api/v1/tracks').send(track)
 			expect(res.body.trackName).to.equal(track.trackName)
 		})
 
 		it('should add the user to the track', async function () {
-			await agent.post('/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks').send(track)
 			const foundUser = await UserModel.findOne({}).exec() as IUser
 			const foundTrack = await TrackModel.findOne({}).exec() as ITrack
 			expect(foundTrack.userId.toString()).to.equal(foundUser._id.toString())
@@ -167,7 +167,7 @@ describe('POST api/v1/tracks', function () {
 		it('should have the offset date and time', async function () {
 			const fakeTime = new Date(2020, 4, 15).getTime()
 			sinon.useFakeTimers(fakeTime) // Fake the JavaScript environment's time
-			await agent.post('/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks').send(track)
 			const foundTrack = await TrackModel.findOne({}).exec() as ITrack
 			expect(new Date(foundTrack.date).getTime()).to.equal(fakeTime + track.timeOffset)
 		})
@@ -192,13 +192,13 @@ describe('POST api/v1/tracks', function () {
 		})
 
 		it('should not create a track with large offset', async function () {
-			await agent.post('/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks').send(track)
 			const allTracks = await TrackModel.find({}).exec()
 			expect(allTracks.length).to.equal(0)
 		})
 
 		it('should respond with status code 400', async function () {
-			const res = await agent.post('/v1/tracks').send(track)
+			const res = await agent.post('/api/v1/tracks').send(track)
 			expect(res).to.have.status(400)
 		})
 	})
@@ -222,13 +222,13 @@ describe('POST api/v1/tracks', function () {
 		})
 
 		it('should not create a track with large offset', async function () {
-			await agent.post('/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks').send(track)
 			const allTracks = await TrackModel.find({}).exec()
 			expect(allTracks.length).to.equal(0)
 		})
 
 		it('should respond with status code 400', async function () {
-			const res = await agent.post('/v1/tracks').send(track)
+			const res = await agent.post('/api/v1/tracks').send(track)
 			expect(res).to.have.status(400)
 		})
 	})
@@ -256,7 +256,7 @@ describe('DELETE api/v1/tracks/last', function () {
 		let res: any
 
 		beforeEach(async function () {
-			res = await agent.delete('/v1/tracks/last').send({ accessToken: testUserA.accessToken })
+			res = await agent.delete('/api/v1/tracks/last').send({ accessToken: testUserA.accessToken })
 		})
 
 		it('should delete a track', async function () {
@@ -283,7 +283,7 @@ describe('DELETE api/v1/tracks/last', function () {
 				userId: testUserA._id
 			})
 			await earlierDateTrack.save()
-			await agent.delete('/v1/tracks/last').send({ accessToken: testUserA.accessToken })
+			await agent.delete('/api/v1/tracks/last').send({ accessToken: testUserA.accessToken })
 		})
 
 		it('should delete the newest created track', async function () {
@@ -296,7 +296,7 @@ describe('DELETE api/v1/tracks/last', function () {
 		let res: any
 
 		beforeEach(async function () {
-			res = await agent.delete('/v1/tracks/last').send({ accessToken: 'invalidAccessToken' })
+			res = await agent.delete('/api/v1/tracks/last').send({ accessToken: 'invalidAccessToken' })
 		})
 
 		it('should not delete track', async function () {
@@ -313,7 +313,7 @@ describe('DELETE api/v1/tracks/last', function () {
 		let res: any
 
 		beforeEach(async function () {
-			res = await agent.delete('/v1/tracks/last').send({})
+			res = await agent.delete('/api/v1/tracks/last').send({})
 		})
 
 		it('should not delete track', async function () {
@@ -330,7 +330,7 @@ describe('DELETE api/v1/tracks/last', function () {
 		let res: any
 
 		beforeEach(async function () {
-			res = await agent.delete('/v1/tracks/last').send({ accessToken: '' })
+			res = await agent.delete('/api/v1/tracks/last').send({ accessToken: '' })
 		})
 
 		it('should not delete track', async function () {
@@ -350,7 +350,7 @@ describe('DELETE api/v1/tracks/last', function () {
 				userId: testUserA._id
 			})
 			await newTrack.save()
-			await agent.delete('/v1/tracks/last').send({ accessToken: testUserA.accessToken })
+			await agent.delete('/api/v1/tracks/last').send({ accessToken: testUserA.accessToken })
 		})
 
 		it('should delete a single track', async function () {
@@ -364,12 +364,12 @@ describe('DELETE api/v1/tracks/last', function () {
 		})
 
 		it('should respond with status code 204', async function () {
-			const res = await agent.delete('/v1/tracks/last').send({ accessToken: testUserA.accessToken })
+			const res = await agent.delete('/api/v1/tracks/last').send({ accessToken: testUserA.accessToken })
 			expect(res).to.have.status(204)
 		})
 
 		it('should have an empty body', async function () {
-			const res = await agent.delete('/v1/tracks/last').send({ accessToken: testUserA.accessToken })
+			const res = await agent.delete('/api/v1/tracks/last').send({ accessToken: testUserA.accessToken })
 
 			expect(res.body).to.be.empty
 		})
@@ -380,7 +380,7 @@ describe('DELETE api/v1/tracks/last', function () {
 
 		beforeEach(async function () {
 			await TrackModel.deleteMany({}).exec()
-			res = await agent.delete('/v1/tracks/last').send({ accessToken: testUserA.accessToken })
+			res = await agent.delete('/api/v1/tracks/last').send({ accessToken: testUserA.accessToken })
 		})
 
 		it('should not delete a track', async function () {
@@ -420,7 +420,7 @@ describe('DELETE api/v1/tracks/last', function () {
 
 			beforeEach(async function () {
 				await TrackModel.deleteMany({}).exec()
-				res = await agent.delete('/v1/tracks/last').send({ accessToken: testUserA.accessToken })
+				res = await agent.delete('/api/v1/tracks/last').send({ accessToken: testUserA.accessToken })
 			})
 
 			it('should not delete a track', async function () {
@@ -441,7 +441,7 @@ describe('DELETE api/v1/tracks/last', function () {
 			let res: any
 
 			beforeEach(async function () {
-				res = await agent.delete('/v1/tracks/last').send({ accessToken: testUserA.accessToken })
+				res = await agent.delete('/api/v1/tracks/last').send({ accessToken: testUserA.accessToken })
 			})
 
 			it('should delete a track', async function () {
@@ -479,7 +479,7 @@ describe('DELETE api/v1/tracks/last', function () {
 					userId: testUserB._id
 				})
 				await testTrackB2.save()
-				res = await agent.delete('/v1/tracks/last').send({ accessToken: testUserA.accessToken })
+				res = await agent.delete('/api/v1/tracks/last').send({ accessToken: testUserA.accessToken })
 			})
 
 			it('should delete a single track', async function () {
@@ -539,7 +539,7 @@ describe('GET api/v1/tracks', function () {
 		])
 
 		// Login userA
-		const logInRes = await agent.post('/v1/auth/login-local').send(userAFields)
+		const logInRes = await agent.post('/api/v1/auth/login-local').send(userAFields)
 
 		// Save session cookie
 		sessionCookie = logInRes.headers['set-cookie']
@@ -549,7 +549,7 @@ describe('GET api/v1/tracks', function () {
 		let res: any
 
 		beforeEach(async function () {
-			res = await agent.get('/v1/tracks').set('Cookie', sessionCookie)
+			res = await agent.get('/api/v1/tracks').set('Cookie', sessionCookie)
 		})
 
 		it('should respond with status code 200', async function () {
@@ -583,7 +583,7 @@ describe('GET api/v1/tracks', function () {
 			let res: any
 
 			beforeEach(async function () {
-				res = await agent.get('/v1/tracks?trackName=TEST_TRACK_A1').set('Cookie', sessionCookie)
+				res = await agent.get('/api/v1/tracks?trackName=TEST_TRACK_A1').set('Cookie', sessionCookie)
 			})
 
 			it('should respond with status code 200', async function () {
@@ -621,7 +621,7 @@ describe('GET api/v1/tracks', function () {
 				let res: any
 
 				beforeEach(async function () {
-					res = await agent.get('/v1/tracks?fromDate=2020-05-16').set('Cookie', sessionCookie)
+					res = await agent.get('/api/v1/tracks?fromDate=2020-05-16').set('Cookie', sessionCookie)
 				})
 
 				it('should respond with status code 200', async function () {
@@ -664,7 +664,7 @@ describe('GET api/v1/tracks', function () {
 				let res: any
 
 				beforeEach(async function () {
-					res = await agent.get('/v1/tracks?toDate=2020-05-16').set('Cookie', sessionCookie)
+					res = await agent.get('/api/v1/tracks?toDate=2020-05-16').set('Cookie', sessionCookie)
 				})
 
 				it('should respond with status code 200', async function () {
@@ -710,7 +710,7 @@ describe('GET api/v1/tracks', function () {
 		let res: any
 
 		beforeEach(async function () {
-			res = await agent.get('/v1/tracks?trackName=TEST_TRACK_A1&fromDate=2020-05-15').set('Cookie', sessionCookie)
+			res = await agent.get('/api/v1/tracks?trackName=TEST_TRACK_A1&fromDate=2020-05-15').set('Cookie', sessionCookie)
 		})
 
 		it('should respond with status code 200', async function () {
@@ -751,7 +751,7 @@ describe('GET api/v1/tracks', function () {
 			let res: any
 
 			beforeEach(async function () {
-				res = await agent.get('/v1/tracks?trackName=TEST_TRACK_A1&fromDate=2020-05-16').set('Cookie', sessionCookie)
+				res = await agent.get('/api/v1/tracks?trackName=TEST_TRACK_A1&fromDate=2020-05-16').set('Cookie', sessionCookie)
 			})
 
 			it('should respond with status code 204', async function () {
@@ -773,7 +773,7 @@ describe('GET api/v1/tracks', function () {
 			let res: any
 
 			beforeEach(async function () {
-				res = await agent.get('/v1/tracks?trackName=nonExistingTrack').set('Cookie', sessionCookie)
+				res = await agent.get('/api/v1/tracks?trackName=nonExistingTrack').set('Cookie', sessionCookie)
 			})
 
 			it('should respond with status code 204', async function () {
@@ -793,7 +793,7 @@ describe('GET api/v1/tracks', function () {
 			let res: any
 
 			beforeEach(async function () {
-				res = await agent.get('/v1/tracks?fromDate=2020-05-18').set('Cookie', sessionCookie)
+				res = await agent.get('/api/v1/tracks?fromDate=2020-05-18').set('Cookie', sessionCookie)
 			})
 
 			it('should respond with status code 204', async function () {
@@ -813,7 +813,7 @@ describe('GET api/v1/tracks', function () {
 			let res: any
 
 			beforeEach(async function () {
-				res = await agent.get('/v1/tracks?toDate=2020-05-13').set('Cookie', sessionCookie)
+				res = await agent.get('/api/v1/tracks?toDate=2020-05-13').set('Cookie', sessionCookie)
 			})
 
 			it('should respond with status code 204', async function () {
