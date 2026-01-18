@@ -222,15 +222,38 @@ export async function getTracks (req: Request, res: Response, next: NextFunction
 		return
 	}
 
-	const { trackName, fromDate, toDate } = req.query as Record<string, unknown>
+	const { trackName, fromDate, toDate, limit, skip, sort } = req.query as Record<string, unknown>
 
 	try {
-		const tracks = await TrackModel.find({
+		const query = TrackModel.find({
 			userId: user._id,
 			...(trackName !== undefined && { trackName }),
 			...(fromDate !== undefined && { date: { $gte: new Date(fromDate as string) } }),
 			...(toDate !== undefined && { date: { ...((fromDate !== undefined) && { $gte: new Date(fromDate as string) }), $lte: new Date(toDate as string) } })
-		}).lean()
+		})
+
+		// Apply sorting
+		if (sort !== undefined && typeof sort === 'string') {
+			query.sort(sort)
+		}
+
+		// Apply skip
+		if (skip !== undefined && typeof skip === 'string') {
+			const skipNum = parseInt(skip, 10)
+			if (!isNaN(skipNum) && skipNum >= 0) {
+				query.skip(skipNum)
+			}
+		}
+
+		// Apply limit
+		if (limit !== undefined && typeof limit === 'string') {
+			const limitNum = parseInt(limit, 10)
+			if (!isNaN(limitNum) && limitNum > 0) {
+				query.limit(limitNum)
+			}
+		}
+
+		const tracks = await query.lean()
 
 		logger.debug(`Retrieved ${tracks.length} tracks`)
 		res.status(200).json(tracks.map(transformTrack))

@@ -78,9 +78,12 @@ router.post('/import',
  * @desc Get all tracks for the authenticated user
  * @access Private
  * @middleware ensureAuthenticated
- * @param {string} [req.query.name] - Filter by track name.
+ * @param {string} [req.query.trackName] - Filter by track name.
  * @param {string} [req.query.fromDate] - Filter tracks from this date.
  * @param {string} [req.query.toDate] - Filter tracks until this date.
+ * @param {number} [req.query.limit] - Limit the number of tracks returned.
+ * @param {number} [req.query.skip] - Number of tracks to skip (for pagination).
+ * @param {string} [req.query.sort] - Sort order (e.g., '-date' for descending by date).
  * @returns {number} res.status - The status code of the HTTP response.
  * @returns {Array<Object>} res.body - The list of tracks.
  */
