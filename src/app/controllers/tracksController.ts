@@ -124,6 +124,62 @@ export async function createTrack (req: Request, res: Response, next: NextFuncti
 	}
 }
 
+export async function importTracks (req: Request, res: Response, next: NextFunction): Promise<void> {
+	logger.info('Bulk importing tracks')
+
+	const user = req.user as IUser | undefined
+
+	if (user === undefined) {
+		res.status(401).json({ error: 'User not found.' })
+		return
+	}
+
+	const { trackName, dates } = req.body as { trackName?: unknown, dates?: unknown }
+
+	if (typeof trackName !== 'string' || trackName.trim() === '') {
+		res.status(400).json({ error: 'trackName must be a non-empty string.' })
+		return
+	}
+
+	if (!Array.isArray(dates) || dates.length === 0) {
+		res.status(400).json({ error: 'dates must be a non-empty array.' })
+		return
+	}
+
+	const validDates: Date[] = []
+	for (const dateStr of dates) {
+		if (typeof dateStr !== 'string') {
+			res.status(400).json({ error: 'Each date must be a string.' })
+			return
+		}
+		const date = new Date(dateStr)
+		if (isNaN(date.getTime())) {
+			res.status(400).json({ error: `Invalid date: ${dateStr}` })
+			return
+		}
+		validDates.push(date)
+	}
+
+	try {
+		const tracksToCreate = validDates.map(date => ({
+			trackName: trackName.trim(),
+			date,
+			userId: user._id
+		}))
+
+		const created = await TrackModel.insertMany(tracksToCreate)
+		logger.info(`Bulk import: created ${created.length} tracks`)
+		res.status(201).json({ created: created.length })
+	} catch (error) {
+		logger.error('Bulk import failed', { error })
+		if (error instanceof mongoose.Error.ValidationError) {
+			res.status(400).json({ error: error.message })
+		} else {
+			next(error)
+		}
+	}
+}
+
 export async function getTrack (req: Request, res: Response, next: NextFunction): Promise<void> {
 	const trackId = req.params.id
 	logger.debug(`Getting track: ID ${trackId}`)

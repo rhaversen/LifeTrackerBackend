@@ -5,6 +5,7 @@ import {
 	createTrackWebhook,
 	deleteLastTrackWebhook,
 	createTrack,
+	importTracks,
 	getTrack,
 	getTracks,
 	patchTrack,
@@ -55,6 +56,21 @@ router.delete('/webhook',
 router.post('/',
 	ensureAuthenticated,
 	createTrack
+)
+
+/**
+ * @route POST api/v1/tracks/import
+ * @desc Bulk import tracks
+ * @access Private
+ * @middleware ensureAuthenticated
+ * @param {string} req.body.trackName - The name for all tracks.
+ * @param {string[]} req.body.dates - Array of ISO date strings.
+ * @returns {number} res.status - The status code of the HTTP response.
+ * @returns {Object} res.body - Import results with created count.
+ */
+router.post('/import',
+	ensureAuthenticated,
+	importTracks
 )
 
 /**
