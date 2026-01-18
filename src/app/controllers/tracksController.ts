@@ -1,23 +1,23 @@
 import { type NextFunction, type Request, type Response } from 'express'
 import mongoose from 'mongoose'
 
-import TrackModel from '../models/Track.js'
+import TrackModel, { transformTrack } from '../models/Track.js'
 import UserModel, { type IUser } from '../models/User.js'
 import logger from '../utils/logger.js'
 
-export async function createTrack (req: Request, res: Response, next: NextFunction): Promise<void> {
-	logger.silly('Creating track')
+// Webhook endpoints - accessToken authentication for external integrations
+
+export async function createTrackWebhook (req: Request, res: Response, next: NextFunction): Promise<void> {
+	logger.info('Webhook: Creating track')
 
 	const {
 		accessToken,
 		trackName,
-		timeOffset,
-		data
+		timeOffset
 	} = req.body as {
 		accessToken?: unknown
 		trackName?: unknown
 		timeOffset?: unknown
-		data?: unknown
 	}
 
 	if (typeof trackName !== 'string' || trackName === '') {
@@ -55,12 +55,12 @@ export async function createTrack (req: Request, res: Response, next: NextFuncti
 		const newTrack = await TrackModel.create({
 			trackName,
 			date,
-			userId: user._id,
-			data
+			userId: user._id
 		})
 
-		res.status(201).json(newTrack)
+		res.status(201).json(transformTrack(newTrack))
 	} catch (error) {
+		logger.error('Webhook: Track creation failed', { error })
 		if (error instanceof mongoose.Error.ValidationError) {
 			res.status(400).json({ error: error.message })
 		} else {
@@ -69,14 +69,10 @@ export async function createTrack (req: Request, res: Response, next: NextFuncti
 	}
 }
 
-export async function deleteLastTrack (req: Request, res: Response, _next: NextFunction): Promise<void> {
-	logger.silly('Deleting last track')
+export async function deleteLastTrackWebhook (req: Request, res: Response, _next: NextFunction): Promise<void> {
+	logger.info('Webhook: Deleting last track')
 
-	const {
-		accessToken
-	} = req.body as {
-		accessToken?: unknown
-	}
+	const { accessToken } = req.body as { accessToken?: unknown }
 
 	if (typeof accessToken !== 'string' || accessToken === '') {
 		res.status(400).json({ error: 'accessToken must be a non-empty string.' })
@@ -96,14 +92,10 @@ export async function deleteLastTrack (req: Request, res: Response, _next: NextF
 	res.status(204).send()
 }
 
-export async function getTracksWithQuery (req: Request, res: Response, _next: NextFunction): Promise<void> {
-	logger.silly('Fetching tracks with query')
+// RESTful endpoints - session authentication
 
-	const {
-		trackName,
-		fromDate,
-		toDate
-	} = req.query as Record<string, unknown>
+export async function createTrack (req: Request, res: Response, next: NextFunction): Promise<void> {
+	logger.info(`Creating track with name: ${req.body.trackName ?? 'N/A'}`)
 
 	const user = req.user as IUser | undefined
 
@@ -112,17 +104,255 @@ export async function getTracksWithQuery (req: Request, res: Response, _next: Ne
 		return
 	}
 
-	const tracks = await TrackModel.find({
-		userId: user._id,
-		...(trackName !== undefined && { trackName }),
-		...(fromDate !== undefined && { date: { $gte: new Date(fromDate as string) } }),
-		...(toDate !== undefined && { date: { $lte: new Date(toDate as string) } })
-	})
+	const allowedFields: Record<string, unknown> = {
+		trackName: req.body.trackName,
+		date: req.body.date ?? new Date(),
+		userId: user._id
+	}
 
-	if (tracks.length === 0) {
-		res.status(204).json({ message: 'No tracks found with the provided query.' })
+	try {
+		const newTrack = await TrackModel.create(allowedFields)
+		logger.debug(`Track created successfully: ID ${newTrack.id}`)
+		res.status(201).json(transformTrack(newTrack))
+	} catch (error) {
+		logger.error(`Track creation failed for name: ${req.body.trackName ?? 'N/A'}`, { error })
+		if (error instanceof mongoose.Error.ValidationError || error instanceof mongoose.Error.CastError) {
+			res.status(400).json({ error: error.message })
+		} else {
+			next(error)
+		}
+	}
+}
+
+export async function importTracks (req: Request, res: Response, next: NextFunction): Promise<void> {
+	logger.info('Bulk importing tracks')
+
+	const user = req.user as IUser | undefined
+
+	if (user === undefined) {
+		res.status(401).json({ error: 'User not found.' })
 		return
 	}
 
-	res.status(200).send(tracks)
+	const { trackName, dates } = req.body as { trackName?: unknown, dates?: unknown }
+
+	if (typeof trackName !== 'string' || trackName.trim() === '') {
+		res.status(400).json({ error: 'trackName must be a non-empty string.' })
+		return
+	}
+
+	if (!Array.isArray(dates) || dates.length === 0) {
+		res.status(400).json({ error: 'dates must be a non-empty array.' })
+		return
+	}
+
+	const validDates: Date[] = []
+	for (const dateStr of dates) {
+		if (typeof dateStr !== 'string') {
+			res.status(400).json({ error: 'Each date must be a string.' })
+			return
+		}
+		const date = new Date(dateStr)
+		if (isNaN(date.getTime())) {
+			res.status(400).json({ error: `Invalid date: ${dateStr}` })
+			return
+		}
+		validDates.push(date)
+	}
+
+	try {
+		const tracksToCreate = validDates.map(date => ({
+			trackName: trackName.trim(),
+			date,
+			userId: user._id
+		}))
+
+		const created = await TrackModel.insertMany(tracksToCreate)
+		logger.info(`Bulk import: created ${created.length} tracks`)
+		res.status(201).json({ created: created.length })
+	} catch (error) {
+		logger.error('Bulk import failed', { error })
+		if (error instanceof mongoose.Error.ValidationError) {
+			res.status(400).json({ error: error.message })
+		} else {
+			next(error)
+		}
+	}
+}
+
+export async function getTrack (req: Request, res: Response, next: NextFunction): Promise<void> {
+	const trackId = req.params.id
+	logger.debug(`Getting track: ID ${trackId}`)
+
+	const user = req.user as IUser | undefined
+
+	if (user === undefined) {
+		res.status(401).json({ error: 'User not found.' })
+		return
+	}
+
+	try {
+		const track = await TrackModel.findOne({ _id: trackId, userId: user._id }).lean()
+
+		if (track === null || track === undefined) {
+			logger.warn(`Get track failed: Track not found. ID: ${trackId}`)
+			res.status(404).json({ error: 'Track not found.' })
+			return
+		}
+
+		logger.debug(`Retrieved track successfully: ID ${trackId}`)
+		res.status(200).json(transformTrack(track))
+	} catch (error) {
+		logger.error(`Get track failed: Error retrieving track ID ${trackId}`, { error })
+		if (error instanceof mongoose.Error.ValidationError || error instanceof mongoose.Error.CastError) {
+			res.status(400).json({ error: error.message })
+		} else {
+			next(error)
+		}
+	}
+}
+
+export async function getTracks (req: Request, res: Response, next: NextFunction): Promise<void> {
+	logger.debug('Getting tracks')
+
+	const user = req.user as IUser | undefined
+
+	if (user === undefined) {
+		res.status(401).json({ error: 'User not found.' })
+		return
+	}
+
+	const { trackName, fromDate, toDate } = req.query as Record<string, unknown>
+
+	try {
+		const tracks = await TrackModel.find({
+			userId: user._id,
+			...(trackName !== undefined && { trackName }),
+			...(fromDate !== undefined && { date: { $gte: new Date(fromDate as string) } }),
+			...(toDate !== undefined && { date: { ...((fromDate !== undefined) && { $gte: new Date(fromDate as string) }), $lte: new Date(toDate as string) } })
+		}).lean()
+
+		logger.debug(`Retrieved ${tracks.length} tracks`)
+		res.status(200).json(tracks.map(transformTrack))
+	} catch (error) {
+		logger.error('Failed to get tracks', { error })
+		if (error instanceof mongoose.Error.ValidationError || error instanceof mongoose.Error.CastError) {
+			res.status(400).json({ error: error.message })
+		} else {
+			next(error)
+		}
+	}
+}
+
+export async function patchTrack (req: Request, res: Response, next: NextFunction): Promise<void> {
+	const trackId = req.params.id
+	logger.info(`Patching track: ID ${trackId}`)
+
+	const user = req.user as IUser | undefined
+
+	if (user === undefined) {
+		res.status(401).json({ error: 'User not found.' })
+		return
+	}
+
+	const session = await mongoose.startSession()
+	session.startTransaction()
+
+	try {
+		const track = await TrackModel.findOne({ _id: trackId, userId: user._id }).session(session)
+
+		if (track === null || track === undefined) {
+			logger.warn(`Patch track failed: Track not found. ID: ${trackId}`)
+			res.status(404).json({ error: 'Track not found.' })
+			await session.abortTransaction()
+			await session.endSession()
+			return
+		}
+
+		let updateApplied = false
+
+		if (req.body.trackName !== undefined && track.trackName !== req.body.trackName) {
+			logger.debug(`Updating trackName for track ID ${trackId}`)
+			track.trackName = req.body.trackName
+			updateApplied = true
+		}
+
+		if (req.body.date !== undefined) {
+			logger.debug(`Updating date for track ID ${trackId}`)
+			track.date = new Date(req.body.date)
+			updateApplied = true
+		}
+
+		if (!updateApplied) {
+			logger.info(`Patch track: No changes detected for track ID ${trackId}`)
+			res.status(200).json(transformTrack(track))
+			await session.commitTransaction()
+			await session.endSession()
+			return
+		}
+
+		await track.validate()
+		await track.save({ session })
+
+		await session.commitTransaction()
+		logger.info(`Track patched successfully: ID ${trackId}`)
+		res.status(200).json(transformTrack(track))
+	} catch (error) {
+		await session.abortTransaction()
+		logger.error(`Patch track failed: Error updating track ID ${trackId}`, { error })
+		if (error instanceof mongoose.Error.ValidationError || error instanceof mongoose.Error.CastError) {
+			res.status(400).json({ error: error.message })
+		} else {
+			next(error)
+		}
+	} finally {
+		await session.endSession()
+	}
+}
+
+export async function deleteTrack (req: Request, res: Response, next: NextFunction): Promise<void> {
+	const trackId = req.params.id
+	logger.info(`Deleting track: ID ${trackId}`)
+
+	const user = req.user as IUser | undefined
+
+	if (user === undefined) {
+		res.status(401).json({ error: 'User not found.' })
+		return
+	}
+
+	if (req.body == null || typeof req.body !== 'object') {
+		logger.warn(`Delete track failed: Request body is missing or invalid. ID: ${trackId}`)
+		res.status(400).json({ error: 'Request body is required.' })
+		return
+	}
+
+	const { confirm } = req.body as { confirm?: unknown }
+
+	if (confirm !== true) {
+		logger.warn(`Delete track failed: Confirmation not provided. ID: ${trackId}`)
+		res.status(400).json({ error: 'Deletion must be confirmed.' })
+		return
+	}
+
+	try {
+		const track = await TrackModel.findOne({ _id: trackId, userId: user._id })
+
+		if (track === null || track === undefined) {
+			logger.warn(`Delete track failed: Track not found. ID: ${trackId}`)
+			res.status(404).json({ error: 'Track not found.' })
+			return
+		}
+
+		await track.deleteOne()
+		logger.info(`Track deleted successfully: ID ${trackId}`)
+		res.status(204).send()
+	} catch (error) {
+		logger.error(`Delete track failed: Error deleting track ID ${trackId}`, { error })
+		if (error instanceof mongoose.Error.ValidationError || error instanceof mongoose.Error.CastError) {
+			res.status(400).json({ error: error.message })
+		} else {
+			next(error)
+		}
+	}
 }

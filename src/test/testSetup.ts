@@ -13,17 +13,13 @@ import mongoose from 'mongoose'
 import { restore } from 'sinon'
 
 import logger from '../app/utils/logger.js'
-import { trackTypes } from '../app/utils/trackTypes.js'
 
 import { disconnectFromInMemoryMongoDB } from './mongoMemoryReplSetConnector.js'
-import { testTrackTypes } from './testTrackTypes.js'
 
 // Test environment settings
 process.env.NODE_ENV = 'test'
 process.env.SESSION_SECRET = 'TEST_SESSION_SECRET'
 process.env.CSRF_TOKEN = 'TEST_CSRF_TOKEN'
-
-Object.assign(trackTypes, testTrackTypes)
 
 const chaiHttpObject = chai.use(chaiHttp)
 let app: { server: Server, sessionStore: MongoStore }

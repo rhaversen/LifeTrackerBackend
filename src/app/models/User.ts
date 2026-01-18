@@ -1,5 +1,5 @@
-import { hash, compare } from 'bcrypt'
-import mongoose, { type Document, model, Schema, type Types } from 'mongoose'
+import { compare, hash } from 'bcrypt'
+import mongoose, { type Document, type FlattenMaps, model, Schema, type Types } from 'mongoose'
 import { nanoid } from 'nanoid'
 import validator from 'validator'
 
@@ -8,34 +8,47 @@ import config from '../utils/setupConfig.js'
 
 import TrackModel from './Track.js'
 
-const {
-	bcryptSaltRounds
-} = config
+const { bcryptSaltRounds } = config
 
-// User interface definition
 export interface IUser extends Document {
-	// Properties
 	_id: Types.ObjectId
-	userName: string // Username of the user
-	email: string // Email of the user
-	password: string // Hashed password of the user
-	accessToken: string // Unique access token for user authentication
+	userName: string
+	email: string
+	password: string
+	accessToken: string
+	passwordResetCode?: string
 
-	// Optional properties
-	passwordResetCode?: string // Unique password reset code for user password reset
-
-	// Timestamps
 	createdAt: Date
 	updatedAt: Date
 
-	// Methods
 	generateAccessToken: () => Promise<string>
 	generateNewPasswordResetCode: () => Promise<string>
 	deleteUserAndAllAssociatedData: () => Promise<void>
 	comparePassword: (password: string) => Promise<boolean>
+
+	_wasNew?: boolean
 }
 
-// User schema definition
+export interface IUserFrontend {
+	_id: string
+	userName: string
+	email: string
+	accessToken: string
+	createdAt: Date
+	updatedAt: Date
+}
+
+export function transformUser (userDoc: IUser | FlattenMaps<IUser>): IUserFrontend {
+	return {
+		_id: userDoc._id.toString(),
+		userName: userDoc.userName,
+		email: userDoc.email,
+		accessToken: userDoc.accessToken,
+		createdAt: userDoc.createdAt,
+		updatedAt: userDoc.updatedAt
+	}
+}
+
 const userSchema = new Schema<IUser>({
 	userName: {
 		type: Schema.Types.String,
@@ -73,7 +86,6 @@ const userSchema = new Schema<IUser>({
 	timestamps: true
 })
 
-// Validations
 userSchema.path('email').validate(function (v: string) {
 	return validator.isEmail(v)
 }, 'Email is not valid')
@@ -83,57 +95,44 @@ userSchema.path('email').validate(async function (v: string) {
 	return foundUserWithEmail === null || foundUserWithEmail === undefined
 }, 'Email is already in use')
 
-// Adding indexes
-userSchema.index({ accessToken: 1 })
-
-// Pre-save middleware for User schema
 userSchema.pre('save', async function (next) {
-	logger.silly('Saving user')
+	this._wasNew = this.isNew
 	if (this.isModified('password')) {
-		// Hash the password
-		this.password = await hash(this.password, bcryptSaltRounds) // Using a random salt for each user
+		logger.debug(`User ID ${this.id}: Hashing password`)
+		this.password = await hash(this.password, bcryptSaltRounds)
 	}
 	if (this.accessToken === undefined) {
-		// Set default value to accessToken
 		this.accessToken = await generateUniqueAccessToken()
 	}
 	next()
 })
 
-// User methods
 userSchema.methods.generateAccessToken = async function (this: IUser) {
-	logger.silly('Generating access token')
+	logger.debug(`Generating access token for user ID ${this.id}`)
 	this.accessToken = await generateUniqueAccessToken()
 	await this.save()
 	return this.accessToken
 }
 
 userSchema.methods.generateNewPasswordResetCode = async function (this: IUser): Promise<string> {
-	logger.silly('Generating new password reset code')
+	logger.debug(`Generating password reset code for user ID ${this.id}`)
 	this.passwordResetCode = await generateUniquePasswordResetCode()
 	await this.save()
 	return this.passwordResetCode
 }
 
 userSchema.methods.deleteUserAndAllAssociatedData = async function (this: IUser): Promise<void> {
-	logger.silly('Deleting user and all associated data')
+	logger.info(`Deleting user and all associated data: ID ${this.id}`)
 
-	// Start a mongoose session to use transactions
 	const session = await mongoose.startSession()
 	session.startTransaction()
 
 	try {
-		// Delete the user
 		await UserModel.findByIdAndDelete(this._id).session(session)
-
-		// Delete all tracks created by the user
 		await TrackModel.deleteMany({ userId: this._id }).session(session)
-
 		await session.commitTransaction()
 	} catch (error) {
 		await session.abortTransaction()
-
-		// Propagate the error
 		throw error
 	} finally {
 		await session.endSession()
@@ -141,9 +140,8 @@ userSchema.methods.deleteUserAndAllAssociatedData = async function (this: IUser)
 }
 
 userSchema.methods.comparePassword = async function (this: IUser, password: string): Promise<boolean> {
-	logger.silly('Comparing password')
-	const isPasswordCorrect = await compare(password, this.password)
-	return isPasswordCorrect
+	logger.debug(`Comparing password for user ID ${this.id}`)
+	return await compare(password, this.password)
 }
 
 // Helper functions

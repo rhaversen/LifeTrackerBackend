@@ -42,14 +42,14 @@ print(response.text)
 
 ## Tracking
 
-You can create tracks with a POST request to **<https://www.life-stats.net/api/v1/tracks>**. Provide a track name and your access token in the request body. There are two types of tracks: instantaneous (for current events) and relative (for past or future events), with the offset specified in milliseconds.
+You can create tracks with a POST request to **<https://www.life-stats.net/api/v1/tracks/webhook>**. Provide a track name and your access token in the request body. There are two types of tracks: instantaneous (for current events) and relative (for past or future events), with the offset specified in milliseconds.
 
 ### Instantaneous Track
 
 **CMD**
 
 ```bash
-curl -X POST -H "Content-Type: application/json" -d "{\"trackName\": \"Your Track Name Here\", \"accessToken\": \"Your Access Token Here\"}" https://www.life-stats.net/api/v1/tracks
+curl -X POST -H "Content-Type: application/json" -d "{\"trackName\": \"Your Track Name Here\", \"accessToken\": \"Your Access Token Here\"}" https://www.life-stats.net/api/v1/tracks/webhook
 ```
 
 **PowerShell**
@@ -58,7 +58,7 @@ curl -X POST -H "Content-Type: application/json" -d "{\"trackName\": \"Your Trac
 $headers = @{ "Content-Type" = "application/json" }
 $body = '{"trackName": "Your Track Name Here", "accessToken": "Your Access Token Here"}'
 
-Invoke-WebRequest -Uri "https://www.life-stats.net/api/v1/tracks" -Method Post -Headers $headers -Body $body
+Invoke-WebRequest -Uri "https://www.life-stats.net/api/v1/tracks/webhook" -Method Post -Headers $headers -Body $body
 ```
 
 **Python**
@@ -66,7 +66,7 @@ Invoke-WebRequest -Uri "https://www.life-stats.net/api/v1/tracks" -Method Post -
 ```py
 import requests
 
-url = "https://www.life-stats.net/api/v1/tracks"
+url = "https://www.life-stats.net/api/v1/tracks/webhook"
 data = {"trackName": "Your Track Name Here", "accessToken": "Your Access Token Here"}
 
 response = requests.post(url, json=data)
@@ -79,7 +79,7 @@ print(response.text)
 **CMD**
 
 ```bash
-curl -X POST -H "Content-Type: application/json" -d "{\"trackName\": \"Your Track Name Here\", \"accessToken\": \"Your Access Token Here\", \"timeOffset\": \"Your Time Offset Here\"}" https://www.life-stats.net/api/v1/tracks
+curl -X POST -H "Content-Type: application/json" -d "{\"trackName\": \"Your Track Name Here\", \"accessToken\": \"Your Access Token Here\", \"timeOffset\": \"Your Time Offset Here\"}" https://www.life-stats.net/api/v1/tracks/webhook
 ```
 
 **PowerShell**
@@ -88,7 +88,7 @@ curl -X POST -H "Content-Type: application/json" -d "{\"trackName\": \"Your Trac
 $headers = @{ "Content-Type" = "application/json" }
 $body = '{"trackName": "Your Track Name Here", "accessToken": "Your Access Token Here", "timeOffset": "Your Time Offset Here"}'
 
-Invoke-WebRequest -Uri "https://www.life-stats.net/api/v1/tracks" -Method Post -Headers $headers -Body $body
+Invoke-WebRequest -Uri "https://www.life-stats.net/api/v1/tracks/webhook" -Method Post -Headers $headers -Body $body
 ```
 
 **Python**
@@ -96,7 +96,7 @@ Invoke-WebRequest -Uri "https://www.life-stats.net/api/v1/tracks" -Method Post -
 ```py
 import requests
 
-url = "https://www.life-stats.net/api/v1/tracks"
+url = "https://www.life-stats.net/api/v1/tracks/webhook"
 data = {"trackName": "Your Track Name Here", "accessToken": "Your Access Token Here", "timeOffset": "Your Time Offset Here"}
 
 response = requests.post(url, json=data)
