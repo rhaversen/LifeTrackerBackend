@@ -5,32 +5,61 @@ metadata:
     namespace: life-tracker-production
     annotations:
         cert-manager.io/cluster-issuer: letsencrypt-production
-        nginx.ingress.kubernetes.io/rewrite-target: /$2
+        # WebSocket support
+        nginx.ingress.kubernetes.io/proxy-http-version: "1.1"
+        nginx.ingress.kubernetes.io/upgrade: "websocket"
+        nginx.ingress.kubernetes.io/connection: "upgrade"
+        # Timeout settings (ensure they exceed Socket.IO's defaults)
+        nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
+        nginx.ingress.kubernetes.io/proxy-send-timeout: "120"
+        # Sticky sessions based on cookies
+        nginx.ingress.kubernetes.io/affinity: "cookie"
+        nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
+        nginx.ingress.kubernetes.io/session-cookie-same-site: "Lax"
+        nginx.ingress.kubernetes.io/session-cookie-secure: "true"
 spec:
     ingressClassName: nginx
     tls:
-        - hosts:
-              - www.life-stats.net
-              - life-stats.net
-          secretName: backend-tls
+        -   hosts:
+                - www.life-stats.net
+                - life-stats.net
+            secretName: backend-tls
     rules:
-        - host: life-stats.net
-          http:
-              paths:
-                  - backend:
-                        service:
-                            name: backend-service
-                            port:
-                                number: 80
-                    path: /api(/|$)(.*) # Strips the prefix
-                    pathType: Prefix
-        - host: www.life-stats.net
-          http:
-              paths:
-                  - backend:
-                        service:
-                            name: backend-service
-                            port:
-                                number: 80
-                    path: /api(/|$)(.*) # Strips the prefix
-                    pathType: Prefix
+        -   host: life-stats.net
+            http:
+                paths:
+                    # API Path
+                    -   path: /api/
+                        pathType: Prefix
+                        backend:
+                            service:
+                                name: backend-service
+                                port:
+                                    number: 80
+                    # Websocket Path
+                    -   path: /socket.io/
+                        pathType: Prefix
+                        backend:
+                            service:
+                                name: backend-service
+                                port:
+                                    number: 80
+        -   host: www.life-stats.net
+            http:
+                paths:
+                    # API Path
+                    -   path: /api/
+                        pathType: Prefix
+                        backend:
+                            service:
+                                name: backend-service
+                                port:
+                                    number: 80
+                    # Websocket Path
+                    -   path: /socket.io/
+                        pathType: Prefix
+                        backend:
+                            service:
+                                name: backend-service
+                                port:
+                                    number: 80

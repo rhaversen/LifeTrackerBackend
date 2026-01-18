@@ -7,9 +7,9 @@ import { expect } from 'chai'
 
 import TrackModel from '../../../app/models/Track.js'
 import UserModel, { type IUser } from '../../../app/models/User.js'
-import { chaiAppServer as agent } from '../../testSetup.js'
+import { chaiAppAgent as agent } from '../../testSetup.js'
 
-describe('POST api/v1/users', function () {
+describe('POST api/api/v1/users', function () {
 	describe('Post a new user', function () {
 		const userFields = {
 			userName: 'TestUser',
@@ -19,7 +19,7 @@ describe('POST api/v1/users', function () {
 		}
 
 		it('should create a user', async function () {
-			await agent.post('/v1/users').send(userFields)
+			await agent.post('/api/v1/users').send(userFields)
 
 			const user = await UserModel.findOne({}).exec()
 
@@ -30,7 +30,7 @@ describe('POST api/v1/users', function () {
 		})
 
 		it('should return the newly created object', async function () {
-			const response = await agent.post('/v1/users').send(userFields)
+			const response = await agent.post('/api/v1/users').send(userFields)
 
 			expect(response).to.have.status(201)
 			expect(response.body).to.have.property('userName', userFields.userName)
@@ -38,18 +38,18 @@ describe('POST api/v1/users', function () {
 		})
 
 		it('should respond with status code 201', async function () {
-			const res = await agent.post('/v1/users').send(userFields)
+			const res = await agent.post('/api/v1/users').send(userFields)
 			expect(res).to.have.status(201)
 		})
 
 		it('should not return the password', async function () {
-			const response = await agent.post('/v1/users').send(userFields)
+			const response = await agent.post('/api/v1/users').send(userFields)
 
 			expect(response.body).to.not.have.property('password')
 		})
 
 		it('should return an error if the passwords do not match', async function () {
-			const response = await agent.post('/v1/users').send({
+			const response = await agent.post('/api/v1/users').send({
 				...userFields,
 				confirmPassword: 'password2'
 			})
@@ -58,7 +58,7 @@ describe('POST api/v1/users', function () {
 		})
 
 		it('should return an error if the userName is missing', async function () {
-			const response = await agent.post('/v1/users').send({
+			const response = await agent.post('/api/v1/users').send({
 				...userFields,
 				userName: undefined
 			})
@@ -67,7 +67,7 @@ describe('POST api/v1/users', function () {
 		})
 
 		it('should return an error if the email is missing', async function () {
-			const response = await agent.post('/v1/users').send({
+			const response = await agent.post('/api/v1/users').send({
 				...userFields,
 				email: undefined
 			})
@@ -76,7 +76,7 @@ describe('POST api/v1/users', function () {
 		})
 
 		it('should return an error if the password is missing', async function () {
-			const response = await agent.post('/v1/users').send({
+			const response = await agent.post('/api/v1/users').send({
 				...userFields,
 				password: undefined
 			})
@@ -85,7 +85,7 @@ describe('POST api/v1/users', function () {
 		})
 
 		it('should return an error if the confirm password is missing', async function () {
-			const response = await agent.post('/v1/users').send({
+			const response = await agent.post('/api/v1/users').send({
 				...userFields,
 				confirmPassword: undefined
 			})
@@ -100,7 +100,7 @@ describe('POST api/v1/users', function () {
 				...userFields
 			}
 
-			await agent.post('/v1/users').send(updatedFields)
+			await agent.post('/api/v1/users').send(updatedFields)
 			const user = await UserModel.findOne({})
 
 			expect(user?._id.toString()).to.not.equal(newId)
@@ -108,7 +108,7 @@ describe('POST api/v1/users', function () {
 	})
 })
 
-describe('GET api/v1/users/:id/accessToken', function () {
+describe('GET api/api/v1/users/:id/accessToken', function () {
 	let testUser: IUser
 
 	const userFields = {
@@ -126,18 +126,18 @@ describe('GET api/v1/users/:id/accessToken', function () {
 	})
 
 	it('should return an access token', async function () {
-		const response = await agent.get(`/v1/users/${testUser._id.toString()}/accessToken`).send(userFields)
+		const response = await agent.get(`/api/v1/users/${testUser._id.toString()}/accessToken`).send(userFields)
 
 		expect(response.body).to.have.property('accessToken')
 	})
 
 	it('should respond with status code 201', async function () {
-		const res = await agent.get(`/v1/users/${testUser._id.toString()}/accessToken`).send(userFields)
+		const res = await agent.get(`/api/v1/users/${testUser._id.toString()}/accessToken`).send(userFields)
 		expect(res).to.have.status(201)
 	})
 
 	it('should return an error if the email is missing', async function () {
-		const response = await agent.get(`/v1/users/${testUser._id.toString()}/accessToken`).send({
+		const response = await agent.get(`/api/v1/users/${testUser._id.toString()}/accessToken`).send({
 			...userFields,
 			email: undefined
 		})
@@ -146,7 +146,7 @@ describe('GET api/v1/users/:id/accessToken', function () {
 	})
 
 	it('should return an error if the password is missing', async function () {
-		const response = await agent.get(`/v1/users/${testUser._id.toString()}/accessToken`).send({
+		const response = await agent.get(`/api/v1/users/${testUser._id.toString()}/accessToken`).send({
 			...userFields,
 			password: undefined
 		})
@@ -155,7 +155,7 @@ describe('GET api/v1/users/:id/accessToken', function () {
 	})
 
 	it('should return an error if the email is not valid', async function () {
-		const response = await agent.get(`/v1/users/${testUser._id.toString()}/accessToken`).send({
+		const response = await agent.get(`/api/v1/users/${testUser._id.toString()}/accessToken`).send({
 			...userFields,
 			email: 'invalidEmail'
 		})
@@ -164,7 +164,7 @@ describe('GET api/v1/users/:id/accessToken', function () {
 	})
 
 	it('should return an error if the password is not correct', async function () {
-		const response = await agent.get(`/v1/users/${testUser._id.toString()}/accessToken`).send({
+		const response = await agent.get(`/api/v1/users/${testUser._id.toString()}/accessToken`).send({
 			...userFields,
 			password: 'incorrectPassword'
 		})
@@ -173,20 +173,20 @@ describe('GET api/v1/users/:id/accessToken', function () {
 	})
 
 	it('should return an error if the user does not exist', async function () {
-		const response = await agent.get('/v1/users/invalidId/accessToken').send(userFields)
+		const response = await agent.get('/api/v1/users/invalidId/accessToken').send(userFields)
 
 		expect(response).to.have.status(400)
 	})
 
 	it('should update the accessToken to the returned accessToken', async function () {
-		const response = await agent.get(`/v1/users/${testUser._id.toString()}/accessToken`).send(userFields)
+		const response = await agent.get(`/api/v1/users/${testUser._id.toString()}/accessToken`).send(userFields)
 
 		const updatedUser = await UserModel.findById(testUser._id).exec()
 		expect(updatedUser?.accessToken).to.equal(response.body.accessToken)
 	})
 
 	it('should not update the accessToken if the email is not valid', async function () {
-		await agent.get(`/v1/users/${testUser._id.toString()}/accessToken`).send({
+		await agent.get(`/api/v1/users/${testUser._id.toString()}/accessToken`).send({
 			...userFields,
 			email: 'invalidEmail'
 		})
@@ -196,7 +196,7 @@ describe('GET api/v1/users/:id/accessToken', function () {
 	})
 
 	it('should not update the accessToken if the password is not correct', async function () {
-		await agent.get(`/v1/users/${testUser._id.toString()}/accessToken`).send({
+		await agent.get(`/api/v1/users/${testUser._id.toString()}/accessToken`).send({
 			...userFields,
 			password: 'incorrectPassword'
 		})
@@ -206,7 +206,7 @@ describe('GET api/v1/users/:id/accessToken', function () {
 	})
 })
 
-describe('DELETE api/v1/users', function () {
+describe('DELETE api/api/v1/users', function () {
 	let testUser: IUser
 
 	beforeEach(async function () {
@@ -226,19 +226,19 @@ describe('DELETE api/v1/users', function () {
 		}
 
 		it('should delete the user', async function () {
-			await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+			await agent.delete(`/api/v1/users/${testUser.id.toString()}`).send(userFields)
 			const allUsers = await UserModel.find({}).exec()
 			expect(allUsers.length).to.equal(0)
 		})
 
 		it('should respond with status code 204', async function () {
-			const res = await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+			const res = await agent.delete(`/api/v1/users/${testUser.id.toString()}`).send(userFields)
 
 			expect(res).to.have.status(204)
 		})
 
 		it('should respond with an empty body', async function () {
-			const res = await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+			const res = await agent.delete(`/api/v1/users/${testUser.id.toString()}`).send(userFields)
 
 			expect(res.body).to.be.empty
 		})
@@ -267,7 +267,7 @@ describe('DELETE api/v1/users', function () {
 			})
 
 			it('should delete all tracks associated with the user', async function () {
-				await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+				await agent.delete(`/api/v1/users/${testUser.id.toString()}`).send(userFields)
 
 				const allTracks = await TrackModel.find({}).exec()
 				expect(allTracks.length).to.equal(3)
@@ -276,7 +276,7 @@ describe('DELETE api/v1/users', function () {
 			})
 
 			it('should not delete any tracks not associated with the user', async function () {
-				await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+				await agent.delete(`/api/v1/users/${testUser.id.toString()}`).send(userFields)
 
 				const allTracks = await TrackModel.find({}).exec()
 				expect(allTracks.length).to.equal(3)
@@ -295,12 +295,12 @@ describe('DELETE api/v1/users', function () {
 		}
 
 		it('should respond with status code 400', async function () {
-			const res = await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+			const res = await agent.delete(`/api/v1/users/${testUser.id.toString()}`).send(userFields)
 			expect(res).to.have.status(400)
 		})
 
 		it('should not delete a user', async function () {
-			await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+			await agent.delete(`/api/v1/users/${testUser.id.toString()}`).send(userFields)
 			const allUsers = await UserModel.find({}).exec()
 			expect(allUsers.length).to.equal(1)
 		})
@@ -314,12 +314,12 @@ describe('DELETE api/v1/users', function () {
 		}
 
 		it('should respond with status code 403', async function () {
-			const res = await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+			const res = await agent.delete(`/api/v1/users/${testUser.id.toString()}`).send(userFields)
 			expect(res).to.have.status(403)
 		})
 
 		it('should not delete a user', async function () {
-			await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+			await agent.delete(`/api/v1/users/${testUser.id.toString()}`).send(userFields)
 			const allUsers = await UserModel.find({}).exec()
 			expect(allUsers.length).to.equal(1)
 		})
@@ -333,13 +333,13 @@ describe('DELETE api/v1/users', function () {
 		}
 
 		it('should respond with status code 400', async function () {
-			const res = await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+			const res = await agent.delete(`/api/v1/users/${testUser.id.toString()}`).send(userFields)
 
 			expect(res).to.have.status(400)
 		})
 
 		it('should not delete a user', async function () {
-			await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+			await agent.delete(`/api/v1/users/${testUser.id.toString()}`).send(userFields)
 			const allUsers = await UserModel.find({}).exec()
 			expect(allUsers.length).to.equal(1)
 		})
@@ -353,13 +353,13 @@ describe('DELETE api/v1/users', function () {
 			}
 
 			it('should respond with status code 400', async function () {
-				const res = await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+				const res = await agent.delete(`/api/v1/users/${testUser.id.toString()}`).send(userFields)
 
 				expect(res).to.have.status(400)
 			})
 
 			it('should not delete a user', async function () {
-				await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+				await agent.delete(`/api/v1/users/${testUser.id.toString()}`).send(userFields)
 				const allUsers = await UserModel.find({}).exec()
 				expect(allUsers.length).to.equal(1)
 			})
@@ -372,12 +372,12 @@ describe('DELETE api/v1/users', function () {
 			}
 
 			it('should respond with status code 400', async function () {
-				const res = await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+				const res = await agent.delete(`/api/v1/users/${testUser.id.toString()}`).send(userFields)
 				expect(res).to.have.status(400)
 			})
 
 			it('should not delete a user', async function () {
-				await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+				await agent.delete(`/api/v1/users/${testUser.id.toString()}`).send(userFields)
 				const allUsers = await UserModel.find({}).exec()
 				expect(allUsers.length).to.equal(1)
 			})
@@ -390,12 +390,12 @@ describe('DELETE api/v1/users', function () {
 			}
 
 			it('should respond with status code 400', async function () {
-				const res = await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+				const res = await agent.delete(`/api/v1/users/${testUser.id.toString()}`).send(userFields)
 				expect(res).to.have.status(400)
 			})
 
 			it('should not delete a user', async function () {
-				await agent.delete(`/v1/users/${testUser.id.toString()}`).send(userFields)
+				await agent.delete(`/api/v1/users/${testUser.id.toString()}`).send(userFields)
 				const allUsers = await UserModel.find({}).exec()
 				expect(allUsers.length).to.equal(1)
 			})
@@ -403,7 +403,7 @@ describe('DELETE api/v1/users', function () {
 	})
 })
 
-describe('POST api/v1/users/request-password-reset-email', function () {
+describe('POST api/api/v1/users/request-password-reset-email', function () {
 	let testUser: IUser
 
 	beforeEach(async function () {
@@ -416,36 +416,36 @@ describe('POST api/v1/users/request-password-reset-email', function () {
 	})
 
 	it('should return status code 200', async function () {
-		const res = await agent.post('/v1/users/request-password-reset-email').send({ email: testUser.email })
+		const res = await agent.post('/api/v1/users/request-password-reset-email').send({ email: testUser.email })
 		expect(res).to.have.status(200)
 	})
 
 	it('should return status code 200 if the email does not exist', async function () {
-		const response = await agent.post('/v1/users/request-password-reset-email').send({ email: 'invalidEmail' })
+		const response = await agent.post('/api/v1/users/request-password-reset-email').send({ email: 'invalidEmail' })
 		expect(response).to.have.status(200)
 	})
 
 	it('should return an error if the email is missing', async function () {
-		const response = await agent.post('/v1/users/request-password-reset-email').send({ email: undefined })
+		const response = await agent.post('/api/v1/users/request-password-reset-email').send({ email: undefined })
 		expect(response).to.have.status(400)
 	})
 
 	it('should set the passwordResetCode on the user', async function () {
-		await agent.post('/v1/users/request-password-reset-email').send({ email: testUser.email })
+		await agent.post('/api/v1/users/request-password-reset-email').send({ email: testUser.email })
 
 		const updatedUser = await UserModel.findById(testUser._id).exec()
 		expect(updatedUser?.passwordResetCode).to.exist
 	})
 
 	it('should not set the passwordResetCode if the email does not exist', async function () {
-		await agent.post('/v1/users/request-password-reset-email').send({ email: 'invalidEmail' })
+		await agent.post('/api/v1/users/request-password-reset-email').send({ email: 'invalidEmail' })
 
 		const updatedUser = await UserModel.findById(testUser._id).exec()
 		expect(updatedUser?.passwordResetCode).to.not.exist
 	})
 })
 
-describe('PATCH api/v1/users/reset-password', function () {
+describe('PATCH api/api/v1/users/reset-password', function () {
 	let testUser: IUser
 
 	beforeEach(async function () {
@@ -459,7 +459,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should return status code 200', async function () {
-		const res = await agent.patch('/v1/users/reset-password').send({
+		const res = await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			password: 'newPassword',
 			confirmPassword: 'newPassword'
@@ -468,7 +468,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should return an error if the passwordResetCode is missing', async function () {
-		const response = await agent.patch('/v1/users/reset-password').send({
+		const response = await agent.patch('/api/v1/users/reset-password').send({
 			password: 'newPassword',
 			confirmPassword: 'newPassword'
 		})
@@ -476,7 +476,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should return an error if the password is missing', async function () {
-		const response = await agent.patch('/v1/users/reset-password').send({
+		const response = await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			confirmPassword: 'newPassword'
 		})
@@ -484,7 +484,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should return an error if the confirmPassword is missing', async function () {
-		const response = await agent.patch('/v1/users/reset-password').send({
+		const response = await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			password: 'newPassword'
 		})
@@ -492,7 +492,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should return an error if the password and confirmPassword do not match', async function () {
-		const response = await agent.patch('/v1/users/reset-password').send({
+		const response = await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			password: 'newPassword',
 			confirmPassword: 'newPassword2'
@@ -501,7 +501,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should return an error if the passwordResetCode is invalid', async function () {
-		const response = await agent.patch('/v1/users/reset-password').send({
+		const response = await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: 'invalidCode',
 			password: 'newPassword',
 			confirmPassword: 'newPassword'
@@ -510,7 +510,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should update the password', async function () {
-		await agent.patch('/v1/users/reset-password').send({
+		await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			password: 'newPassword',
 			confirmPassword: 'newPassword'
@@ -522,7 +522,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should delete the passwordResetCode', async function () {
-		await agent.patch('/v1/users/reset-password').send({
+		await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			password: 'newPassword',
 			confirmPassword: 'newPassword'
@@ -533,7 +533,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should not update the password if the passwordResetCode is invalid', async function () {
-		await agent.patch('/v1/users/reset-password').send({
+		await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: 'invalidCode',
 			password: 'newPassword',
 			confirmPassword: 'newPassword'
@@ -545,7 +545,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should not delete the passwordResetCode if the password and confirmPassword do not match', async function () {
-		await agent.patch('/v1/users/reset-password').send({
+		await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			password: 'newPassword',
 			confirmPassword: 'newPassword2'
@@ -556,7 +556,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should not update the password if the password and confirmPassword do not match', async function () {
-		await agent.patch('/v1/users/reset-password').send({
+		await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			password: 'newPassword',
 			confirmPassword: 'newPassword2'
@@ -568,7 +568,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should not delete the passwordResetCode if the password is missing', async function () {
-		await agent.patch('/v1/users/reset-password').send({
+		await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			confirmPassword: 'newPassword'
 		})
@@ -578,7 +578,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should not update the password if the password is missing', async function () {
-		await agent.patch('/v1/users/reset-password').send({
+		await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			confirmPassword: 'newPassword'
 		})
@@ -589,7 +589,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should not delete the passwordResetCode if the confirmPassword is missing', async function () {
-		await agent.patch('/v1/users/reset-password').send({
+		await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			password: 'newPassword'
 		})
@@ -599,7 +599,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should not update the password if the confirmPassword is missing', async function () {
-		await agent.patch('/v1/users/reset-password').send({
+		await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			password: 'newPassword'
 		})
@@ -610,7 +610,7 @@ describe('PATCH api/v1/users/reset-password', function () {
 	})
 
 	it('should not delete the passwordResetCode if the password is invalid', async function () {
-		await agent.patch('/v1/users/reset-password').send({
+		await agent.patch('/api/v1/users/reset-password').send({
 			passwordResetCode: testUser.passwordResetCode,
 			password: 'a',
 			confirmPassword: 'a'
