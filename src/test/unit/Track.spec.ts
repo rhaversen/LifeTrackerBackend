@@ -24,7 +24,7 @@ describe('Track Model', function () {
 
 			beforeEach(async function () {
 				track = new TrackModel({
-					trackName: 'TEST_TRACK',
+					trackName: 'Test Track',
 					userId: user._id
 				})
 			})
@@ -49,7 +49,7 @@ describe('Track Model', function () {
 
 			beforeEach(async function () {
 				track = new TrackModel({
-					trackName: 'TEST_TRACK',
+					trackName: 'Test Track',
 					userId: user._id
 				})
 			})
@@ -67,7 +67,7 @@ describe('Track Model', function () {
 	})
 
 	describe('required fields', function () {
-		it('should require trackName', async function () {
+		it('should require name', async function () {
 			const track = new TrackModel({
 				userId: user._id
 			})
@@ -79,7 +79,38 @@ describe('Track Model', function () {
 
 		it('should require userId', async function () {
 			const track = new TrackModel({
-				trackName: 'TEST_TRACK'
+				trackName: 'Test Track'
+			})
+			await track.save().catch((err) => {
+				// eslint-disable-next-line @typescript-eslint/no-unused-expressions
+				expect(err).to.not.be.null
+			})
+		})
+	})
+
+	describe('name validation', function () {
+		it('should accept any name string', async function () {
+			const track = new TrackModel({
+				trackName: 'My Custom Track',
+				userId: user._id
+			})
+			await track.save()
+			expect(track.trackName).to.equal('My Custom Track')
+		})
+
+		it('should trim name', async function () {
+			const track = new TrackModel({
+				trackName: '  Trimmed Track  ',
+				userId: user._id
+			})
+			await track.save()
+			expect(track.trackName).to.equal('Trimmed Track')
+		})
+
+		it('should reject name over 100 characters', async function () {
+			const track = new TrackModel({
+				trackName: 'a'.repeat(101),
+				userId: user._id
 			})
 			await track.save().catch((err) => {
 				// eslint-disable-next-line @typescript-eslint/no-unused-expressions
