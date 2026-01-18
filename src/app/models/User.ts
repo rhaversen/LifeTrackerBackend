@@ -83,9 +83,6 @@ userSchema.path('email').validate(async function (v: string) {
 	return foundUserWithEmail === null || foundUserWithEmail === undefined
 }, 'Email is already in use')
 
-// Adding indexes
-userSchema.index({ accessToken: 1 })
-
 // Pre-save middleware for User schema
 userSchema.pre('save', async function (next) {
 	logger.silly('Saving user')
