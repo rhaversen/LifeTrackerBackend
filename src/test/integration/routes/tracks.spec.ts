@@ -10,7 +10,7 @@ import TrackModel, { type ITrack } from '../../../app/models/Track.js'
 import UserModel, { type IUser } from '../../../app/models/User.js'
 import { chaiAppAgent as agent } from '../../testSetup.js'
 
-describe('POST api/v1/tracks', function () {
+describe('POST api/v1/tracks/webhook', function () {
 	describe('Post a new track', function () {
 		let testUser: IUser
 		let track: { trackName: string, accessToken: string }
@@ -29,24 +29,24 @@ describe('POST api/v1/tracks', function () {
 		})
 
 		it('should create a track', async function () {
-			await agent.post('/api/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks/webhook').send(track)
 			const allTracks = await TrackModel.find({}).exec()
 			expect(allTracks.length).to.equal(1)
 			expect(allTracks[0].trackName).to.equal(track.trackName)
 		})
 
 		it('should respond with status code 201', async function () {
-			const res = await agent.post('/api/v1/tracks').send(track)
+			const res = await agent.post('/api/v1/tracks/webhook').send(track)
 			expect(res).to.have.status(201)
 		})
 
 		it('should respond with the track', async function () {
-			const res = await agent.post('/api/v1/tracks').send(track)
+			const res = await agent.post('/api/v1/tracks/webhook').send(track)
 			expect(res.body.trackName).to.equal(track.trackName)
 		})
 
 		it('should add the user to the track', async function () {
-			await agent.post('/api/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks/webhook').send(track)
 			const foundUser = await UserModel.findOne({}).exec() as IUser
 			const foundTrack = await TrackModel.findOne({}).exec() as ITrack
 			expect(foundTrack.userId.toString()).to.equal(foundUser._id.toString())
@@ -55,7 +55,7 @@ describe('POST api/v1/tracks', function () {
 		it('should have the current date and time', async function () {
 			const fakeTime = new Date(2020, 4, 15).getTime()
 			sinon.useFakeTimers(fakeTime) // Fake the JavaScript environment's time
-			await agent.post('/api/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks/webhook').send(track)
 			const foundTrack = await TrackModel.findOne({}).exec() as ITrack
 			expect(new Date(foundTrack.date).getTime()).to.equal(fakeTime)
 		})
@@ -65,7 +65,7 @@ describe('POST api/v1/tracks', function () {
 				...track,
 				accessToken: 'invalidCode'
 			}
-			await agent.post('/api/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks/webhook').send(track)
 			const allTracks = await TrackModel.find({}).exec()
 			expect(allTracks.length).to.equal(0)
 		})
@@ -90,24 +90,24 @@ describe('POST api/v1/tracks', function () {
 		})
 
 		it('should create a track', async function () {
-			await agent.post('/api/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks/webhook').send(track)
 			const allTracks = await TrackModel.find({}).exec()
 			expect(allTracks.length).to.equal(1)
 			expect(allTracks[0].trackName).to.equal(track.trackName)
 		})
 
 		it('should respond with status code 201', async function () {
-			const res = await agent.post('/api/v1/tracks').send(track)
+			const res = await agent.post('/api/v1/tracks/webhook').send(track)
 			expect(res).to.have.status(201)
 		})
 
 		it('should respond with the track', async function () {
-			const res = await agent.post('/api/v1/tracks').send(track)
+			const res = await agent.post('/api/v1/tracks/webhook').send(track)
 			expect(res.body.trackName).to.equal(track.trackName)
 		})
 
 		it('should add the user to the track', async function () {
-			await agent.post('/api/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks/webhook').send(track)
 			const foundUser = await UserModel.findOne({}).exec() as IUser
 			const foundTrack = await TrackModel.findOne({}).exec() as ITrack
 			expect(foundTrack.userId.toString()).to.equal(foundUser._id.toString())
@@ -116,7 +116,7 @@ describe('POST api/v1/tracks', function () {
 		it('should have the offset date and time', async function () {
 			const fakeTime = new Date(2020, 4, 15).getTime()
 			sinon.useFakeTimers(fakeTime) // Fake the JavaScript environment's time
-			await agent.post('/api/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks/webhook').send(track)
 			const foundTrack = await TrackModel.findOne({}).exec() as ITrack
 			expect(new Date(foundTrack.date).getTime()).to.equal(fakeTime + track.timeOffset)
 		})
@@ -141,24 +141,24 @@ describe('POST api/v1/tracks', function () {
 		})
 
 		it('should create a track', async function () {
-			await agent.post('/api/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks/webhook').send(track)
 			const allTracks = await TrackModel.find({}).exec()
 			expect(allTracks.length).to.equal(1)
 			expect(allTracks[0].trackName).to.equal(track.trackName)
 		})
 
 		it('should respond with status code 201', async function () {
-			const res = await agent.post('/api/v1/tracks').send(track)
+			const res = await agent.post('/api/v1/tracks/webhook').send(track)
 			expect(res).to.have.status(201)
 		})
 
 		it('should respond with the track', async function () {
-			const res = await agent.post('/api/v1/tracks').send(track)
+			const res = await agent.post('/api/v1/tracks/webhook').send(track)
 			expect(res.body.trackName).to.equal(track.trackName)
 		})
 
 		it('should add the user to the track', async function () {
-			await agent.post('/api/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks/webhook').send(track)
 			const foundUser = await UserModel.findOne({}).exec() as IUser
 			const foundTrack = await TrackModel.findOne({}).exec() as ITrack
 			expect(foundTrack.userId.toString()).to.equal(foundUser._id.toString())
@@ -167,7 +167,7 @@ describe('POST api/v1/tracks', function () {
 		it('should have the offset date and time', async function () {
 			const fakeTime = new Date(2020, 4, 15).getTime()
 			sinon.useFakeTimers(fakeTime) // Fake the JavaScript environment's time
-			await agent.post('/api/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks/webhook').send(track)
 			const foundTrack = await TrackModel.findOne({}).exec() as ITrack
 			expect(new Date(foundTrack.date).getTime()).to.equal(fakeTime + track.timeOffset)
 		})
@@ -192,13 +192,13 @@ describe('POST api/v1/tracks', function () {
 		})
 
 		it('should not create a track with large offset', async function () {
-			await agent.post('/api/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks/webhook').send(track)
 			const allTracks = await TrackModel.find({}).exec()
 			expect(allTracks.length).to.equal(0)
 		})
 
 		it('should respond with status code 400', async function () {
-			const res = await agent.post('/api/v1/tracks').send(track)
+			const res = await agent.post('/api/v1/tracks/webhook').send(track)
 			expect(res).to.have.status(400)
 		})
 	})
@@ -222,19 +222,19 @@ describe('POST api/v1/tracks', function () {
 		})
 
 		it('should not create a track with large offset', async function () {
-			await agent.post('/api/v1/tracks').send(track)
+			await agent.post('/api/v1/tracks/webhook').send(track)
 			const allTracks = await TrackModel.find({}).exec()
 			expect(allTracks.length).to.equal(0)
 		})
 
 		it('should respond with status code 400', async function () {
-			const res = await agent.post('/api/v1/tracks').send(track)
+			const res = await agent.post('/api/v1/tracks/webhook').send(track)
 			expect(res).to.have.status(400)
 		})
 	})
 })
 
-describe('DELETE api/v1/tracks/last', function () {
+describe('DELETE api/v1/tracks/webhook', function () {
 	let testUserA: IUser
 	let testTrackA1: ITrack
 
@@ -256,7 +256,7 @@ describe('DELETE api/v1/tracks/last', function () {
 		let res: any
 
 		beforeEach(async function () {
-			res = await agent.delete('/api/v1/tracks/last').send({ accessToken: testUserA.accessToken })
+			res = await agent.delete('/api/v1/tracks/webhook').send({ accessToken: testUserA.accessToken })
 		})
 
 		it('should delete a track', async function () {
@@ -283,7 +283,7 @@ describe('DELETE api/v1/tracks/last', function () {
 				userId: testUserA._id
 			})
 			await earlierDateTrack.save()
-			await agent.delete('/api/v1/tracks/last').send({ accessToken: testUserA.accessToken })
+			await agent.delete('/api/v1/tracks/webhook').send({ accessToken: testUserA.accessToken })
 		})
 
 		it('should delete the newest created track', async function () {
@@ -296,7 +296,7 @@ describe('DELETE api/v1/tracks/last', function () {
 		let res: any
 
 		beforeEach(async function () {
-			res = await agent.delete('/api/v1/tracks/last').send({ accessToken: 'invalidAccessToken' })
+			res = await agent.delete('/api/v1/tracks/webhook').send({ accessToken: 'invalidAccessToken' })
 		})
 
 		it('should not delete track', async function () {
@@ -313,7 +313,7 @@ describe('DELETE api/v1/tracks/last', function () {
 		let res: any
 
 		beforeEach(async function () {
-			res = await agent.delete('/api/v1/tracks/last').send({})
+			res = await agent.delete('/api/v1/tracks/webhook').send({})
 		})
 
 		it('should not delete track', async function () {
@@ -330,7 +330,7 @@ describe('DELETE api/v1/tracks/last', function () {
 		let res: any
 
 		beforeEach(async function () {
-			res = await agent.delete('/api/v1/tracks/last').send({ accessToken: '' })
+			res = await agent.delete('/api/v1/tracks/webhook').send({ accessToken: '' })
 		})
 
 		it('should not delete track', async function () {
@@ -350,7 +350,7 @@ describe('DELETE api/v1/tracks/last', function () {
 				userId: testUserA._id
 			})
 			await newTrack.save()
-			await agent.delete('/api/v1/tracks/last').send({ accessToken: testUserA.accessToken })
+			await agent.delete('/api/v1/tracks/webhook').send({ accessToken: testUserA.accessToken })
 		})
 
 		it('should delete a single track', async function () {
@@ -364,12 +364,12 @@ describe('DELETE api/v1/tracks/last', function () {
 		})
 
 		it('should respond with status code 204', async function () {
-			const res = await agent.delete('/api/v1/tracks/last').send({ accessToken: testUserA.accessToken })
+			const res = await agent.delete('/api/v1/tracks/webhook').send({ accessToken: testUserA.accessToken })
 			expect(res).to.have.status(204)
 		})
 
 		it('should have an empty body', async function () {
-			const res = await agent.delete('/api/v1/tracks/last').send({ accessToken: testUserA.accessToken })
+			const res = await agent.delete('/api/v1/tracks/webhook').send({ accessToken: testUserA.accessToken })
 
 			expect(res.body).to.be.empty
 		})
@@ -380,7 +380,7 @@ describe('DELETE api/v1/tracks/last', function () {
 
 		beforeEach(async function () {
 			await TrackModel.deleteMany({}).exec()
-			res = await agent.delete('/api/v1/tracks/last').send({ accessToken: testUserA.accessToken })
+			res = await agent.delete('/api/v1/tracks/webhook').send({ accessToken: testUserA.accessToken })
 		})
 
 		it('should not delete a track', async function () {
@@ -420,7 +420,7 @@ describe('DELETE api/v1/tracks/last', function () {
 
 			beforeEach(async function () {
 				await TrackModel.deleteMany({}).exec()
-				res = await agent.delete('/api/v1/tracks/last').send({ accessToken: testUserA.accessToken })
+				res = await agent.delete('/api/v1/tracks/webhook').send({ accessToken: testUserA.accessToken })
 			})
 
 			it('should not delete a track', async function () {
@@ -441,7 +441,7 @@ describe('DELETE api/v1/tracks/last', function () {
 			let res: any
 
 			beforeEach(async function () {
-				res = await agent.delete('/api/v1/tracks/last').send({ accessToken: testUserA.accessToken })
+				res = await agent.delete('/api/v1/tracks/webhook').send({ accessToken: testUserA.accessToken })
 			})
 
 			it('should delete a track', async function () {
@@ -479,7 +479,7 @@ describe('DELETE api/v1/tracks/last', function () {
 					userId: testUserB._id
 				})
 				await testTrackB2.save()
-				res = await agent.delete('/api/v1/tracks/last').send({ accessToken: testUserA.accessToken })
+				res = await agent.delete('/api/v1/tracks/webhook').send({ accessToken: testUserA.accessToken })
 			})
 
 			it('should delete a single track', async function () {
@@ -754,38 +754,30 @@ describe('GET api/v1/tracks', function () {
 				res = await agent.get('/api/v1/tracks?trackName=TEST_TRACK_A1&fromDate=2020-05-16').set('Cookie', sessionCookie)
 			})
 
-			it('should respond with status code 204', async function () {
-				expect(res).to.have.status(204)
+			it('should respond with status code 200', async function () {
+				expect(res).to.have.status(200)
 			})
 
-			it('should not respond with an array of tracks', async function () {
-				expect(res.body).to.be.empty
-			})
-
-			it('should not respond with any tracks', async function () {
-				expect(JSON.stringify(res.body)).to.not.include('trackName')
+			it('should respond with an empty array', async function () {
+				expect(res.body).to.be.an('array').that.is.empty
 			})
 		})
 	})
 
 	describe('Query with no match', function () {
-		describe('trackName query', function () {
+		describe('name query', function () {
 			let res: any
 
 			beforeEach(async function () {
 				res = await agent.get('/api/v1/tracks?trackName=nonExistingTrack').set('Cookie', sessionCookie)
 			})
 
-			it('should respond with status code 204', async function () {
-				expect(res).to.have.status(204)
+			it('should respond with status code 200', async function () {
+				expect(res).to.have.status(200)
 			})
 
-			it('should not respond with an array of tracks', async function () {
-				expect(res.body).to.be.empty
-			})
-
-			it('should not respond with any tracks', async function () {
-				expect(JSON.stringify(res.body)).to.not.include('trackName')
+			it('should respond with an empty array', async function () {
+				expect(res.body).to.be.an('array').that.is.empty
 			})
 		})
 
@@ -796,16 +788,12 @@ describe('GET api/v1/tracks', function () {
 				res = await agent.get('/api/v1/tracks?fromDate=2020-05-18').set('Cookie', sessionCookie)
 			})
 
-			it('should respond with status code 204', async function () {
-				expect(res).to.have.status(204)
+			it('should respond with status code 200', async function () {
+				expect(res).to.have.status(200)
 			})
 
-			it('should not respond with an array of tracks', async function () {
-				expect(res.body).to.be.empty
-			})
-
-			it('should not respond with any tracks', async function () {
-				expect(JSON.stringify(res.body)).to.not.include('trackName')
+			it('should respond with an empty array', async function () {
+				expect(res.body).to.be.an('array').that.is.empty
 			})
 		})
 
@@ -816,16 +804,12 @@ describe('GET api/v1/tracks', function () {
 				res = await agent.get('/api/v1/tracks?toDate=2020-05-13').set('Cookie', sessionCookie)
 			})
 
-			it('should respond with status code 204', async function () {
-				expect(res).to.have.status(204)
+			it('should respond with status code 200', async function () {
+				expect(res).to.have.status(200)
 			})
 
-			it('should not respond with an array of tracks', async function () {
-				expect(res.body).to.be.empty
-			})
-
-			it('should not respond with any tracks', async function () {
-				expect(JSON.stringify(res.body)).to.not.include('trackName')
+			it('should respond with an empty array', async function () {
+				expect(res.body).to.be.an('array').that.is.empty
 			})
 		})
 	})
