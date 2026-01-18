@@ -2,12 +2,14 @@ import { type Server } from 'http'
 
 import * as chai from 'chai'
 import chaiHttp from 'chai-http'
+import type MongoStore from 'connect-mongo'
 import mongoose from 'mongoose'
 import sinon from 'sinon'
 
 import logger from '../app/utils/logger.js'
 import { trackTypes } from '../app/utils/trackTypes.js'
 
+import { disconnectFromInMemoryMongoDB } from './mongoMemoryReplSetConnector.js'
 import { testTrackTypes } from './testTrackTypes.js'
 
 process.env.NODE_ENV = 'test'
@@ -17,7 +19,7 @@ process.env.CSRF_TOKEN = 'TEST_CSRF_TOKEN'
 Object.assign(trackTypes, testTrackTypes)
 
 const chaiHttpObject = chai.use(chaiHttp)
-let app: { shutDown: (exitCode?: number) => Promise<void>, server: Server }
+let app: { server: Server, sessionStore: MongoStore }
 let chaiAppServer: ChaiHttp.Agent
 
 const cleanDatabase = async function (): Promise<void> {
@@ -25,7 +27,6 @@ const cleanDatabase = async function (): Promise<void> {
 	// / ///////////////////////////////////////////
 	if (process.env.NODE_ENV !== 'test') {
 		logger.error('Database wipe attempted in non-test environment! Shutting down.')
-		await app.shutDown(1)
 		return
 	}
 	// / ////////////////////////////////////////////
@@ -37,7 +38,7 @@ const cleanDatabase = async function (): Promise<void> {
 }
 
 before(async function () {
-	this.timeout(10000)
+	this.timeout(20000)
 	// Setting environment
 	process.env.NODE_ENV = 'test'
 
@@ -56,10 +57,17 @@ beforeEach(async function () {
 afterEach(async function () {
 	sinon.restore()
 	await cleanDatabase()
+	await new Promise<void>((resolve) => {
+		chaiAppServer.close(() => {
+			resolve()
+		})
+	})
 })
 
-after(function () {
-	void app.shutDown()
+after(async function () {
+	this.timeout(40000)
+	app.server.close()
+	await disconnectFromInMemoryMongoDB(app.sessionStore)
 })
 
 export { chaiAppServer }
