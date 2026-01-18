@@ -8,7 +8,7 @@ import sinon from 'sinon'
 
 import UserModel, { type IUser } from '../../../app/models/User.js'
 import config from '../../../app/utils/setupConfig.js'
-import { chaiAppServer as agent } from '../../testSetup.js'
+import { chaiAppAgent as agent } from '../../testSetup.js'
 
 const {
 	sessionExpiry
