@@ -1,7 +1,7 @@
 import { type NextFunction, type Request, type Response } from 'express'
 import passport from 'passport'
 
-import { type IUser } from '../models/User.js'
+import { type IUser, transformUser } from '../models/User.js'
 import logger from '../utils/logger.js'
 import config from '../utils/setupConfig.js'
 
@@ -66,4 +66,12 @@ export function ensureAuthenticated (req: Request, res: Response, next: NextFunc
 		return
 	}
 	next()
+}
+
+export function getAuthenticatedUser (req: Request, res: Response): void {
+	if (req.user == null) {
+		res.status(401).json({ message: 'Unauthorized' })
+		return
+	}
+	res.status(200).json(transformUser(req.user))
 }
