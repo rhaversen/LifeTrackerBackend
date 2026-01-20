@@ -1,6 +1,7 @@
 import { Router } from 'express'
 
-import { createUser, deleteUser, createAccessToken, requestPasswordResetEmail, resetPassword } from '../controllers/userController.js'
+import { ensureAuthenticated, getAuthenticatedUser } from '../controllers/authController.js'
+import { createUser, deleteUser, createAccessToken, requestPasswordResetEmail, resetPassword, updateTrackNameTranslations } from '../controllers/userController.js'
 
 const router = Router()
 
@@ -67,6 +68,31 @@ router.post('/request-password-reset-email',
 */
 router.patch('/reset-password',
 	resetPassword
+)
+
+/**
+ * @route GET api/v1/users/user
+ * @desc Get authenticated user data
+ * @access Private
+ * @return {number} res.status The status code of the HTTP response.
+ * @return {object} res.body The user object with trackNameTranslations.
+ */
+router.get('/user',
+	ensureAuthenticated,
+	getAuthenticatedUser
+)
+
+/**
+ * @route PATCH api/v1/users/track-name-translations
+ * @desc Update track name translations for the authenticated user
+ * @access Private
+ * @param {Record<string, string>} req.body.translations The track name translations object
+ * @return {number} res.status The status code of the HTTP response
+ * @return {Record<string, string>} res.body The updated translations
+ */
+router.patch('/track-name-translations',
+	ensureAuthenticated,
+	updateTrackNameTranslations
 )
 
 export default router

@@ -17,6 +17,7 @@ export interface IUser extends Document {
 	password: string
 	accessToken: string
 	passwordResetCode?: string
+	trackNameTranslations?: Record<string, string>
 
 	createdAt: Date
 	updatedAt: Date
@@ -34,6 +35,7 @@ export interface IUserFrontend {
 	userName: string
 	email: string
 	accessToken: string
+	trackNameTranslations?: Record<string, string>
 	createdAt: Date
 	updatedAt: Date
 }
@@ -44,6 +46,7 @@ export function transformUser (userDoc: IUser | FlattenMaps<IUser>): IUserFronte
 		userName: userDoc.userName,
 		email: userDoc.email,
 		accessToken: userDoc.accessToken,
+		trackNameTranslations: userDoc.trackNameTranslations,
 		createdAt: userDoc.createdAt,
 		updatedAt: userDoc.updatedAt
 	}
@@ -83,6 +86,11 @@ const userSchema = new Schema<IUser>({
 		required: false,
 		unique: true,
 		sparse: true
+	},
+	trackNameTranslations: {
+		type: Schema.Types.Map,
+		of: Schema.Types.String,
+		required: false
 	}
 }, {
 	timestamps: true
