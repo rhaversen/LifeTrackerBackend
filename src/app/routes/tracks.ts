@@ -9,7 +9,8 @@ import {
 	getTrack,
 	getTracks,
 	patchTrack,
-	deleteTrack
+	deleteTrack,
+	bulkRenameTrack
 } from '../controllers/tracksController.js'
 
 const router = Router()
@@ -71,6 +72,21 @@ router.post('/',
 router.post('/import',
 	ensureAuthenticated,
 	importTracks
+)
+
+/**
+ * @route PATCH api/v1/tracks/bulk/rename
+ * @desc Bulk rename all tracks with a specific track name
+ * @access Private
+ * @middleware ensureAuthenticated
+ * @param {string} req.body.oldName - The current track name to rename.
+ * @param {string} req.body.newName - The new track name.
+ * @returns {number} res.status - The status code of the HTTP response.
+ * @returns {Object} res.body - Result with modifiedCount.
+ */
+router.patch('/bulk/rename',
+	ensureAuthenticated,
+	bulkRenameTrack
 )
 
 /**

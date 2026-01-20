@@ -203,3 +203,33 @@ export async function resetPassword (req: Request, res: Response, next: NextFunc
 		await session.endSession()
 	}
 }
+
+export async function updateTrackNameTranslations (req: Request, res: Response, next: NextFunction): Promise<void> {
+	logger.silly('Updating track name translations')
+
+	const user = req.user
+	if (user == null) {
+		res.status(401).json({ error: 'Unauthorized' })
+		return
+	}
+
+	const { translations } = req.body as { translations?: Record<string, string> }
+
+	if (translations == null || typeof translations !== 'object') {
+		res.status(400).json({ error: 'translations must be an object' })
+		return
+	}
+
+	try {
+		user.trackNameTranslations = translations
+		await user.save()
+
+		res.status(200).json({ trackNameTranslations: user.trackNameTranslations })
+	} catch (error) {
+		if (error instanceof mongoose.Error.ValidationError || error instanceof mongoose.Error.CastError) {
+			res.status(400).json({ error: error.message })
+		} else {
+			next(error)
+		}
+	}
+}

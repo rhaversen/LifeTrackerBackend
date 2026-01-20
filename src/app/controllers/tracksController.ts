@@ -379,3 +379,48 @@ export async function deleteTrack (req: Request, res: Response, next: NextFuncti
 		}
 	}
 }
+
+export async function bulkRenameTrack (req: Request, res: Response, next: NextFunction): Promise<void> {
+	logger.info('Bulk renaming tracks')
+
+	const user = req.user as IUser | undefined
+
+	if (user === undefined) {
+		res.status(401).json({ error: 'User not found.' })
+		return
+	}
+
+	const { oldName, newName } = req.body as { oldName?: unknown, newName?: unknown }
+
+	if (typeof oldName !== 'string' || oldName === '') {
+		res.status(400).json({ error: 'oldName must be a non-empty string.' })
+		return
+	}
+
+	if (typeof newName !== 'string' || newName === '') {
+		res.status(400).json({ error: 'newName must be a non-empty string.' })
+		return
+	}
+
+	if (oldName === newName) {
+		res.status(400).json({ error: 'oldName and newName must be different.' })
+		return
+	}
+
+	try {
+		const result = await TrackModel.updateMany(
+			{ userId: user._id, trackName: oldName },
+			{ $set: { trackName: newName } }
+		)
+
+		logger.info(`Bulk rename: ${result.modifiedCount} tracks renamed from "${oldName}" to "${newName}"`)
+		res.status(200).json({ modifiedCount: result.modifiedCount })
+	} catch (error) {
+		logger.error('Bulk rename failed', { error })
+		if (error instanceof mongoose.Error.ValidationError) {
+			res.status(400).json({ error: error.message })
+		} else {
+			next(error)
+		}
+	}
+}
